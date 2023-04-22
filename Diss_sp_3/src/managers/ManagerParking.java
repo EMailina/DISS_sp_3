@@ -4,84 +4,123 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //meta! id="5"
-public class ManagerParking extends Manager
-{
-	public ManagerParking(int id, Simulation mySim, Agent myAgent)
-	{
-		super(id, mySim, myAgent);
-		init();
-	}
+public class ManagerParking extends Manager {
 
-	@Override
-	public void prepareReplication()
-	{
-		super.prepareReplication();
-		// Setup component for the next replication
+    public ManagerParking(int id, Simulation mySim, Agent myAgent) {
+        super(id, mySim, myAgent);
+        init();
+    }
 
-		if (petriNet() != null)
-		{
-			petriNet().clear();
-		}
-	}
+    @Override
+    public void prepareReplication() {
+        super.prepareReplication();
+        // Setup component for the next replication
 
-	//meta! sender="AgentVehicleInspection", id="51", type="Notice"
-	public void processInit(MessageForm message)
-	{
-	}
+        if (petriNet() != null) {
+            petriNet().clear();
+        }
+    }
 
-	//meta! sender="AgentVehicleInspection", id="59", type="Notice"
-	public void processNoticeIsFreeParking(MessageForm message)
-	{
-	}
+    //meta! userInfo="Process messages defined in code", id="0"
+    public void processDefault(MessageForm message) {
+        switch (message.code()) {
+        }
+    }
 
-	//meta! sender="AgentVehicleInspection", id="38", type="Notice"
-	public void processNoticeParkVehicle(MessageForm message)
-	{
-	}
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    public void init() {
+    }
 
-	//meta! userInfo="Process messages defined in code", id="0"
-	public void processDefault(MessageForm message)
-	{
-		switch (message.code())
-		{
-		}
-	}
+    @Override
+    public void processMessage(MessageForm message) {
+        switch (message.code()) {
+//            case Mc.leaveParking:
+//                processLeaveParking(message);
+//                break;
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init()
-	{
-	}
+            case Mc.noticeParkingVehicle:
+                processNoticeParkingVehicle(message);
+                break;
 
-	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
-		case Mc.init:
-			processInit(message);
-		break;
+            case Mc.parkingPlaceInfo:
+                processParkingPlaceInfo(message);
+                break;
+            case Mc.parkingPlaceInfoMechanics:
+                processParkingPlaceInfoMechanics(message);
+                break;
 
-		case Mc.noticeParkVehicle:
-			processNoticeParkVehicle(message);
-		break;
+            case Mc.noticeFreeMechanic:
+                processNoticeFreeMechanic(message);
+                break;
 
-		case Mc.noticeIsFreeParking:
-			processNoticeIsFreeParking(message);
-		break;
+            default:
+                processDefault(message);
+                break;
+        }
+    }
+    //meta! tag="end"
 
-		default:
-			processDefault(message);
-		break;
-		}
-	}
-	//meta! tag="end"
+    @Override
+    public AgentParking myAgent() {
+        return (AgentParking) super.myAgent();
+    }
 
-	@Override
-	public AgentParking myAgent()
-	{
-		return (AgentParking)super.myAgent();
-	}
+//    private void processLeaveParking(MessageForm message) {
+//        MyMessage nextMessage = (MyMessage) myAgent().getQueue().dequeue();
+//        ((MyMessage) message).setCustomer(nextMessage.getCustomer());
+//
+//        notice(message);
+//    }
+    private void processParkingPlaceInfo(MessageForm message) {
+        ((MyMessage) message).setCountOfParkingPlaces(myAgent().getQueue().size());
+        response(message);
+    }
+
+    private void processNoticeParkingVehicle(MessageForm message) {
+        try {
+            if (myAgent().getQueue().size() < myAgent().getTotalCountOfParkingPlaces()) {
+                System.out.println("Added to parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+
+                myAgent().getQueue().enqueue(message);
+
+                message.setCode(Mc.parkingPlaceInfoMechanics);
+                message.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
+                request(message);
+            } else {
+                throw new Exception("Parking places full!");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ManagerParking.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void processParkingPlaceInfoMechanics(MessageForm message) {
+        if (((MyMessage) message).isAvailableEmployee()) {
+            MyMessage nextMessage = (MyMessage) myAgent().getQueue().dequeue();
+            nextMessage.setCode(Mc.leaveParking);
+            nextMessage.setAddressee(Id.agentVehicleInspection);
+            nextMessage.setCountOfParkingPlaces(myAgent().getQueue().size());
+            notice(message);
+            System.out.println("Leave parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+
+        }
+
+    }
+
+    private void processNoticeFreeMechanic(MessageForm message) {
+        if (myAgent().getQueue().size() > 0) {
+            MyMessage nextMessage = (MyMessage) myAgent().getQueue().dequeue();
+            nextMessage.setCode(Mc.leaveParking);
+            nextMessage.setAddressee(Id.agentVehicleInspection);
+            nextMessage.setCountOfParkingPlaces(myAgent().getQueue().size());
+            notice(message);
+            System.out.println("Leave parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+
+        }
+    }
 
 }

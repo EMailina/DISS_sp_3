@@ -6,82 +6,88 @@ import agents.*;
 import continualAssistants.*;
 
 //meta! id="4"
-public class ManagerMechanics extends Manager
-{
-	public ManagerMechanics(int id, Simulation mySim, Agent myAgent)
-	{
-		super(id, mySim, myAgent);
-		init();
-	}
+public class ManagerMechanics extends Manager {
 
-	@Override
-	public void prepareReplication()
-	{
-		super.prepareReplication();
-		// Setup component for the next replication
+    public ManagerMechanics(int id, Simulation mySim, Agent myAgent) {
+        super(id, mySim, myAgent);
+        init();
+    }
 
-		if (petriNet() != null)
-		{
-			petriNet().clear();
-		}
-	}
+    @Override
+    public void prepareReplication() {
+        super.prepareReplication();
+        // Setup component for the next replication
 
-	//meta! sender="AgentVehicleInspection", id="44", type="Request"
-	public void processMechanicExecute(MessageForm message)
-	{
-	}
+        if (petriNet() != null) {
+            petriNet().clear();
+        }
+    }
 
-	//meta! sender="AgentVehicleInspection", id="52", type="Notice"
-	public void processInit(MessageForm message)
-	{
-	}
+    //meta! sender="AgentVehicleInspection", id="44", type="Request"
+    public void processMechanicExecute(MessageForm message) {
+        if (myAgent().getCountOfWorking() < myAgent().getTotalCountOfEmployees()) {
+            myAgent().addWorkingEmployee();
+            message.setAddressee(myAgent().findAssistant(Id.processInsepction));
+            startContinualAssistant(message);
+            System.out.println("Start service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
-	//meta! sender="ProcessInsepction", id="28", type="Finish"
-	public void processFinish(MessageForm message)
-	{
-	}
+        }
+    }
 
-	//meta! userInfo="Process messages defined in code", id="0"
-	public void processDefault(MessageForm message)
-	{
-		switch (message.code())
-		{
-		}
-	}
+    //meta! sender="ProcessInsepction", id="28", type="Finish"
+    public void processFinish(MessageForm message) {
+        myAgent().removeWorkingEmployee();
+        System.out.println("END service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init()
-	{
-	}
+      
+        message.setCode(Mc.mechanicExecute);
+        response(message);
+    }
 
-	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
-		case Mc.mechanicExecute:
-			processMechanicExecute(message);
-		break;
+    //meta! userInfo="Process messages defined in code", id="0"
+    public void processDefault(MessageForm message) {
+        switch (message.code()) {
+        }
+    }
 
-		case Mc.init:
-			processInit(message);
-		break;
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    public void init() {
+    }
 
-		case Mc.finish:
-			processFinish(message);
-		break;
+    @Override
+    public void processMessage(MessageForm message) {
+        switch (message.code()) {
+            case Mc.mechanicExecute:
+                processMechanicExecute(message);
+                break;
 
-		default:
-			processDefault(message);
-		break;
-		}
-	}
-	//meta! tag="end"
+            case Mc.finish:
+                processFinish(message);
+                break;
 
-	@Override
-	public AgentMechanics myAgent()
-	{
-		return (AgentMechanics)super.myAgent();
-	}
+            case Mc.mechanicsAvailability:
+                processMechanicsAvailability(message);
+                break;
+
+            default:
+                processDefault(message);
+                break;
+        }
+    }
+    //meta! tag="end"
+
+    @Override
+    public AgentMechanics myAgent() {
+        return (AgentMechanics) super.myAgent();
+    }
+
+    private void processMechanicsAvailability(MessageForm message) {
+        if (myAgent().getCountOfWorking() < myAgent().getTotalCountOfEmployees()) {
+            ((MyMessage) message).setAvailableEmployee(true);
+        } else {
+            ((MyMessage) message).setAvailableEmployee(false);
+        }
+        response(message);
+    }
 
 }

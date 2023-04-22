@@ -25,14 +25,25 @@ public class CustomerObject {
     private boolean waitingForPayment = false;
     private boolean park = false;
 
-    public CustomerObject(double startOfWaiting, long count, double p) {
-        this.startOfWaitingForTakeOver = startOfWaiting;
-        endOfWaitingForTakeOver = -1;
-        this.count = count;
-        this.probabilityVehicle = p;
+    public CustomerObject() {
+       
 
     }
 
+    public void setProbabilityVehicle(double probabilityVehicle) {
+        this.probabilityVehicle = probabilityVehicle;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
+
+    public void setStartOfWaitingForTakeOver(double startOfWaitingForTakeOver) {
+        this.startOfWaitingForTakeOver = startOfWaitingForTakeOver;
+    }
+
+    
+    
     public boolean isPark() {
         return park;
     }

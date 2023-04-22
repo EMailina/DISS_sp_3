@@ -5,6 +5,7 @@
  */
 package diss_sp_3;
 
+import java.util.Random;
 import simulation.MySimulation;
 
 /**
@@ -18,11 +19,12 @@ public class Diss_sp_3 {
      */
     public static void main(String[] args) {
         MySimulation sim = new MySimulation();
+        
         sim.onSimulationWillStart(s -> {
             System.out.println("simm...");
         });
-        sim.simulate(1, 10000000);
-        
+        sim.simulate(1, 480);
+        System.out.println("x");
     }
 
 }

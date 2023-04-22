@@ -6,73 +6,77 @@ import agents.*;
 import continualAssistants.*;
 
 //meta! id="1"
-public class ManagerModel extends Manager
-{
-	public ManagerModel(int id, Simulation mySim, Agent myAgent)
-	{
-		super(id, mySim, myAgent);
-		init();
-	}
+public class ManagerModel extends Manager {
 
-	@Override
-	public void prepareReplication()
-	{
-		super.prepareReplication();
-		// Setup component for the next replication
+    public ManagerModel(int id, Simulation mySim, Agent myAgent) {
+        super(id, mySim, myAgent);
+        init();
+    }
 
-		if (petriNet() != null)
-		{
-			petriNet().clear();
-		}
-	}
+    @Override
+    public void prepareReplication() {
+        super.prepareReplication();
+        // Setup component for the next replication
 
-	//meta! sender="AgentVehicleInspection", id="33", type="Response"
-	public void processCustomerService(MessageForm message)
-	{
-	}
+        if (petriNet() != null) {
+            petriNet().clear();
+        }
+    }
 
-	//meta! sender="AgentEnviroment", id="31", type="Notice"
-	public void processNoticeCustomerArrival(MessageForm message)
-	{
-	}
+    //meta! sender="AgentVehicleInspection", id="33", type="Response"
+    public void processCustomerService(MessageForm message) {
+        message.setCode(Mc.noticeCustomerLeave);
+        message.setAddressee(mySim().findAgent(Id.agentEnviroment));
+        notice(message);
+    }
 
-	//meta! userInfo="Process messages defined in code", id="0"
-	public void processDefault(MessageForm message)
-	{
-		switch (message.code())
-		{
-		}
-	}
+    //meta! sender="AgentEnviroment", id="31", type="Notice"
+    public void processNoticeCustomerArrival(MessageForm message) {
+        message.setCode(Mc.customerService);
+        message.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
+        notice(message);
+    }
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init()
-	{
-	}
+    //meta! userInfo="Process messages defined in code", id="0"
+    public void processDefault(MessageForm message) {
+        switch (message.code()) {
+        }
+    }
 
-	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
-		case Mc.customerService:
-			processCustomerService(message);
-		break;
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    public void init() {
+    }
 
-		case Mc.noticeCustomerArrival:
-			processNoticeCustomerArrival(message);
-		break;
+    @Override
+    public void processMessage(MessageForm message) {
+        switch (message.code()) {
+            case Mc.init:
+                processInit(message);
+                break;
 
-		default:
-			processDefault(message);
-		break;
-		}
-	}
-	//meta! tag="end"
+            case Mc.customerService:
+                processCustomerService(message);
+                break;
 
-	@Override
-	public AgentModel myAgent()
-	{
-		return (AgentModel)super.myAgent();
-	}
+            case Mc.noticeCustomerArrival:
+                processNoticeCustomerArrival(message);
+                break;
+
+            default:
+                processDefault(message);
+                break;
+        }
+    }
+    //meta! tag="end"
+
+    public void processInit(MessageForm message) {
+        message.setAddressee(mySim().findAgent(Id.agentEnviroment));
+        notice(message);
+    }
+
+    @Override
+    public AgentModel myAgent() {
+        return (AgentModel) super.myAgent();
+    }
 
 }

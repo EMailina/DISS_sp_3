@@ -1,33 +1,47 @@
 package agents;
 
 import OSPABA.*;
+import OSPDataStruct.SimQueue;
+import OSPStat.WStat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
 
 //meta! id="5"
-public class AgentParking extends Agent
-{
-	public AgentParking(int id, Simulation mySim, Agent parent)
-	{
-		super(id, mySim, parent);
-		init();
-	}
+public class AgentParking extends Agent {
 
-	@Override
-	public void prepareReplication()
-	{
-		super.prepareReplication();
-		// Setup component for the next replication
-	}
+    private int totalCountOfParkingPlaces = 5;
+    private SimQueue<MessageForm> queue;
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	private void init()
-	{
-		new ManagerParking(Id.managerParking, mySim(), this);
-		addOwnMessage(Mc.init);
-		addOwnMessage(Mc.noticeIsFreeParking);
-		addOwnMessage(Mc.noticeParkVehicle);
-	}
-	//meta! tag="end"
+    public AgentParking(int id, Simulation mySim, Agent parent) {
+        super(id, mySim, parent);
+        init();
+    }
+
+    @Override
+    public void prepareReplication() {
+        super.prepareReplication();
+        // Setup component for the next replication
+        queue = new SimQueue<>(new WStat(_mySim));
+    }
+
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    private void init() {
+        new ManagerParking(Id.managerParking, mySim(), this);
+        addOwnMessage(Mc.parkingPlaceInfo);
+        addOwnMessage(Mc.parkingPlaceInfoMechanics);
+        addOwnMessage(Mc.leaveParking);
+        addOwnMessage(Mc.noticeParkingVehicle);
+        addOwnMessage(Mc.noticeFreeMechanic);
+    }
+    //meta! tag="end"
+
+    public int getTotalCountOfParkingPlaces() {
+        return totalCountOfParkingPlaces;
+    }
+
+    public SimQueue<MessageForm> getQueue() {
+        return queue;
+    }
+
 }

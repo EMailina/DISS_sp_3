@@ -1,12 +1,15 @@
 package simulation;
 
 import OSPABA.*;
+import OSPStat.Stat;
 import agents.*;
 import java.util.Random;
 
 public class MySimulation extends Simulation {
 
     private Random generatorOfGenerators = new Random(0);
+
+    private Stat avgWaitingTime;
 
     public MySimulation() {
         init();
@@ -16,24 +19,30 @@ public class MySimulation extends Simulation {
     public void prepareSimulation() {
         super.prepareSimulation();
         // Create global statistcis
+        avgWaitingTime = new Stat();
     }
 
     @Override
     public void prepareReplication() {
         super.prepareReplication();
         // Reset entities, queues, local statistics, etc...
+        _agentModel.startSimulation();
     }
 
     @Override
     public void replicationFinished() {
         // Collect local statistics into global, update UI, etc...
         super.replicationFinished();
+        avgWaitingTime.addSample(_agentReception.getStatWaitingTime().mean());
+
     }
 
     @Override
     public void simulationFinished() {
         // Dysplay simulation results
         super.simulationFinished();
+        System.out.println("Waiting Time: " + avgWaitingTime.mean());
+      
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -110,7 +119,5 @@ public class MySimulation extends Simulation {
     public Random getGeneratorOfGenerators() {
         return generatorOfGenerators;
     }
-    
-    
-    
+
 }
