@@ -8,7 +8,7 @@ import continualAssistants.*;
 //meta! id="4"
 public class AgentMechanics extends Agent {
 
-    private int totalCountOfEmployees = 1;
+    private int totalCountOfEmployees = 2;
     private int countOfWorking;
 
     public AgentMechanics(int id, Simulation mySim, Agent parent) {

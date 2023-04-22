@@ -76,6 +76,7 @@ public class ManagerParking extends Manager {
 //        notice(message);
 //    }
     private void processParkingPlaceInfo(MessageForm message) {
+        System.out.println("Posielam stav do recepcie: Q: " + myAgent().getQueue().size());
         ((MyMessage) message).setCountOfParkingPlaces(myAgent().getQueue().size());
         response(message);
     }
@@ -83,9 +84,8 @@ public class ManagerParking extends Manager {
     private void processNoticeParkingVehicle(MessageForm message) {
         try {
             if (myAgent().getQueue().size() < myAgent().getTotalCountOfParkingPlaces()) {
-                System.out.println("Added to parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
-
                 myAgent().getQueue().enqueue(message);
+                System.out.println("Added to parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime() + " Q: " + myAgent().getQueue().size());
 
                 message.setCode(Mc.parkingPlaceInfoMechanics);
                 message.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
@@ -104,8 +104,8 @@ public class ManagerParking extends Manager {
             nextMessage.setCode(Mc.leaveParking);
             nextMessage.setAddressee(Id.agentVehicleInspection);
             nextMessage.setCountOfParkingPlaces(myAgent().getQueue().size());
-            notice(message);
-            System.out.println("Leave parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+            notice(nextMessage);
+            System.out.println("Leave parking: " + ((MyMessage) nextMessage).getCustomer().getCount() + " " + mySim().currentTime());
 
         }
 
@@ -117,8 +117,8 @@ public class ManagerParking extends Manager {
             nextMessage.setCode(Mc.leaveParking);
             nextMessage.setAddressee(Id.agentVehicleInspection);
             nextMessage.setCountOfParkingPlaces(myAgent().getQueue().size());
-            notice(message);
-            System.out.println("Leave parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+            notice(nextMessage);
+            System.out.println("Leave parking: " + ((MyMessage) nextMessage).getCustomer().getCount() + " " + mySim().currentTime());
 
         }
     }

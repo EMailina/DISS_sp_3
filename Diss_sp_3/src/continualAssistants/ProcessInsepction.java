@@ -27,7 +27,7 @@ public class ProcessInsepction extends Process {
     public void prepareReplication() {
         super.prepareReplication();
 
-        inspectionTimeCarDistribution = new UniformDiscreteRNG(31, 46, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        inspectionTimeCarDistribution = new UniformDiscreteRNG(31, 45, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
 
         ArrayList<EmpiricPair> list = new ArrayList<>();
         list.add(new EmpiricPair(new UniformDiscreteRNG(35, 37, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.2));

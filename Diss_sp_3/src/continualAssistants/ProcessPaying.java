@@ -14,7 +14,6 @@ public class ProcessPaying extends Process {
 
     public ProcessPaying(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
-
     }
 
     @Override
@@ -42,7 +41,7 @@ public class ProcessPaying extends Process {
             case Mc.start:
                 processStart(message);
                 break;
-            case Mc.noticeEndTakeOver:
+            case Mc.noticeEndPaying:
                 processEndPaying(message);
                 break;
             default:

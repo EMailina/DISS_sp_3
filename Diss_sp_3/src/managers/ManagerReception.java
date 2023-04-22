@@ -34,10 +34,12 @@ public class ManagerReception extends Manager {
         try {
             if (myAgent().getCountOfWorkingEmployees() >= myAgent().getTotalCountOfEmployees()
                     || myAgent().getCountOfReservedParkingPlaces() + ((MyMessage) message).getCountOfParkingPlaces() >= myAgent().getTotalCountOfParkingPlaces()) {
-                ((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
-                myAgent().getQueueTakeOver().enqueue(message);
+                // ((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
+                //myAgent().getQueueTakeOver().enqueue(message);
             } else {
-                startWorkOnTakeOver((MyMessage) message);
+
+                MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().dequeue();
+                startWorkOnTakeOver((MyMessage) newMessage);
             }
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
@@ -71,16 +73,18 @@ public class ManagerReception extends Manager {
                 startWorkOnPayment(nextMessage);
             }
 
+            message.setCode(Mc.receptionExecute);
+            response(message);
+
             //takeover
             if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5) {
-                MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().dequeue();
+                MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().get(0);
 
                 newMessage.setCode(Mc.checkParkingPlace);
                 newMessage.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
                 request(newMessage);
             }
-            message.setCode(Mc.receptionExecute);
-            response(message);
+
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,10 +94,10 @@ public class ManagerReception extends Manager {
         myAgent().addWorkingEmployee();
         myAgent().addReservedParkingPlace();
         ((MyMessage) message).getCustomer().setEndOfWaitingForTakeOver(mySim().currentTime());
-        myAgent().getStatWaitingTime().addSample(((MyMessage) message).getCustomer().getWaitingTime());
+        myAgent().getStatWaitingTime().addSample(mySim().currentTime() - ((MyMessage) message).getCustomer().getStartOfWaitingForTakeOver());
         message.setAddressee(myAgent().findAssistant(Id.processTakeOverVehicle));
         startContinualAssistant(message);
-        System.out.println("Registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+        System.out.println("Start registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
     }
 
@@ -113,17 +117,20 @@ public class ManagerReception extends Manager {
             //payment
             if (myAgent().getQueuePaying().size() > 0) {
                 MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+
                 //nextMessage.getCustomer().setmySim().currentTime() - nextMessage.getCustomer().getStartOfWaitingForTakeOver());
                 startWorkOnPayment(nextMessage);
             }
 
             //takeover
             if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5) {
-                MyMessage newMessage = new MyMessage(_mySim);
-                newMessage.setCustomer(((MyMessage) message).getCustomer());
+                MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().get(0);
+                if (((MyMessage) newMessage).getCustomer().getCount() == 7) {
+                    System.out.println("xxxxx7");
+                }
                 newMessage.setCode(Mc.checkParkingPlace);
                 newMessage.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
-                request(message);
+                request(newMessage);
             }
 
             message.setCode(Mc.paymentExecute);
@@ -136,6 +143,7 @@ public class ManagerReception extends Manager {
     //meta! sender="AgentVehicleInspection", id="36", type="Request"
     public void processReceptionExecute(MessageForm message) {
         try {
+
             ((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
             if (myAgent().getCountOfWorkingEmployees() >= myAgent().getTotalCountOfEmployees()
                     || myAgent().getCountOfReservedParkingPlaces() >= myAgent().getTotalCountOfParkingPlaces()) {
@@ -150,6 +158,7 @@ public class ManagerReception extends Manager {
                 newMessage.setCode(Mc.checkParkingPlace);
                 newMessage.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
                 request(newMessage);
+                myAgent().getQueueTakeOver().enqueue(message);
             }
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
@@ -226,7 +235,7 @@ public class ManagerReception extends Manager {
         try {
             if (myAgent().getCountOfWorkingEmployees() < myAgent().getTotalCountOfEmployees()
                     || myAgent().getCountOfReservedParkingPlaces() /*+ ((MyMessage) message).getCountOfParkingPlaces() */ >= myAgent().getTotalCountOfParkingPlaces()) {
-                ((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
+                //((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
                 MyMessage mess = (MyMessage) myAgent().getQueueTakeOver().dequeue();
                 startWorkOnTakeOver((MyMessage) mess);
             }

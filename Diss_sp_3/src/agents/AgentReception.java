@@ -11,7 +11,7 @@ import continualAssistants.*;
 //meta! id="3"
 public class AgentReception extends Agent {
 
-    private int totalCountOfEmployees = 1;
+    private int totalCountOfEmployees = 2;
     private int totalCountOfParkingPlaces = 5;
     private SimQueue<MessageForm> queueTakeOver;
     private SimQueue<MessageForm> queuePaying;
