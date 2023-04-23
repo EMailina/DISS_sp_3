@@ -55,7 +55,8 @@ public class ManagerVehicleInspection extends Manager {
     //meta! sender="AgentReception", id="53", type="Response"
     public void processPaymentExecute(MessageForm message) {
         message.setCode(Mc.customerService);
-        response(message);
+        message.setAddressee(Id.agentModel);
+        notice(message);
     }
 
     //meta! sender="AgentReception", id="36", type="Response"
@@ -77,6 +78,9 @@ public class ManagerVehicleInspection extends Manager {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
+        if (message.code() == Mc.customerService) {
+            System.out.println("vehins");
+        }
         switch (message.code()) {
         }
     }

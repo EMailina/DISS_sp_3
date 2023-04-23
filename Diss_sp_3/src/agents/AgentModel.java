@@ -27,8 +27,8 @@ public class AgentModel extends Agent {
         addOwnMessage(Mc.noticeCustomerArrival);
     }
     //meta! tag="end"
-    
-     public void startSimulation() {
+
+    public void startSimulation() {
         MyMessage message = new MyMessage(super.mySim());
         message.setCode(Mc.init);
         message.setAddressee(this);

@@ -44,4 +44,7 @@ public class AgentParking extends Agent {
         return queue;
     }
 
+    public long getCOuntOfVehicles() {
+        return queue.size();
+    }
 }

@@ -32,11 +32,20 @@ public class ManagerEnviroment extends Manager {
 
     //meta! sender="AgentModel", id="32", type="Notice"
     public void processNoticeCustomerLeave(MessageForm message) {
-        //TODO: probably stat of time in system
+
+        myAgent().getAverageTimeInSystem().addSample(mySim().currentTime() - ((MyMessage) message).getCustomer().getStartOfWaitingForTakeOver());
+        if (mySim().currentTime() >= 476) {
+            System.out.println("");
+        }
+
+        myAgent().getCustomers().remove(((MyMessage) message).getCustomer());
+        System.out.println("" + myAgent().getCustomers().size());
     }
 
     //meta! sender="SchedulerCustomerArrival", id="10", type="Finish"
     public void processFinish(MessageForm message) {
+        System.out.println("-------------------------------------SArrival " + ((MyMessage) message).getCustomer().getCount()+ " " +  mySim().currentTime() );
+        myAgent().getCustomers().add(((MyMessage) message).getCustomer());
         message.setCode(Mc.noticeCustomerArrival);
         message.setAddressee(mySim().findAgent(Id.agentModel));
         notice(message);
@@ -44,6 +53,9 @@ public class ManagerEnviroment extends Manager {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
+        if (message.code() == Mc.customerService) {
+            System.out.println("env");
+        }
         switch (message.code()) {
         }
     }

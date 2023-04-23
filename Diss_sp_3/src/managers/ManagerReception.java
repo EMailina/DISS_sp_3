@@ -36,8 +36,9 @@ public class ManagerReception extends Manager {
                     || myAgent().getCountOfReservedParkingPlaces() + ((MyMessage) message).getCountOfParkingPlaces() >= myAgent().getTotalCountOfParkingPlaces()) {
                 // ((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
                 //myAgent().getQueueTakeOver().enqueue(message);
+                myAgent().getQueueTakeOverTest().enqueue(message);
             } else {
-
+                //System.out.println("AFTER CHECK TIME: " + mySim().currentTime());
                 MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().dequeue();
                 startWorkOnTakeOver((MyMessage) newMessage);
             }
@@ -52,6 +53,7 @@ public class ManagerReception extends Manager {
             if (myAgent().getCountOfWorkingEmployees() >= myAgent().getTotalCountOfEmployees()) {
                 //((MyMessage) message).getCustomer().setStartWaitingTime(mySim().currentTime());
                 myAgent().getQueuePaying().enqueue(message);
+
             } else {
                 startWorkOnPayment((MyMessage) message);
             }
@@ -125,9 +127,7 @@ public class ManagerReception extends Manager {
             //takeover
             if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5) {
                 MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().get(0);
-                if (((MyMessage) newMessage).getCustomer().getCount() == 7) {
-                    System.out.println("xxxxx7");
-                }
+
                 newMessage.setCode(Mc.checkParkingPlace);
                 newMessage.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
                 request(newMessage);
@@ -149,10 +149,12 @@ public class ManagerReception extends Manager {
                     || myAgent().getCountOfReservedParkingPlaces() >= myAgent().getTotalCountOfParkingPlaces()) {
 
                 myAgent().getQueueTakeOver().enqueue(message);
+                myAgent().getQueueTakeOverTest().enqueue(message);
                 //System.out.println("v rade:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
             } else {
                 //startWorkOnTakeOver((MyMessage) message);
                 MyMessage newMessage = (MyMessage) message.createCopy();
+               // System.out.println("BEFORE CHECK TIME: " + mySim().currentTime());
                 //System.out.println("" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
                 //((MyMessage) newMessage).setCustomer(((MyMessage) message).getCustomer());
                 newMessage.setCode(Mc.checkParkingPlace);
@@ -179,6 +181,9 @@ public class ManagerReception extends Manager {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
+        if (message.code() == Mc.customerService) {
+            System.out.println("rec");
+        }
         switch (message.code()) {
         }
     }
@@ -237,10 +242,12 @@ public class ManagerReception extends Manager {
                     || myAgent().getCountOfReservedParkingPlaces() /*+ ((MyMessage) message).getCountOfParkingPlaces() */ >= myAgent().getTotalCountOfParkingPlaces()) {
                 //((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
                 MyMessage mess = (MyMessage) myAgent().getQueueTakeOver().dequeue();
+                myAgent().getQueueTakeOverTest().dequeue();
                 startWorkOnTakeOver((MyMessage) mess);
             }
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
 }

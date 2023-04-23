@@ -10,6 +10,12 @@ public class MySimulation extends Simulation {
     private Random generatorOfGenerators = new Random(0);
 
     private Stat avgWaitingTime;
+    private Stat avgQueueLength;
+    private Stat avgTimeInSystem;
+    private Stat avgFreeEmp1;
+    private Stat avgFreeEmp2;
+    private Stat avgCOuntOfVehicles;
+    private Stat avgCountOfCustomers;
 
     public MySimulation() {
         init();
@@ -20,6 +26,13 @@ public class MySimulation extends Simulation {
         super.prepareSimulation();
         // Create global statistcis
         avgWaitingTime = new Stat();
+        avgQueueLength = new Stat();
+        avgTimeInSystem = new Stat();
+        avgFreeEmp1 = new Stat();
+        avgFreeEmp2 = new Stat();
+        avgCOuntOfVehicles = new Stat();
+        avgCountOfCustomers = new Stat();
+
     }
 
     @Override
@@ -34,15 +47,28 @@ public class MySimulation extends Simulation {
         // Collect local statistics into global, update UI, etc...
         super.replicationFinished();
         avgWaitingTime.addSample(_agentReception.getStatWaitingTime().mean());
-
+        avgQueueLength.addSample(_agentReception.getQueueTakeOverAvgLength().mean());
+        avgTimeInSystem.addSample(_agentEnviroment.getAverageTimeInSystem().mean());
+        avgFreeEmp1.addSample(_agentReception.getEmployee().lengthStatistic().mean());
+        avgFreeEmp2.addSample(_agentMechanics.getEmployee().lengthStatistic().mean());
+        avgCOuntOfVehicles.addSample(_agentEnviroment.getCustomers().size());
+        avgCountOfCustomers.addSample(_agentEnviroment.getCustomers().lengthStatistic().mean());
     }
 
     @Override
     public void simulationFinished() {
         // Dysplay simulation results
         super.simulationFinished();
+        System.out.println("-----------------------------------------------------------------");
         System.out.println("Waiting Time: " + avgWaitingTime.mean());
-      
+        System.out.println("Queue len Time: " + avgQueueLength.mean());
+        System.out.println("EMP 1 : " + avgFreeEmp1.mean());
+        System.out.println("EMP 2: " + avgFreeEmp2.mean());
+        System.out.println("Time in sys : " + avgTimeInSystem.mean());
+        System.out.println("vehicles: " + avgCOuntOfVehicles.mean());
+        System.out.println("countOfCustomers: " + avgCountOfCustomers.mean());
+
+
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"

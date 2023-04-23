@@ -67,18 +67,21 @@ public class SchedulerCustomerArrival extends Scheduler {
     private void processCustomerArrival(MessageForm message) {
         double time = arrivalExponentialDistribution.sample();
         MessageForm copy = message.createCopy();
+        if (mySim().currentTime() > 402) {
+            System.out.println("");
+        }
 
-        if (mySim().currentTime() + time <= 405) {
+        if (mySim().currentTime() + time <= 405.0) {
 
             hold(time, copy);
-            CustomerObject customer = new CustomerObject();
-          
-            customer.setCount(count);
-              count++;
-            customer.setProbabilityVehicle(vehicleDistribution.sample());
-            ((MyMessage) message).setCustomer(customer);
-            assistantFinished(message);
+
         }
+        CustomerObject customer = new CustomerObject();
+        customer.setCount(count);
+        count++;
+        customer.setProbabilityVehicle(vehicleDistribution.sample());
+        ((MyMessage) message).setCustomer(customer);
+        assistantFinished(message);
     }
 
 }

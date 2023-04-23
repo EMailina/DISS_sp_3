@@ -39,13 +39,15 @@ public class ManagerMechanics extends Manager {
         myAgent().removeWorkingEmployee();
         System.out.println("END service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
-      
         message.setCode(Mc.mechanicExecute);
         response(message);
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
+        if (message.code() == Mc.customerService) {
+            System.out.println("mech");
+        }
         switch (message.code()) {
         }
     }
