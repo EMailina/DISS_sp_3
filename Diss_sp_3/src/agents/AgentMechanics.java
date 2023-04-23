@@ -7,15 +7,18 @@ import OSPStat.WStat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
+import java.util.ArrayList;
+import objects.CustomerObject;
 
 //meta! id="4"
 public class AgentMechanics extends Agent {
 
-    private int totalCountOfEmployees = 1;
+    private int totalCountOfEmployees = 2;
     private int countOfWorking;
     private SimQueue<MessageForm> employee;
 
     private WStat freeEmployersStat;
+    private ArrayList<CustomerObject> guiEmployers;
 
     public AgentMechanics(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
@@ -28,7 +31,15 @@ public class AgentMechanics extends Agent {
         countOfWorking = 0;
         freeEmployersStat = new WStat(_mySim);
         employee = new SimQueue<>(new WStat(_mySim));
-        employee.add(null);
+        employee.clear();
+        for (int i = 0; i < totalCountOfEmployees; i++) {
+            employee.add(null);
+        }
+
+        guiEmployers = new ArrayList<>(totalCountOfEmployees);
+        for (int i = 0; i < totalCountOfEmployees; i++) {
+            guiEmployers.add(null);
+        }
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -89,6 +100,14 @@ public class AgentMechanics extends Agent {
 
     public void setEmployee(SimQueue<MessageForm> employee) {
         this.employee = employee;
+    }
+
+    public ArrayList<CustomerObject> getGuiEmployers() {
+        return guiEmployers;
+    }
+
+    public void setGuiEmployers(ArrayList<CustomerObject> guiEmployers) {
+        this.guiEmployers = guiEmployers;
     }
 
 }

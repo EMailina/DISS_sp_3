@@ -3,6 +3,8 @@ package simulation;
 import OSPABA.*;
 import OSPStat.Stat;
 import agents.*;
+import diss_sp_3.RunType;
+import java.time.LocalTime;
 import java.util.Random;
 
 public class MySimulation extends Simulation {
@@ -16,10 +18,16 @@ public class MySimulation extends Simulation {
     private Stat avgFreeEmp2;
     private Stat avgCOuntOfVehicles;
     private Stat avgCountOfCustomers;
+    private RunType type;
 
     public MySimulation() {
         init();
     }
+
+    public MySimulation(RunType type) {
+        this.type = type;
+    }
+    
 
     @Override
     public void prepareSimulation() {
@@ -67,7 +75,6 @@ public class MySimulation extends Simulation {
         System.out.println("Time in sys : " + avgTimeInSystem.mean());
         System.out.println("vehicles: " + avgCOuntOfVehicles.mean());
         System.out.println("countOfCustomers: " + avgCountOfCustomers.mean());
-
 
     }
 
@@ -145,5 +152,47 @@ public class MySimulation extends Simulation {
     public Random getGeneratorOfGenerators() {
         return generatorOfGenerators;
     }
+
+    public LocalTime getTime() {
+        return LocalTime.of(9, 0).plusMinutes((long) currentTime());
+    }
+
+    public Stat getAvgWaitingTime() {
+        return avgWaitingTime;
+    }
+
+    public Stat getAvgQueueLength() {
+        return avgQueueLength;
+    }
+
+    public Stat getAvgTimeInSystem() {
+        return avgTimeInSystem;
+    }
+
+    public Stat getAvgFreeEmp1() {
+        return avgFreeEmp1;
+    }
+
+    public Stat getAvgFreeEmp2() {
+        return avgFreeEmp2;
+    }
+
+    public Stat getAvgCOuntOfVehicles() {
+        return avgCOuntOfVehicles;
+    }
+
+    public Stat getAvgCountOfCustomers() {
+        return avgCountOfCustomers;
+    }
+
+    public RunType getType() {
+        return type;
+    }
+
+    public void setType(RunType type) {
+        this.type = type;
+    }
+    
+    
 
 }

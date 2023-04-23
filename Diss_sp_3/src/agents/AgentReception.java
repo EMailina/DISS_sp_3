@@ -7,20 +7,22 @@ import OSPStat.WStat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
+import java.util.ArrayList;
+import objects.CustomerObject;
 
 //meta! id="3"
 public class AgentReception extends Agent {
 
-    private int totalCountOfEmployees = 1;
+    private int totalCountOfEmployees = 2;
     private int totalCountOfParkingPlaces = 5;
     private SimQueue<MessageForm> queueTakeOver;
-    private SimQueue<MessageForm> queueTakeOverTest;
     private SimQueue<MessageForm> queuePaying;
     private Stat waitingTimeStat;
     private WStat freeEmployersStat;
     private int countOfWorking = 0;
     private int countOfReservedParkingPlaces = 0;
     private SimQueue<MessageForm> employee;
+    private ArrayList<CustomerObject> guiEmployers;
 
     public AgentReception(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
@@ -31,14 +33,21 @@ public class AgentReception extends Agent {
     public void prepareReplication() {
         super.prepareReplication();
         queueTakeOver = new SimQueue<>(new WStat(_mySim));
-        queueTakeOverTest = new SimQueue<>(new WStat(_mySim));
         queuePaying = new SimQueue<>(new WStat(_mySim));
         waitingTimeStat = new Stat();
         freeEmployersStat = new WStat(_mySim);
         countOfWorking = 0;
         countOfReservedParkingPlaces = 0;
         employee = new SimQueue<>(new WStat(_mySim));
-        employee.add(null);
+        employee.clear();
+        for (int i = 0; i < totalCountOfEmployees; i++) {
+            employee.add(null);
+        }
+
+        guiEmployers = new ArrayList<>(totalCountOfEmployees);
+        for (int i = 0; i < totalCountOfEmployees; i++) {
+            guiEmployers.add(null);
+        }
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -160,14 +169,12 @@ public class AgentReception extends Agent {
         this.employee = employee;
     }
 
-    public SimQueue<MessageForm> getQueueTakeOverTest() {
-        return queueTakeOverTest;
+    public ArrayList<CustomerObject> getGuiEmployers() {
+        return guiEmployers;
     }
 
-    public void setQueueTakeOverTest(SimQueue<MessageForm> queueTakeOverTest) {
-        this.queueTakeOverTest = queueTakeOverTest;
+    public void setGuiEmployers(ArrayList<CustomerObject> guiEmployers) {
+        this.guiEmployers = guiEmployers;
     }
 
-    
-    
 }

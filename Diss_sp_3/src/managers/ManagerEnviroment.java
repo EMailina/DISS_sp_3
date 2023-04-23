@@ -34,17 +34,13 @@ public class ManagerEnviroment extends Manager {
     public void processNoticeCustomerLeave(MessageForm message) {
 
         myAgent().getAverageTimeInSystem().addSample(mySim().currentTime() - ((MyMessage) message).getCustomer().getStartOfWaitingForTakeOver());
-        if (mySim().currentTime() >= 476) {
-            System.out.println("");
-        }
+
 
         myAgent().getCustomers().remove(((MyMessage) message).getCustomer());
-        System.out.println("" + myAgent().getCustomers().size());
     }
 
     //meta! sender="SchedulerCustomerArrival", id="10", type="Finish"
     public void processFinish(MessageForm message) {
-        System.out.println("-------------------------------------SArrival " + ((MyMessage) message).getCustomer().getCount()+ " " +  mySim().currentTime() );
         myAgent().getCustomers().add(((MyMessage) message).getCustomer());
         message.setCode(Mc.noticeCustomerArrival);
         message.setAddressee(mySim().findAgent(Id.agentModel));

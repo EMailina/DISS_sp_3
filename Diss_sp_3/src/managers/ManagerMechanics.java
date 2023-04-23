@@ -4,6 +4,8 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import diss_sp_3.RunType;
+import objects.CustomerObject;
 
 //meta! id="4"
 public class ManagerMechanics extends Manager {
@@ -26,6 +28,7 @@ public class ManagerMechanics extends Manager {
     //meta! sender="AgentVehicleInspection", id="44", type="Request"
     public void processMechanicExecute(MessageForm message) {
         if (myAgent().getCountOfWorking() < myAgent().getTotalCountOfEmployees()) {
+            addToEmployer(((MyMessage) message).getCustomer());
             myAgent().addWorkingEmployee();
             message.setAddressee(myAgent().findAssistant(Id.processInsepction));
             startContinualAssistant(message);
@@ -36,6 +39,7 @@ public class ManagerMechanics extends Manager {
 
     //meta! sender="ProcessInsepction", id="28", type="Finish"
     public void processFinish(MessageForm message) {
+        removeFromEmployer(((MyMessage) message).getCustomer());
         myAgent().removeWorkingEmployee();
         System.out.println("END service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
@@ -92,4 +96,34 @@ public class ManagerMechanics extends Manager {
         response(message);
     }
 
+    public void addToEmployer(CustomerObject customer) {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+                if (myAgent().getGuiEmployers().get(i) == null) {
+
+                    myAgent().getGuiEmployers().set(i, customer);
+                    customer.setInspectionRewrite(true);
+//                    if (takeOver) {
+//                        customer.setTakeOverRewrite(true);
+//                    } else {
+//                        customer.setPaymentRewrite(true);
+//                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private void removeFromEmployer(CustomerObject customer) {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+                if (customer.equals(myAgent().getGuiEmployers().get(i))) {
+                    myAgent().getGuiEmployers().set(i, null);
+                    break;
+                }
+            }
+        }
+    }
 }

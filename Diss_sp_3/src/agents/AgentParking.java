@@ -6,12 +6,16 @@ import OSPStat.WStat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
+import diss_sp_3.RunType;
+import java.util.ArrayList;
+import objects.CustomerObject;
 
 //meta! id="5"
 public class AgentParking extends Agent {
 
     private int totalCountOfParkingPlaces = 5;
     private SimQueue<MessageForm> queue;
+    private ArrayList<CustomerObject> parkingPlaces;
 
     public AgentParking(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
@@ -23,6 +27,10 @@ public class AgentParking extends Agent {
         super.prepareReplication();
         // Setup component for the next replication
         queue = new SimQueue<>(new WStat(_mySim));
+        parkingPlaces = new ArrayList<>();
+        for (int i = 0; i < totalCountOfParkingPlaces; i++) {
+            parkingPlaces.add(null);
+        }
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -47,4 +55,14 @@ public class AgentParking extends Agent {
     public long getCOuntOfVehicles() {
         return queue.size();
     }
+
+    public ArrayList<CustomerObject> getParkingPlaces() {
+        return parkingPlaces;
+    }
+
+    public void setParkingPlaces(ArrayList<CustomerObject> parkingPlaces) {
+        this.parkingPlaces = parkingPlaces;
+    }
+
+   
 }

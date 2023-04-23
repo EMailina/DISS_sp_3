@@ -4,8 +4,10 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import diss_sp_3.RunType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import objects.CustomerObject;
 
 //meta! id="5"
 public class ManagerParking extends Manager {
@@ -93,6 +95,7 @@ public class ManagerParking extends Manager {
                 message.setCode(Mc.parkingPlaceInfoMechanics);
                 message.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
                 request(message);
+                addToParkingPlace(((MyMessage) message).getCustomer());
             } else {
                 throw new Exception("Parking places full!");
             }
@@ -109,6 +112,7 @@ public class ManagerParking extends Manager {
             nextMessage.setCountOfParkingPlaces(myAgent().getQueue().size());
             notice(nextMessage);
             System.out.println("Leave parking: " + ((MyMessage) nextMessage).getCustomer().getCount() + " " + mySim().currentTime());
+            removeFromParkingPlace(((MyMessage) message).getCustomer());
 
         }
 
@@ -122,7 +126,30 @@ public class ManagerParking extends Manager {
             nextMessage.setCountOfParkingPlaces(myAgent().getQueue().size());
             notice(nextMessage);
             System.out.println("Leave parking: " + ((MyMessage) nextMessage).getCustomer().getCount() + " " + mySim().currentTime());
+            removeFromParkingPlace(((MyMessage) message).getCustomer());
+        }
+    }
 
+    private void removeFromParkingPlace(CustomerObject customer) {
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < myAgent().getTotalCountOfParkingPlaces(); i++) {
+                if (customer.equals(myAgent().getParkingPlaces().get(i))) {
+                    myAgent().getParkingPlaces().set(i, null);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void addToParkingPlace(CustomerObject customer) {
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < myAgent().getTotalCountOfParkingPlaces(); i++) {
+                if (myAgent().getParkingPlaces().get(i) == null) {
+                    myAgent().getParkingPlaces().set(i, customer);
+                    customer.setParkingRewrite(true);
+                    break;
+                }
+            }
         }
     }
 

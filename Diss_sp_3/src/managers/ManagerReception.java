@@ -4,8 +4,10 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import diss_sp_3.RunType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import objects.CustomerObject;
 
 //meta! id="3"
 public class ManagerReception extends Manager {
@@ -36,7 +38,7 @@ public class ManagerReception extends Manager {
                     || myAgent().getCountOfReservedParkingPlaces() + ((MyMessage) message).getCountOfParkingPlaces() >= myAgent().getTotalCountOfParkingPlaces()) {
                 // ((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
                 //myAgent().getQueueTakeOver().enqueue(message);
-                myAgent().getQueueTakeOverTest().enqueue(message);
+
             } else {
                 //System.out.println("AFTER CHECK TIME: " + mySim().currentTime());
                 MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().dequeue();
@@ -65,6 +67,7 @@ public class ManagerReception extends Manager {
     //meta! sender="ProcessTakeOverVehicle", id="20", type="Finish"
     public void processFinishProcessTakeOverVehicle(MessageForm message) {
         try {
+            removeFromEmployer(((MyMessage) message).getCustomer());
             myAgent().removeWorkingEmployee();
             myAgent().removeReservedParkingPlace();
 
@@ -100,7 +103,7 @@ public class ManagerReception extends Manager {
         message.setAddressee(myAgent().findAssistant(Id.processTakeOverVehicle));
         startContinualAssistant(message);
         System.out.println("Start registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
-
+        addToEmployer(((MyMessage) message).getCustomer(), true);
     }
 
     private void startWorkOnPayment(MyMessage message) throws Exception {
@@ -109,11 +112,13 @@ public class ManagerReception extends Manager {
         myAgent().addWorkingEmployee();
         message.setAddressee(myAgent().findAssistant(Id.processPaying));
         startContinualAssistant(message);
+        addToEmployer(((MyMessage) message).getCustomer(), false);
     }
 
     //meta! sender="ProcessPaying", id="22", type="Finish"
     public void processFinishProcessPaying(MessageForm message) {
         try {
+            removeFromEmployer(((MyMessage) message).getCustomer());
             myAgent().removeWorkingEmployee();
 
             //payment
@@ -149,12 +154,12 @@ public class ManagerReception extends Manager {
                     || myAgent().getCountOfReservedParkingPlaces() >= myAgent().getTotalCountOfParkingPlaces()) {
 
                 myAgent().getQueueTakeOver().enqueue(message);
-                myAgent().getQueueTakeOverTest().enqueue(message);
+
                 //System.out.println("v rade:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
             } else {
                 //startWorkOnTakeOver((MyMessage) message);
                 MyMessage newMessage = (MyMessage) message.createCopy();
-               // System.out.println("BEFORE CHECK TIME: " + mySim().currentTime());
+                // System.out.println("BEFORE CHECK TIME: " + mySim().currentTime());
                 //System.out.println("" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
                 //((MyMessage) newMessage).setCustomer(((MyMessage) message).getCustomer());
                 newMessage.setCode(Mc.checkParkingPlace);
@@ -238,11 +243,10 @@ public class ManagerReception extends Manager {
 
     private void processNoticeFreeParking(MessageForm message) {
         try {
-            if (myAgent().getCountOfWorkingEmployees() < myAgent().getTotalCountOfEmployees()
-                    || myAgent().getCountOfReservedParkingPlaces() /*+ ((MyMessage) message).getCountOfParkingPlaces() */ >= myAgent().getTotalCountOfParkingPlaces()) {
+            if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfWorkingEmployees() < myAgent().getTotalCountOfEmployees()
+                    && myAgent().getCountOfReservedParkingPlaces() /*+ ((MyMessage) message).getCountOfParkingPlaces() */ < myAgent().getTotalCountOfParkingPlaces()) {
                 //((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
                 MyMessage mess = (MyMessage) myAgent().getQueueTakeOver().dequeue();
-                myAgent().getQueueTakeOverTest().dequeue();
                 startWorkOnTakeOver((MyMessage) mess);
             }
         } catch (Exception ex) {
@@ -250,4 +254,33 @@ public class ManagerReception extends Manager {
         }
     }
 
+    public void addToEmployer(CustomerObject customer, boolean takeOver) {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+                if (myAgent().getGuiEmployers().get(i) == null) {
+
+                    myAgent().getGuiEmployers().set(i, customer);
+                    if (takeOver) {
+                        customer.setTakeOverRewrite(true);
+                    } else {
+                        customer.setPaymentRewrite(true);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private void removeFromEmployer(CustomerObject customer) {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+                if (customer.equals(myAgent().getGuiEmployers().get(i))) {
+                    myAgent().getGuiEmployers().set(i, null);
+                    break;
+                }
+            }
+        }
+    }
 }
