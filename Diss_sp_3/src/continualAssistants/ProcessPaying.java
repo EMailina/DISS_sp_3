@@ -19,7 +19,10 @@ public class ProcessPaying extends Process {
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-        paymentTimeDistribution = new UniformContinuousRNG((double) 65 / 60, (double) 177 / 60, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        if (mySim().currentReplication() == 0) {
+
+            paymentTimeDistribution = new UniformContinuousRNG((double) 65 / 60, (double) 177 / 60, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        }
     }
 
     //meta! sender="AgentReception", id="22", type="Start"

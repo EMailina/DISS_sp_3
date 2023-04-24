@@ -14,14 +14,15 @@ public class ProcessTakeOverVehicle extends Process {
 
     public ProcessTakeOverVehicle(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
-      
+
     }
 
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-        takeOverVehicleDistribution = new TriangularRNG((double) 180 / 60, (double) 431 / 60, (double) 695 / 60, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-
+        if (mySim().currentReplication() == 0) {
+            takeOverVehicleDistribution = new TriangularRNG((double) 180 / 60, (double) 431 / 60, (double) 695 / 60, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        }
     }
 
     //meta! sender="AgentReception", id="20", type="Start"

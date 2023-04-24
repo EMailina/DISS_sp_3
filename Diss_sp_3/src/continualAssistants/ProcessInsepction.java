@@ -27,30 +27,31 @@ public class ProcessInsepction extends Process {
     public void prepareReplication() {
         super.prepareReplication();
 
-        inspectionTimeCarDistribution = new UniformDiscreteRNG(31, 45, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        if (mySim().currentReplication() == 0) {
+            inspectionTimeCarDistribution = new UniformDiscreteRNG(31, 45, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
 
-        ArrayList<EmpiricPair> list = new ArrayList<>();
-        list.add(new EmpiricPair(new UniformDiscreteRNG(35, 37, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.2));
-        list.add(new EmpiricPair(new UniformDiscreteRNG(38, 40, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.35));
-        list.add(new EmpiricPair(new UniformDiscreteRNG(41, 47, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.3));
-        list.add(new EmpiricPair(new UniformDiscreteRNG(48, 52, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.15));
+            ArrayList<EmpiricPair> list = new ArrayList<>();
+            list.add(new EmpiricPair(new UniformDiscreteRNG(35, 37, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.2));
+            list.add(new EmpiricPair(new UniformDiscreteRNG(38, 40, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.35));
+            list.add(new EmpiricPair(new UniformDiscreteRNG(41, 47, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.3));
+            list.add(new EmpiricPair(new UniformDiscreteRNG(48, 52, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.15));
 
-        EmpiricPair[] obj = new EmpiricPair[list.size()];
-        obj = list.toArray(obj);
-        inspectionTimeVanDistribution = new EmpiricRNG(((MySimulation) this.mySim()).getGeneratorOfGenerators(), obj);
+            EmpiricPair[] obj = new EmpiricPair[list.size()];
+            obj = list.toArray(obj);
+            inspectionTimeVanDistribution = new EmpiricRNG(((MySimulation) this.mySim()).getGeneratorOfGenerators(), obj);
 
-        obj = null;
-        list = new ArrayList<>();
-        list.add(new EmpiricPair(new UniformDiscreteRNG(37, 42, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.05));
-        list.add(new EmpiricPair(new UniformDiscreteRNG(43, 45, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.1));
-        list.add(new EmpiricPair(new UniformDiscreteRNG(46, 47, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.15));
-        list.add(new EmpiricPair(new UniformDiscreteRNG(48, 51, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.4));
-        list.add(new EmpiricPair(new UniformDiscreteRNG(42, 55, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.25));
-        list.add(new EmpiricPair(new UniformDiscreteRNG(56, 65, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.05));
-        obj = new EmpiricPair[list.size()];
-        obj = list.toArray(obj);
-        inspectionTimeTruckDistribution = new EmpiricRNG(((MySimulation) this.mySim()).getGeneratorOfGenerators(), obj);
-
+            obj = null;
+            list = new ArrayList<>();
+            list.add(new EmpiricPair(new UniformDiscreteRNG(37, 42, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.05));
+            list.add(new EmpiricPair(new UniformDiscreteRNG(43, 45, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.1));
+            list.add(new EmpiricPair(new UniformDiscreteRNG(46, 47, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.15));
+            list.add(new EmpiricPair(new UniformDiscreteRNG(48, 51, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.4));
+            list.add(new EmpiricPair(new UniformDiscreteRNG(52, 55, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.25));
+            list.add(new EmpiricPair(new UniformDiscreteRNG(56, 65, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.05));
+            obj = new EmpiricPair[list.size()];
+            obj = list.toArray(obj);
+            inspectionTimeTruckDistribution = new EmpiricRNG(((MySimulation) this.mySim()).getGeneratorOfGenerators(), obj);
+        }
     }
 
     //meta! sender="AgentMechanics", id="28", type="Start"

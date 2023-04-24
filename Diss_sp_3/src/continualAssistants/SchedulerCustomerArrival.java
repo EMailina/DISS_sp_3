@@ -21,10 +21,13 @@ public class SchedulerCustomerArrival extends Scheduler {
 
     @Override
     public void prepareReplication() {
+
         super.prepareReplication();
-        arrivalExponentialDistribution = new ExponentialRNG((double) 60 / 23, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-        vehicleDistribution = new UniformContinuousRNG((double) 0, (double) 1, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-        count = 1;
+        if (mySim().currentReplication() == 0) {
+            arrivalExponentialDistribution = new ExponentialRNG((double) 60 / 23, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+            vehicleDistribution = new UniformContinuousRNG((double) 0, (double) 1, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+            count = 1;
+        }
     }
 
     //meta! sender="AgentEnviroment", id="10", type="Start"
@@ -67,13 +70,15 @@ public class SchedulerCustomerArrival extends Scheduler {
     private void processCustomerArrival(MessageForm message) {
         double time = arrivalExponentialDistribution.sample();
         MessageForm copy = message.createCopy();
-       
 
         if (mySim().currentTime() + time <= 405.0) {
             hold(time, copy);
         }
         CustomerObject customer = new CustomerObject();
         customer.setCount(count);
+        if (count == 48) {
+            System.out.println("");
+        }
         count++;
         customer.setProbabilityVehicle(vehicleDistribution.sample());
         ((MyMessage) message).setCustomer(customer);

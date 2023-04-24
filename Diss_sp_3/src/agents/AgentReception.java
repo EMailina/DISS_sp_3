@@ -8,6 +8,7 @@ import simulation.*;
 import managers.*;
 import continualAssistants.*;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import objects.CustomerObject;
 
 //meta! id="3"
@@ -16,6 +17,7 @@ public class AgentReception extends Agent {
     private int totalCountOfEmployees = 2;
     private int totalCountOfParkingPlaces = 5;
     private SimQueue<MessageForm> queueTakeOver;
+    private ConcurrentLinkedQueue<MessageForm> queueTakeOverGui;
     private SimQueue<MessageForm> queuePaying;
     private Stat waitingTimeStat;
     private WStat freeEmployersStat;
@@ -32,7 +34,9 @@ public class AgentReception extends Agent {
     @Override
     public void prepareReplication() {
         super.prepareReplication();
+
         queueTakeOver = new SimQueue<>(new WStat(_mySim));
+        queueTakeOverGui = new ConcurrentLinkedQueue<>();
         queuePaying = new SimQueue<>(new WStat(_mySim));
         waitingTimeStat = new Stat();
         freeEmployersStat = new WStat(_mySim);
@@ -48,6 +52,7 @@ public class AgentReception extends Agent {
         for (int i = 0; i < totalCountOfEmployees; i++) {
             guiEmployers.add(null);
         }
+
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -175,6 +180,14 @@ public class AgentReception extends Agent {
 
     public void setGuiEmployers(ArrayList<CustomerObject> guiEmployers) {
         this.guiEmployers = guiEmployers;
+    }
+
+    public void setTotalCountOfEmployees(int totalCountOfEmployees) {
+        this.totalCountOfEmployees = totalCountOfEmployees;
+    }
+
+    public ConcurrentLinkedQueue<MessageForm> getQueueTakeOverGui() {
+        return queueTakeOverGui;
     }
 
 }

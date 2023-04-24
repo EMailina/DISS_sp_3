@@ -110,4 +110,7 @@ public class AgentMechanics extends Agent {
         this.guiEmployers = guiEmployers;
     }
 
+    public void setTotalCountOfEmployees(int totalCountOfEmployees) {
+        this.totalCountOfEmployees = totalCountOfEmployees;
+    }
 }

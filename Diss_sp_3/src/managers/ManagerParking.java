@@ -29,9 +29,7 @@ public class ManagerParking extends Manager {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
-        if (message.code() == Mc.customerService) {
-            System.out.println("park");
-        }
+       
         switch (message.code()) {
         }
     }
@@ -81,7 +79,7 @@ public class ManagerParking extends Manager {
 //        notice(message);
 //    }
     private void processParkingPlaceInfo(MessageForm message) {
-        System.out.println("Posielam stav do recepcie: Q: " + myAgent().getQueue().size());
+        //System.out.println("Posielam stav do recepcie: Q: " + myAgent().getQueue().size());
         ((MyMessage) message).setCountOfParkingPlaces(myAgent().getQueue().size());
         response(message);
     }
@@ -90,7 +88,7 @@ public class ManagerParking extends Manager {
         try {
             if (myAgent().getQueue().size() < myAgent().getTotalCountOfParkingPlaces()) {
                 myAgent().getQueue().enqueue(message);
-                System.out.println("Added to parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime() + " Q: " + myAgent().getQueue().size());
+                //System.out.println("Added to parking: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime() + " Q: " + myAgent().getQueue().size());
 
                 message.setCode(Mc.parkingPlaceInfoMechanics);
                 message.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
@@ -111,8 +109,8 @@ public class ManagerParking extends Manager {
             nextMessage.setAddressee(Id.agentVehicleInspection);
             nextMessage.setCountOfParkingPlaces(myAgent().getQueue().size());
             notice(nextMessage);
-            System.out.println("Leave parking: " + ((MyMessage) nextMessage).getCustomer().getCount() + " " + mySim().currentTime());
-            removeFromParkingPlace(((MyMessage) message).getCustomer());
+            //System.out.println("Leave parking: " + ((MyMessage) nextMessage).getCustomer().getCount() + " " + mySim().currentTime());
+            removeFromParkingPlace(((MyMessage) nextMessage).getCustomer());
 
         }
 
@@ -125,8 +123,8 @@ public class ManagerParking extends Manager {
             nextMessage.setAddressee(Id.agentVehicleInspection);
             nextMessage.setCountOfParkingPlaces(myAgent().getQueue().size());
             notice(nextMessage);
-            System.out.println("Leave parking: " + ((MyMessage) nextMessage).getCustomer().getCount() + " " + mySim().currentTime());
-            removeFromParkingPlace(((MyMessage) message).getCustomer());
+            //System.out.println("Leave parking: " + ((MyMessage) nextMessage).getCustomer().getCount() + " " + mySim().currentTime());
+            removeFromParkingPlace(((MyMessage) nextMessage).getCustomer());
         }
     }
 

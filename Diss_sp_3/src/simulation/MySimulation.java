@@ -27,7 +27,6 @@ public class MySimulation extends Simulation {
     public MySimulation(RunType type) {
         this.type = type;
     }
-    
 
     @Override
     public void prepareSimulation() {
@@ -54,6 +53,15 @@ public class MySimulation extends Simulation {
     public void replicationFinished() {
         // Collect local statistics into global, update UI, etc...
         super.replicationFinished();
+        agentReception().getQueueTakeOver().enqueue(null);
+        agentReception().getQueueTakeOver().dequeue();
+        agentReception().getEmployee().enqueue(null);
+        agentReception().getEmployee().dequeue();
+        agentEnviroment().getCustomers().enqueue(null);
+        agentEnviroment().getCustomers().dequeue();
+        agentMechanics().getEmployee().enqueue(null);
+        agentMechanics().getEmployee().dequeue();
+        
         avgWaitingTime.addSample(_agentReception.getStatWaitingTime().mean());
         avgQueueLength.addSample(_agentReception.getQueueTakeOverAvgLength().mean());
         avgTimeInSystem.addSample(_agentEnviroment.getAverageTimeInSystem().mean());
@@ -86,6 +94,7 @@ public class MySimulation extends Simulation {
         setAgentReception(new AgentReception(Id.agentReception, this, agentVehicleInspection()));
         setAgentMechanics(new AgentMechanics(Id.agentMechanics, this, agentVehicleInspection()));
         setAgentParking(new AgentParking(Id.agentParking, this, agentVehicleInspection()));
+
     }
 
     private AgentModel _agentModel;
@@ -192,7 +201,32 @@ public class MySimulation extends Simulation {
     public void setType(RunType type) {
         this.type = type;
     }
-    
-    
+
+    public void setCountOfEmployeeType1(Integer count) {
+        _agentReception.setTotalCountOfEmployees(count);
+    }
+
+    public void setCountOfEmployeeType2(Integer count) {
+        _agentMechanics.setTotalCountOfEmployees(count);
+    }
+
+    public void setSpeedChange(int value) {
+
+        if (type == RunType.SIMULATION) {
+
+            if (value == 1) {
+                setSimSpeed(1, 1);
+            } else if (value == 2) {
+                setSimSpeed(1, 0.350);
+            } else if (value == 3) {
+                setSimSpeed(1, 0.125);
+            } else if (value == 4) {
+                setSimSpeed(5, 0.250);
+            } else {
+                setSimSpeed(15, 0.50);
+            }
+        }
+
+    }
 
 }

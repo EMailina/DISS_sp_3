@@ -49,9 +49,7 @@ public class ManagerEnviroment extends Manager {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
-        if (message.code() == Mc.customerService) {
-            System.out.println("env");
-        }
+      
         switch (message.code()) {
         }
     }
