@@ -8,17 +8,17 @@ public class MyMessage extends MessageForm {
     private CustomerObject customer = new CustomerObject();
     private int countOfParkingPlaces;
     private boolean availableEmployee;
-
+    private double processStartTime;
+ 
     public MyMessage(Simulation sim) {
         super(sim);
-
     }
 
     public MyMessage(MyMessage original) {
         super(original);
         // copy() is called in superclass
         customer = original.customer;
-
+        processStartTime = original.processStartTime;
         countOfParkingPlaces = original.getCountOfParkingPlaces();
         availableEmployee = original.isAvailableEmployee();
     }
@@ -50,6 +50,14 @@ public class MyMessage extends MessageForm {
 
     public void setAvailableEmployee(boolean availableEmployee) {
         this.availableEmployee = availableEmployee;
+    }
+
+    public double getProcessStartTime() {
+        return processStartTime;
+    }
+
+    public void setProcessStartTime(double processStartTime) {
+        this.processStartTime = processStartTime;
     }
 
 }

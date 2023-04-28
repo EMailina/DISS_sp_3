@@ -18,13 +18,19 @@ public class AgentReception extends Agent {
     private int totalCountOfParkingPlaces = 5;
     private SimQueue<MessageForm> queueTakeOver;
     private ConcurrentLinkedQueue<MessageForm> queueTakeOverGui;
+    private ConcurrentLinkedQueue<MessageForm> queuePayingGui;
     private SimQueue<MessageForm> queuePaying;
     private Stat waitingTimeStat;
     private WStat freeEmployersStat;
     private int countOfWorking = 0;
+    private int countOfPaused = 0;
+    
     private int countOfReservedParkingPlaces = 0;
     private SimQueue<MessageForm> employee;
     private ArrayList<CustomerObject> guiEmployers;
+    private boolean pauseTimeStarted = false;
+    private double pauseTimeStartedTime = Double.MAX_VALUE;
+    private int pauseCounter = 0;
 
     public AgentReception(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
@@ -37,22 +43,26 @@ public class AgentReception extends Agent {
 
         queueTakeOver = new SimQueue<>(new WStat(_mySim));
         queueTakeOverGui = new ConcurrentLinkedQueue<>();
+        queuePayingGui = new ConcurrentLinkedQueue<>();
         queuePaying = new SimQueue<>(new WStat(_mySim));
         waitingTimeStat = new Stat();
         freeEmployersStat = new WStat(_mySim);
         countOfWorking = 0;
+        countOfPaused = 0;
         countOfReservedParkingPlaces = 0;
         employee = new SimQueue<>(new WStat(_mySim));
         employee.clear();
         for (int i = 0; i < totalCountOfEmployees; i++) {
             employee.add(null);
         }
+        pauseTimeStartedTime = Double.MAX_VALUE;
 
         guiEmployers = new ArrayList<>(totalCountOfEmployees);
         for (int i = 0; i < totalCountOfEmployees; i++) {
             guiEmployers.add(null);
         }
-
+        pauseTimeStarted = false;
+        pauseCounter = 0;
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -60,6 +70,7 @@ public class AgentReception extends Agent {
         new ManagerReception(Id.managerReception, mySim(), this);
         new ProcessTakeOverVehicle(Id.processTakeOverVehicle, mySim(), this);
         new ProcessPaying(Id.processPaying, mySim(), this);
+        new ProcessLunchPauseReception(Id.processLunchPauseReception, mySim(), this);
 
         addOwnMessage(Mc.checkParkingPlace);
         addOwnMessage(Mc.paymentExecute);
@@ -67,6 +78,8 @@ public class AgentReception extends Agent {
         addOwnMessage(Mc.noticeEndTakeOver);
         addOwnMessage(Mc.noticeEndPaying);
         addOwnMessage(Mc.noticeFreeParking);
+        addOwnMessage(Mc.noticeLunchPause);
+        addOwnMessage(Mc.noticeEndPause);
     }
     //meta! tag="end"
 
@@ -83,7 +96,7 @@ public class AgentReception extends Agent {
     }
 
     public int getCountOfWorkingEmployees() {
-        return countOfWorking;
+        return countOfWorking + countOfPaused;
     }
 
     public int getCountOfReservedParkingPlaces() {
@@ -103,6 +116,19 @@ public class AgentReception extends Agent {
         } else {
             throw new Exception("Any free workers(type 1)!");
         }
+    }
+
+    public void addPausedEmployees() {
+        countOfPaused = totalCountOfEmployees - countOfWorking;
+        for (int i = 0; i < countOfPaused; i++) {
+            employee.remove(0);
+        }
+        
+    }
+
+    public void removePausedEmployees() {
+        countOfPaused--;
+        employee.add(null);
     }
 
     public void addReservedParkingPlace() throws java.lang.Exception {
@@ -190,4 +216,51 @@ public class AgentReception extends Agent {
         return queueTakeOverGui;
     }
 
+    public int getCountOfPaused() {
+        return countOfPaused;
+    }
+
+    public void setCountOfPaused(int countOfPaused) {
+        this.countOfPaused = countOfPaused;
+    }
+
+    public boolean isPauseTimeStarted() {
+        return pauseTimeStarted;
+    }
+
+    public void setPauseTimeStarted(boolean pauseTimeStarted) {
+        this.pauseTimeStarted = pauseTimeStarted;
+    }
+
+    public void addEmployeeToPause() {
+        countOfPaused++;
+        employee.remove(0);
+    }
+
+    public int getPauseCounter() {
+        return pauseCounter;
+    }
+
+    public void addPauseCounter() {
+        this.pauseCounter++;
+    }
+
+    public double getPauseTimeStartedTime() {
+        return pauseTimeStartedTime;
+    }
+
+    public void setPauseTimeStartedTime(double pauseTimeStartedTime) {
+        this.pauseTimeStartedTime = pauseTimeStartedTime;
+    }
+
+    public ConcurrentLinkedQueue<MessageForm> getQueuePayingGui() {
+        return queuePayingGui;
+    }
+
+    public void setQueuePayingGui(ConcurrentLinkedQueue<MessageForm> queuePayingGui) {
+        this.queuePayingGui = queuePayingGui;
+    }
+
+    
+    
 }

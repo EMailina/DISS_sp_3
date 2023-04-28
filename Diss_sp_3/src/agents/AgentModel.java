@@ -25,6 +25,7 @@ public class AgentModel extends Agent {
         addOwnMessage(Mc.init);
         addOwnMessage(Mc.customerService);
         addOwnMessage(Mc.noticeCustomerArrival);
+        addOwnMessage(Mc.noticeLunchPause);
     }
     //meta! tag="end"
 

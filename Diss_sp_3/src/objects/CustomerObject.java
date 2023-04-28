@@ -24,10 +24,19 @@ public class CustomerObject {
     private boolean parkingRewrite = false;
     private boolean waitingForPayment = false;
     private boolean park = false;
+    private boolean pause = false;
 
     public CustomerObject() {
        
 
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
     }
 
     public void setProbabilityVehicle(double probabilityVehicle) {

@@ -32,7 +32,7 @@ public class ManagerVehicleInspection extends Manager {
         MessageForm newMessage = message.createCopy();
 
         newMessage.setCode(Mc.noticeFreeMechanic);
-        ((MyMessage) newMessage).setAvailableEmployee(true);
+        
         newMessage.setAddressee(mySim().findAgent(Id.agentParking));
         notice(newMessage);
     }
@@ -78,7 +78,7 @@ public class ManagerVehicleInspection extends Manager {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
-       
+
         switch (message.code()) {
         }
     }
@@ -126,6 +126,14 @@ public class ManagerVehicleInspection extends Manager {
                 processMechanicsAvailability(message);
                 break;
 
+            case Mc.noticeLunchPause:
+                processNoticeLunchPause(message);
+                break;
+
+            case Mc.noticeFreeMechanic:
+                processNoticeFreeMechanic(message);
+                break;
+
             default:
                 processDefault(message);
                 break;
@@ -165,6 +173,23 @@ public class ManagerVehicleInspection extends Manager {
     private void processMechanicsAvailability(MessageForm message) {
         message.setCode(Mc.parkingPlaceInfoMechanics);
         response(message);
+    }
+
+    private void processNoticeLunchPause(MessageForm message) {
+        message.setCode(Mc.noticeLunchPause);
+        message.setAddressee(mySim().findAgent(Id.agentMechanics));
+        notice(message);
+
+        MessageForm newMessage = message.createCopy();
+        newMessage.setAddressee(mySim().findAgent(Id.agentReception));
+        notice(newMessage);
+    }
+
+    private void processNoticeFreeMechanic(MessageForm message) {
+        message.setCode(Mc.noticeFreeMechanic);
+        ((MyMessage) message).setAvailableEmployee(true);
+        message.setAddressee(mySim().findAgent(Id.agentParking));
+        notice(message);
     }
 
 }

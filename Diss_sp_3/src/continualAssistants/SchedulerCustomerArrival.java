@@ -16,26 +16,22 @@ public class SchedulerCustomerArrival extends Scheduler {
 
     public SchedulerCustomerArrival(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
-
+  arrivalExponentialDistribution = new ExponentialRNG((double) 60 / 23, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+            vehicleDistribution = new UniformContinuousRNG((double) 0, (double) 1, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+            count = 1;
     }
 
     @Override
     public void prepareReplication() {
 
         super.prepareReplication();
-        if (mySim().currentReplication() == 0) {
-            arrivalExponentialDistribution = new ExponentialRNG((double) 60 / 23, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-            vehicleDistribution = new UniformContinuousRNG((double) 0, (double) 1, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-            count = 1;
-        }
+      count = 1;
     }
 
     //meta! sender="AgentEnviroment", id="10", type="Start"
     public void processStart(MessageForm message) {
         message.setCode(Mc.noticeCustomerArrival);
         hold(arrivalExponentialDistribution.sample(), message);
-        // processCustomerArrival(message);
-
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
@@ -55,6 +51,7 @@ public class SchedulerCustomerArrival extends Scheduler {
             case Mc.noticeCustomerArrival:
                 processCustomerArrival(message);
                 break;
+                
             default:
                 processDefault(message);
                 break;
@@ -76,9 +73,6 @@ public class SchedulerCustomerArrival extends Scheduler {
         }
         CustomerObject customer = new CustomerObject();
         customer.setCount(count);
-        if (count == 48) {
-            System.out.println("");
-        }
         count++;
         customer.setProbabilityVehicle(vehicleDistribution.sample());
         ((MyMessage) message).setCustomer(customer);

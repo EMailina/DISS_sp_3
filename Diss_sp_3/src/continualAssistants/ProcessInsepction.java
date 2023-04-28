@@ -21,14 +21,8 @@ public class ProcessInsepction extends Process {
 
     public ProcessInsepction(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
-    }
-
-    @Override
-    public void prepareReplication() {
-        super.prepareReplication();
-
-        if (mySim().currentReplication() == 0) {
-            inspectionTimeCarDistribution = new UniformDiscreteRNG(31, 45, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        
+         inspectionTimeCarDistribution = new UniformDiscreteRNG(31, 45, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
 
             ArrayList<EmpiricPair> list = new ArrayList<>();
             list.add(new EmpiricPair(new UniformDiscreteRNG(35, 37, ((MySimulation) this.mySim()).getGeneratorOfGenerators()), 0.2));
@@ -51,7 +45,14 @@ public class ProcessInsepction extends Process {
             obj = new EmpiricPair[list.size()];
             obj = list.toArray(obj);
             inspectionTimeTruckDistribution = new EmpiricRNG(((MySimulation) this.mySim()).getGeneratorOfGenerators(), obj);
-        }
+     
+    }
+
+    @Override
+    public void prepareReplication() {
+        super.prepareReplication();
+
+       
     }
 
     //meta! sender="AgentMechanics", id="28", type="Start"
@@ -60,13 +61,14 @@ public class ProcessInsepction extends Process {
         if (((MyMessage) message).getCustomer().getProbabilityVehicle() < CAR_PROBABILITY) {
             hold((double) inspectionTimeCarDistribution.sample().doubleValue(), message);
         } else if (((MyMessage) message).getCustomer().getProbabilityVehicle() < VAN_PROBABILITY + CAR_PROBABILITY) {
-            hold((inspectionTimeVanDistribution.sample().doubleValue()), message);
+            hold((double)(inspectionTimeVanDistribution.sample().doubleValue()), message);
         } else {
             hold((double) inspectionTimeTruckDistribution.sample().doubleValue(), message);
         }
+        ((MyMessage)message).setProcessStartTime(mySim().currentTime());
     }
+    
     //meta! userInfo="Process messages defined in code", id="0"
-
     public void processDefault(MessageForm message) {
         switch (message.code()) {
         }

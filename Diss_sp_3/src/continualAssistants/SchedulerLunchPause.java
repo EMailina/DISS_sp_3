@@ -3,32 +3,27 @@ package continualAssistants;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
-import OSPABA.Process;
-import OSPRNG.TriangularRNG;
-import OSPRNG.UniformContinuousRNG;
 
-//meta! id="21"
-public class ProcessPaying extends Process {
+//meta! id="77"
+public class SchedulerLunchPause extends Scheduler {
 
-    private UniformContinuousRNG paymentTimeDistribution;
+    private int constPauseTime = 120;
 
-    public ProcessPaying(int id, Simulation mySim, CommonAgent myAgent) {
+    public SchedulerLunchPause(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
-        paymentTimeDistribution = new UniformContinuousRNG((double) 65 / 60, (double) 177 / 60, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-     
     }
 
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-  
+        // Setup component for the next replication
     }
 
-    //meta! sender="AgentReception", id="22", type="Start"
+    //meta! sender="AgentEnviroment", id="78", type="Start"
     public void processStart(MessageForm message) {
-        message.setCode(Mc.noticeEndPaying);
-        hold(paymentTimeDistribution.sample(), message);
-        ((MyMessage)message).setProcessStartTime(mySim().currentTime());
+        message.setCode(Mc.noticeLunchPause);
+        ((MyMessage) message).setCustomer(null);
+        hold(constPauseTime, message);
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
@@ -44,9 +39,11 @@ public class ProcessPaying extends Process {
             case Mc.start:
                 processStart(message);
                 break;
-            case Mc.noticeEndPaying:
-                processEndPaying(message);
+
+            case Mc.noticeLunchPause:
+                processNoticeLunchPause(message);
                 break;
+
             default:
                 processDefault(message);
                 break;
@@ -55,11 +52,11 @@ public class ProcessPaying extends Process {
     //meta! tag="end"
 
     @Override
-    public AgentReception myAgent() {
-        return (AgentReception) super.myAgent();
+    public AgentEnviroment myAgent() {
+        return (AgentEnviroment) super.myAgent();
     }
 
-    private void processEndPaying(MessageForm message) {
+    private void processNoticeLunchPause(MessageForm message) {
         assistantFinished(message);
     }
 

@@ -20,6 +20,11 @@ public class AgentMechanics extends Agent {
     private WStat freeEmployersStat;
     private ArrayList<CustomerObject> guiEmployers;
 
+    private int countOfPaused = 0;
+    private boolean pauseTimeStarted = false;
+    private double pauseTimeStartedTime = Double.MAX_VALUE;
+    private int pauseCounter = 0;
+
     public AgentMechanics(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
         init();
@@ -40,15 +45,23 @@ public class AgentMechanics extends Agent {
         for (int i = 0; i < totalCountOfEmployees; i++) {
             guiEmployers.add(null);
         }
+        countOfPaused = 0;
+        pauseTimeStarted = false;
+        pauseTimeStartedTime = Double.MAX_VALUE;
+        pauseCounter = 0;
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
     private void init() {
         new ManagerMechanics(Id.managerMechanics, mySim(), this);
         new ProcessInsepction(Id.processInsepction, mySim(), this);
+        new ProcessLunchPauseInspection(Id.processLunchPauseInspection, mySim(), this);
+
         addOwnMessage(Mc.mechanicExecute);
         addOwnMessage(Mc.mechanicsAvailability);
         addOwnMessage(Mc.noticeEndInspection);
+        addOwnMessage(Mc.noticeLunchPause);
+        addOwnMessage(Mc.noticeEndPause);
     }
     //meta! tag="end"
 
@@ -57,7 +70,7 @@ public class AgentMechanics extends Agent {
     }
 
     public int getCountOfWorking() {
-        return countOfWorking;
+        return countOfWorking + countOfPaused;
     }
 
     public void addWorkingEmployee() {
@@ -113,4 +126,60 @@ public class AgentMechanics extends Agent {
     public void setTotalCountOfEmployees(int totalCountOfEmployees) {
         this.totalCountOfEmployees = totalCountOfEmployees;
     }
+
+    public int getCountOfPaused() {
+        return countOfPaused;
+    }
+
+    public void setCountOfPaused(int countOfPaused) {
+        this.countOfPaused = countOfPaused;
+    }
+
+    public boolean isPauseTimeStarted() {
+        return pauseTimeStarted;
+    }
+
+    public void setPauseTimeStarted(boolean pauseTimeStarted) {
+        this.pauseTimeStarted = pauseTimeStarted;
+    }
+
+    public double getPauseTimeStartedTime() {
+        return pauseTimeStartedTime;
+    }
+
+    public void setPauseTimeStartedTime(double pauseTimeStartedTime) {
+        this.pauseTimeStartedTime = pauseTimeStartedTime;
+    }
+
+    public int getPauseCounter() {
+        return pauseCounter;
+    }
+
+    public void setPauseCounter(int pauseCounter) {
+        this.pauseCounter = pauseCounter;
+    }
+
+    public void addPausedEmployees() {
+        countOfPaused = totalCountOfEmployees - countOfWorking;
+        for (int i = 0; i < countOfPaused; i++) {
+            employee.remove(0);
+        }
+    }
+
+    public void removePausedEmployees() {
+        countOfPaused--;
+
+        employee.add(null);
+
+    }
+
+    public void addPauseCounter() {
+        this.pauseCounter++;
+    }
+
+    public void addEmployeeToPause() {
+        countOfPaused++;
+        employee.remove(0);
+    }
+
 }

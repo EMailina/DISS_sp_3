@@ -17,14 +17,18 @@ public class Mc extends IdList {
     public static final int init = 1016;
     public static final int paymentExecute = 1021;
     public static final int checkParkingPlace = 1027;
-    //meta! tag="end"
+    public static final int noticeLunchPause = 1035;
+    public static final int noticeCustomerService = 1039;
 
+    //meta! tag="end"
     // 1..1000 range reserved for user
     public static final int noticeEndTakeOver = 1;
     public static final int noticeEndInspection = 2;
     public static final int noticeEndPaying = 3;
+    public static final int noticeFreeMechanic = 6;
+    public static final int noticeEndPause = 7;
     public static final int parkingPlaceInfoMechanics = 4;
     public static final int mechanicsAvailability = 5;
-    public static final int noticeFreeMechanic = 6;
+  
 
 }

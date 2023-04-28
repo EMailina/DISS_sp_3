@@ -32,6 +32,9 @@ public class AgentVehicleInspection extends Agent {
         addOwnMessage(Mc.parkingPlaceInfoMechanics);
         addOwnMessage(Mc.mechanicsAvailability);
         addOwnMessage(Mc.mechanicsAvailability);
+        addOwnMessage(Mc.noticeLunchPause);
+        addOwnMessage(Mc.noticeFreeMechanic);
+   
     }
     //meta! tag="end"
 }

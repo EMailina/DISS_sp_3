@@ -5,6 +5,8 @@ import simulation.*;
 import agents.*;
 import continualAssistants.*;
 import diss_sp_3.RunType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import objects.CustomerObject;
 
 //meta! id="4"
@@ -30,9 +32,10 @@ public class ManagerMechanics extends Manager {
         if (myAgent().getCountOfWorking() < myAgent().getTotalCountOfEmployees()) {
             addToEmployer(((MyMessage) message).getCustomer());
             myAgent().addWorkingEmployee();
+            ((MyMessage) message).setProcessStartTime(mySim().currentTime());
             message.setAddressee(myAgent().findAssistant(Id.processInsepction));
             startContinualAssistant(message);
-           // System.out.println("Start service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+            //System.out.println("Start service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
         }
     }
@@ -41,15 +44,35 @@ public class ManagerMechanics extends Manager {
     public void processFinish(MessageForm message) {
         removeFromEmployer(((MyMessage) message).getCustomer());
         myAgent().removeWorkingEmployee();
-       // System.out.println("END service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+        // System.out.println("END service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
-        message.setCode(Mc.mechanicExecute);
-        response(message);
+        boolean pause = false;
+        //pause
+        if (myAgent().isPauseTimeStarted()) {
+            if (((MyMessage) message).getProcessStartTime() < myAgent().getPauseTimeStartedTime()) {
+                addPauseToEmployerGui();
+                MyMessage newMessage = (MyMessage)  message.createCopy();
+                myAgent().addEmployeeToPause();
+                newMessage.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
+                startContinualAssistant(newMessage);
+                pause = true;
+            }
+
+        }
+        if (!pause) {
+            ((MyMessage) message).setAvailableEmployee(true);
+            message.setCode(Mc.mechanicExecute);
+            response(message);
+        }else{
+            ((MyMessage) message).setAvailableEmployee(false);
+            message.setCode(Mc.mechanicExecute);
+            response(message);
+        }
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
-       
+
         switch (message.code()) {
         }
     }
@@ -66,13 +89,25 @@ public class ManagerMechanics extends Manager {
                 break;
 
             case Mc.finish:
-                processFinish(message);
+                switch (message.sender().id()) {
+                    case Id.processInsepction: {
+                        processFinish(message);
+                    }
+                    break;
+
+                    case Id.processLunchPauseInspection:
+                        processFinishProcessLunchPause(message);
+                        break;
+                }
                 break;
 
             case Mc.mechanicsAvailability:
                 processMechanicsAvailability(message);
                 break;
 
+            case Mc.noticeLunchPause:
+                processNoticeLunchPause(message);
+                break;
             default:
                 processDefault(message);
                 break;
@@ -123,5 +158,65 @@ public class ManagerMechanics extends Manager {
                 }
             }
         }
+    }
+
+    private void processNoticeLunchPause(MessageForm message) {
+       // System.out.println("pauza 2");
+        myAgent().setPauseTimeStarted(true);
+        myAgent().setPauseTimeStartedTime(mySim().currentTime());
+        myAgent().addPausedEmployees();
+        ((MyMessage) message).setProcessStartTime(mySim().currentTime());
+        for (int i = 0; i < myAgent().getCountOfPaused(); i++) {
+            message = message.createCopy();
+            message.setCode(Mc.start);
+            message.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
+            startContinualAssistant(message);
+            addPauseToEmployerGui();
+        }
+    }
+
+    public void addPauseToEmployerGui() {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+                if (myAgent().getGuiEmployers().get(i) == null) {
+                    CustomerObject customer = new CustomerObject();
+                    customer.setCount(myAgent().getPauseCounter());
+                    myAgent().addPauseCounter();
+                    myAgent().getGuiEmployers().set(i, customer);
+                    customer.setPause(true);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void removePauseFromEmployer() {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            int min = Integer.MAX_VALUE;
+            int index = -1;
+            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+                if (myAgent().getGuiEmployers().get(i) != null) {
+                    if (myAgent().getGuiEmployers().get(i).isPause()) {
+                        if (min > myAgent().getGuiEmployers().get(i).getCount()) {
+                            min = (int) myAgent().getGuiEmployers().get(i).getCount();
+                            index = i;
+                        }
+                    }
+
+                }
+            }
+            myAgent().getGuiEmployers().set(index, null);
+        }
+    }
+
+    private void processFinishProcessLunchPause(MessageForm message) {
+        //System.out.println("stop pauza 2");
+        myAgent().removePausedEmployees();
+        removePauseFromEmployer();
+        message.setAddressee(Id.agentVehicleInspection);
+        message.setCode(Mc.noticeFreeMechanic);
+        notice(message);
     }
 }

@@ -65,6 +65,10 @@ public class ManagerModel extends Manager {
                 processNoticeCustomerArrival(message);
                 break;
 
+            case Mc.noticeLunchPause:
+                processNoticeLunchPause(message);
+                break;
+
             default:
                 processDefault(message);
                 break;
@@ -80,6 +84,12 @@ public class ManagerModel extends Manager {
     @Override
     public AgentModel myAgent() {
         return (AgentModel) super.myAgent();
+    }
+
+    private void processNoticeLunchPause(MessageForm message) {
+        message.setCode(Mc.noticeLunchPause);
+        message.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
+        notice(message);
     }
 
 }

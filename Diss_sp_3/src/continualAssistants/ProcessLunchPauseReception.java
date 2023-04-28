@@ -4,38 +4,32 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import OSPABA.Process;
-import OSPRNG.ExponentialRNG;
-import OSPRNG.TriangularRNG;
 
-//meta! id="19"
-public class ProcessTakeOverVehicle extends Process {
+//meta! id="85"
+public class ProcessLunchPauseReception extends Process {
 
-    private TriangularRNG takeOverVehicleDistribution;
+    private double pauseLength = 30;
 
-    public ProcessTakeOverVehicle(int id, Simulation mySim, CommonAgent myAgent) {
+    public ProcessLunchPauseReception(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
-         takeOverVehicleDistribution = new TriangularRNG((double) 180 / 60, (double) 431 / 60, (double) 695 / 60, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-     
-
     }
 
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-       
-    }
-
-    //meta! sender="AgentReception", id="20", type="Start"
-    public void processStart(MessageForm message) {
-        message.setCode(Mc.noticeEndTakeOver);
-        hold(takeOverVehicleDistribution.sample(), message);
-        ((MyMessage)message).setProcessStartTime(mySim().currentTime());
+        // Setup component for the next replication
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
         switch (message.code()) {
         }
+    }
+
+    //meta! sender="AgentMechanics", id="89", type="Start"
+    public void processStart(MessageForm message) {
+        message.setCode(Mc.noticeEndPause);
+        hold(pauseLength, message);
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -45,8 +39,9 @@ public class ProcessTakeOverVehicle extends Process {
             case Mc.start:
                 processStart(message);
                 break;
-            case Mc.noticeEndTakeOver:
-                processEndTakeOver(message);
+
+            case Mc.noticeEndPause:
+                processNoticeEndPause(message);
                 break;
 
             default:
@@ -61,7 +56,7 @@ public class ProcessTakeOverVehicle extends Process {
         return (AgentReception) super.myAgent();
     }
 
-    private void processEndTakeOver(MessageForm message) {
+    private void processNoticeEndPause(MessageForm message) {
         assistantFinished(message);
     }
 

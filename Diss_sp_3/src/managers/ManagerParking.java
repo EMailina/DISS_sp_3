@@ -117,7 +117,7 @@ public class ManagerParking extends Manager {
     }
 
     private void processNoticeFreeMechanic(MessageForm message) {
-        if (myAgent().getQueue().size() > 0) {
+        if (myAgent().getQueue().size() > 0 && ((MyMessage)message).isAvailableEmployee()) {
             MyMessage nextMessage = (MyMessage) myAgent().getQueue().dequeue();
             nextMessage.setCode(Mc.leaveParking);
             nextMessage.setAddressee(Id.agentVehicleInspection);

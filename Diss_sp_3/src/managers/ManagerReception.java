@@ -56,6 +56,7 @@ public class ManagerReception extends Manager {
             if (myAgent().getCountOfWorkingEmployees() >= myAgent().getTotalCountOfEmployees()) {
                 //((MyMessage) message).getCustomer().setStartWaitingTime(mySim().currentTime());
                 myAgent().getQueuePaying().enqueue(message);
+                myAgent().getQueuePayingGui().add(message);
                 ((MyMessage) message).getCustomer().setWaitingForPayment(true);
 
             } else {
@@ -73,18 +74,36 @@ public class ManagerReception extends Manager {
             myAgent().removeWorkingEmployee();
             myAgent().removeReservedParkingPlace();
 
+            boolean pause = false;
+            //pause
+            if (myAgent().isPauseTimeStarted()) {
+
+                if (((MyMessage) message).getProcessStartTime() < myAgent().getPauseTimeStartedTime()) {
+                    addPauseToEmployerGui();
+
+                    myAgent().addEmployeeToPause();
+                    message.setAddressee(myAgent().findAssistant(Id.processLunchPauseReception));
+                    startContinualAssistant(message);
+                    pause = true;
+
+                }
+
+            }
+
             //payment
-            if (myAgent().getQueuePaying().size() > 0) {
+            if (myAgent().getQueuePaying().size() > 0 && !pause) {
                 MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+                myAgent().getQueuePayingGui().poll();
                 //nextMessage.setTotalWaitingTime(mySim().currentTime() - nextMessage.getStartWaitingTime());
                 startWorkOnPayment(nextMessage);
             }
 
-            message.setCode(Mc.receptionExecute);
-            response(message);
+            MyMessage nextMessage = (MyMessage) message.createCopy();
+            nextMessage.setCode(Mc.receptionExecute);
+            response(nextMessage);
 
             //takeover
-            if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5) {
+            if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5 && !pause) {
                 MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().peek();
 
                 newMessage.setCode(Mc.checkParkingPlace);
@@ -124,16 +143,28 @@ public class ManagerReception extends Manager {
             removeFromEmployer(((MyMessage) message).getCustomer());
             myAgent().removeWorkingEmployee();
 
-            //payment
-            if (myAgent().getQueuePaying().size() > 0) {
-                MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+            boolean pause = false;
+            //pause
+            if (myAgent().isPauseTimeStarted()) {
+                if (((MyMessage) message).getProcessStartTime() < myAgent().getPauseTimeStartedTime()) {
+                    addPauseToEmployerGui();
 
+                    myAgent().addEmployeeToPause();
+                    message.setAddressee(myAgent().findAssistant(Id.processLunchPauseReception));
+                    startContinualAssistant(message);
+                    pause = true;
+                }
+
+            }
+            //payment
+            if (myAgent().getQueuePaying().size() > 0 && !pause) {
+                MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+                myAgent().getQueuePayingGui().poll();
                 //nextMessage.getCustomer().setmySim().currentTime() - nextMessage.getCustomer().getStartOfWaitingForTakeOver());
                 startWorkOnPayment(nextMessage);
             }
-
             //takeover
-            if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5) {
+            if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5 && !pause) {
                 MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().peek();
 
                 newMessage.setCode(Mc.checkParkingPlace);
@@ -141,8 +172,9 @@ public class ManagerReception extends Manager {
                 request(newMessage);
             }
 
-            message.setCode(Mc.paymentExecute);
-            response(message);
+            MyMessage newMessage = (MyMessage) message.createCopy();
+            newMessage.setCode(Mc.paymentExecute);
+            response(newMessage);
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -191,9 +223,7 @@ public class ManagerReception extends Manager {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
-        if (message.code() == Mc.customerService) {
-            System.out.println("rec");
-        }
+
         switch (message.code()) {
         }
     }
@@ -215,6 +245,11 @@ public class ManagerReception extends Manager {
                     case Id.processPaying:
                         processFinishProcessPaying(message);
                         break;
+
+                    case Id.processLunchPauseReception:
+                        processFinishProcessLunchPause(message);
+                        break;
+
                 }
                 break;
 
@@ -232,6 +267,10 @@ public class ManagerReception extends Manager {
 
             case Mc.noticeFreeParking:
                 processNoticeFreeParking(message);
+                break;
+
+            case Mc.noticeLunchPause:
+                processNoticeLunchPause(message);
                 break;
 
             default:
@@ -279,6 +318,22 @@ public class ManagerReception extends Manager {
         }
     }
 
+    public void addPauseToEmployerGui() {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+                if (myAgent().getGuiEmployers().get(i) == null) {
+                    CustomerObject customer = new CustomerObject();
+                    customer.setCount(myAgent().getPauseCounter());
+                    myAgent().addPauseCounter();
+                    myAgent().getGuiEmployers().set(i, customer);
+                    customer.setPause(true);
+                    break;
+                }
+            }
+        }
+    }
+
     private void removeFromEmployer(CustomerObject customer) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
@@ -289,5 +344,65 @@ public class ManagerReception extends Manager {
                 }
             }
         }
+    }
+
+    private void removePauseFromEmployer() {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            int min = Integer.MAX_VALUE;
+            int index = -1;
+            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+                if (myAgent().getGuiEmployers().get(i) != null) {
+                    if (myAgent().getGuiEmployers().get(i).isPause()) {
+                        if (min > myAgent().getGuiEmployers().get(i).getCount()) {
+                            min = (int) myAgent().getGuiEmployers().get(i).getCount();
+                            index = i;
+                        }
+                    }
+
+                }
+            }
+            myAgent().getGuiEmployers().set(index, null);
+        }
+    }
+
+    private void processNoticeLunchPause(MessageForm message) {
+       // System.out.println("pauza");
+        myAgent().setPauseTimeStarted(true);
+        myAgent().setPauseTimeStartedTime(mySim().currentTime());
+        myAgent().addPausedEmployees();
+        ((MyMessage) message).setProcessStartTime(mySim().currentTime());
+        for (int i = 0; i < myAgent().getCountOfPaused(); i++) {
+            message = message.createCopy();
+            message.setCode(Mc.start);
+            message.setAddressee(myAgent().findAssistant(Id.processLunchPauseReception));
+            startContinualAssistant(message);
+            addPauseToEmployerGui();
+            
+        }
+    }
+
+    private void processFinishProcessLunchPause(MessageForm message) {
+       // System.out.println("stop pauza");
+        myAgent().removePausedEmployees();
+        removePauseFromEmployer();
+        //payment
+        if (myAgent().getQueuePaying().size() > 0) {
+            MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+            myAgent().getQueuePayingGui().poll();
+            try {
+                startWorkOnPayment(nextMessage);
+            } catch (Exception ex) {
+                Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } //takeover
+        else if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5) {
+            MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().peek();
+            MyMessage nextMessage = (MyMessage) newMessage.createCopy();
+            nextMessage.setCode(Mc.checkParkingPlace);
+            nextMessage.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
+            request(nextMessage);
+        }
+
     }
 }

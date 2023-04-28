@@ -25,22 +25,22 @@ public class AgentEnviroment extends Agent {
         super.prepareReplication();
         // Setup component for the next replication
         averageTimeInSystem = new Stat();
-       customers = new SimQueue<>(new WStat(_mySim));
+        customers = new SimQueue<>(new WStat(_mySim));
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
     private void init() {
         new ManagerEnviroment(Id.managerEnviroment, mySim(), this);
         new SchedulerCustomerArrival(Id.schedulerCustomerArrival, mySim(), this);
+
+        new SchedulerLunchPause(Id.schedulerLunchPause, mySim(), this);
+
         addOwnMessage(Mc.init);
         addOwnMessage(Mc.noticeCustomerLeave);
         addOwnMessage(Mc.noticeCustomerArrival);
+        addOwnMessage(Mc.noticeLunchPause);
     }
     //meta! tag="end"
-
-    public ContinualAssistant getContinualAssistant() {
-        return this.getContinualAssistant();
-    }
 
     public Stat getAverageTimeInSystem() {
         return averageTimeInSystem;
@@ -58,5 +58,4 @@ public class AgentEnviroment extends Agent {
         this.customers = customers;
     }
 
-    
 }
