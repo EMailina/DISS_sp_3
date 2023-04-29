@@ -13,6 +13,7 @@ import objects.CustomerObject;
 //meta! id="5"
 public class AgentParking extends Agent {
 
+    private double chanceCarAndVan = 0.86;
     private int totalCountOfParkingPlaces = 5;
     private SimQueue<MessageForm> queue;
     private ArrayList<CustomerObject> parkingPlaces;
@@ -63,6 +64,11 @@ public class AgentParking extends Agent {
     public void setParkingPlaces(ArrayList<CustomerObject> parkingPlaces) {
         this.parkingPlaces = parkingPlaces;
     }
+
+    public double getChanceCarAndVan() {
+        return chanceCarAndVan;
+    }
+
 
    
 }

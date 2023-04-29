@@ -40,7 +40,7 @@ public class ManagerReception extends Manager {
                 //myAgent().getQueueTakeOver().enqueue(message);
 
             } else {
-                //System.out.println("AFTER CHECK TIME: " + mySim().currentTime());
+               // System.out.println("AFTER CHECK TIME: " + mySim().currentTime());
                 MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().dequeue();
                 myAgent().getQueueTakeOverGui().poll();
                 startWorkOnTakeOver((MyMessage) newMessage);
@@ -123,12 +123,12 @@ public class ManagerReception extends Manager {
         myAgent().getStatWaitingTime().addSample(mySim().currentTime() - ((MyMessage) message).getCustomer().getStartOfWaitingForTakeOver());
         message.setAddressee(myAgent().findAssistant(Id.processTakeOverVehicle));
         startContinualAssistant(message);
-        // System.out.println("Start registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+         //System.out.println("Start registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
         addToEmployer(((MyMessage) message).getCustomer(), true);
     }
 
     private void startWorkOnPayment(MyMessage message) throws Exception {
-        // System.out.println("Payment: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+         //System.out.println("Payment: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
         myAgent().addWorkingEmployee();
         message.setAddressee(myAgent().findAssistant(Id.processPaying));
@@ -195,7 +195,7 @@ public class ManagerReception extends Manager {
             } else {
                 //startWorkOnTakeOver((MyMessage) message);
                 MyMessage newMessage = (MyMessage) message.createCopy();
-                // System.out.println("BEFORE CHECK TIME: " + mySim().currentTime());
+                //System.out.println("BEFORE CHECK TIME: " + mySim().currentTime());
                 //System.out.println("" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
                 //((MyMessage) newMessage).setCustomer(((MyMessage) message).getCustomer());
                 newMessage.setCode(Mc.checkParkingPlace);
@@ -383,7 +383,7 @@ public class ManagerReception extends Manager {
     }
 
     private void processFinishProcessLunchPause(MessageForm message) {
-       // System.out.println("stop pauza");
+     //  System.out.println("stop pauza");
         myAgent().removePausedEmployees();
         removePauseFromEmployer();
         //payment

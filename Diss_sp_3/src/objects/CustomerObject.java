@@ -26,6 +26,8 @@ public class CustomerObject {
     private boolean park = false;
     private boolean pause = false;
 
+    private double truckLimit = 0.86;
+    
     public CustomerObject() {
        
 
@@ -137,6 +139,13 @@ public class CustomerObject {
 
     public double getTimeInSystem() {
         return endTimeInSystem - startOfWaitingForTakeOver;
+    }
+
+    public boolean isTruck() {
+        if(probabilityVehicle < truckLimit){
+            return false;
+        }
+        return true;
     }
 
 }

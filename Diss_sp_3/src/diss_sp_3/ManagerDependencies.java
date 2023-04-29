@@ -27,7 +27,7 @@ public class ManagerDependencies {
         stop = false;
         for (int i = 0; i < 15; i++) {
             MySimulation simulation = new MySimulation();
-            init(simulation, RunType.DEPENDENCY_1, i + 1, countOfEmp, refresher);
+         //   init(simulation, RunType.DEPENDENCY_1, i + 1, countOfEmp, refresher);
 
             simulation.simulate(countOfReplication, 480);
             refresher.refresh(simulation);
@@ -42,7 +42,7 @@ public class ManagerDependencies {
         stop = false;
         for (int i = 10; i < 26; i++) {
             MySimulation simulation = new MySimulation();
-            init(simulation, RunType.DEPENDENCY_2, countOfEmp, i + 1, refresher);
+          //  init(simulation, RunType.DEPENDENCY_2, countOfEmp, i + 1, refresher);
 
             simulation.simulate(countOfReplication, 480);
             refresher.refresh(simulation);
@@ -64,12 +64,12 @@ public class ManagerDependencies {
     }
 
     
-    private void init(MySimulation simulation, RunType type, int countOfEmp1, int countOfEmp2, ISimDelegate refresher) {
-        ((Diss_sp_3) refresher).setSimulation(simulation);
-        simulation.setType(type);
-        simulation.registerDelegate(refresher);
-        simulation.setCountOfEmployeeType1(countOfEmp1);
-        simulation.setCountOfEmployeeType2(countOfEmp2);
-    }
+//    private void init(MySimulation simulation, RunType type, int countOfEmp1, int countOfEmp2, ISimDelegate refresher) {
+//        ((Diss_sp_3) refresher).setSimulation(simulation);
+//        simulation.setType(type);
+//        simulation.registerDelegate(refresher);
+//        simulation.setCountOfEmployeeType1(countOfEmp1);
+//        simulation.setCountOfEmployeeType2(countOfEmp2);
+//    }
 
 }

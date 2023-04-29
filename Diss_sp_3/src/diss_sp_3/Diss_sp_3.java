@@ -137,6 +137,10 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         jLabel19 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         checkboxValidation = new javax.swing.JCheckBox();
+        countOfEmployees2Box2 = new javax.swing.JTextField();
+        jLabel25 = new javax.swing.JLabel();
+        countOfEmployees2Box3 = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1200, 600));
@@ -215,19 +219,19 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 
         countOfEmployees2Box.setText("17");
         getContentPane().add(countOfEmployees2Box);
-        countOfEmployees2Box.setBounds(150, 110, 70, 30);
+        countOfEmployees2Box.setBounds(110, 110, 50, 30);
 
         countOfEmployees1Box.setText("4");
         getContentPane().add(countOfEmployees1Box);
-        countOfEmployees1Box.setBounds(150, 70, 70, 30);
+        countOfEmployees1Box.setBounds(110, 70, 50, 30);
 
         jLabel4.setText("Employees 1:");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(60, 80, 75, 16);
+        jLabel4.setBounds(10, 80, 75, 16);
 
-        jLabel5.setText("Employees 2:");
+        jLabel5.setText("Cert 2:");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(60, 120, 75, 16);
+        jLabel5.setBounds(950, 40, 50, 16);
 
         jLabel2.setText("loading...");
         getContentPane().add(jLabel2);
@@ -318,11 +322,11 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 
         countOfEmployees2Box1.setText("2");
         getContentPane().add(countOfEmployees2Box1);
-        countOfEmployees2Box1.setBounds(880, 60, 70, 30);
+        countOfEmployees2Box1.setBounds(880, 60, 50, 30);
 
         countOfEmployees1Box1.setText("2");
         getContentPane().add(countOfEmployees1Box1);
-        countOfEmployees1Box1.setBounds(880, 20, 70, 30);
+        countOfEmployees1Box1.setBounds(880, 20, 50, 30);
 
         jLabel23.setText("Employees 1:");
         getContentPane().add(jLabel23);
@@ -332,23 +336,23 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         getContentPane().add(jLabel24);
         jLabel24.setBounds(790, 70, 75, 16);
 
-        startSimulation2.setText("Dependency on group 2");
+        startSimulation2.setText("Dependency on grp 2");
         startSimulation2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 startSimulation2ActionPerformed(evt);
             }
         });
         getContentPane().add(startSimulation2);
-        startSimulation2.setBounds(960, 60, 170, 32);
+        startSimulation2.setBounds(1020, 60, 160, 32);
 
-        startSimulation3.setText("Dependency on group 1");
+        startSimulation3.setText("Dependency on grp 1");
         startSimulation3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 startSimulation3ActionPerformed(evt);
             }
         });
         getContentPane().add(startSimulation3);
-        startSimulation3.setBounds(960, 20, 170, 32);
+        startSimulation3.setBounds(1020, 20, 160, 32);
 
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -513,7 +517,23 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 
         checkboxValidation.setText("Validation");
         getContentPane().add(checkboxValidation);
-        checkboxValidation.setBounds(300, 100, 90, 24);
+        checkboxValidation.setBounds(180, 80, 90, 24);
+
+        countOfEmployees2Box2.setText("17");
+        getContentPane().add(countOfEmployees2Box2);
+        countOfEmployees2Box2.setBounds(260, 110, 50, 30);
+
+        jLabel25.setText("Employees 2(all):");
+        getContentPane().add(jLabel25);
+        jLabel25.setBounds(10, 120, 110, 16);
+
+        countOfEmployees2Box3.setText("2");
+        getContentPane().add(countOfEmployees2Box3);
+        countOfEmployees2Box3.setBounds(950, 60, 50, 30);
+
+        jLabel26.setText("Certificate 2:");
+        getContentPane().add(jLabel26);
+        jLabel26.setBounds(180, 120, 72, 16);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -623,7 +643,8 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         simulation = new MySimulation();
         simulation.setType(runType);
         simulation.setCountOfEmployeeType1(Integer.valueOf(countOfEmployees1Box.getText()));
-        simulation.setCountOfEmployeeType2(Integer.valueOf(countOfEmployees2Box.getText()));
+        simulation.setCountOfEmployeeType2WithCertificate1(Integer.valueOf(countOfEmployees2Box.getText()));
+        simulation.setCountOfEmployeeType2WithCertificate2(Integer.valueOf(countOfEmployees2Box2.getText()));
         int countOfReplication = Integer.valueOf(EditCountOfReplications.getText());
         simulation.registerDelegate(this);
         
@@ -635,7 +656,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             // simulation.simulate(countOfReplication, 480);
             simulation.onSimulationDidFinish(sim -> updateReplicationStats());
             
-//            for (int i = 0; i < 1000; i++) {
+  //          for (int i = 0; i < 1000; i++) {
 //                simulation = new MySimulation(i);
 //                simulation.setType(runType);
 //                simulation.setCountOfEmployeeType1(Integer.valueOf(countOfEmployees1Box.getText()));
@@ -643,7 +664,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 //                
 //                simulation.setValidationRun(checkboxValidation.isSelected());
 //               
-                simulation.simulate(1, 480);
+                simulation.simulate(countOfReplication, 480);
 //                System.out.println("" + i + " | " +  simulation.getAvgTimeInSystem().mean());
 //            }
 
@@ -706,6 +727,8 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     private javax.swing.JTextField countOfEmployees1Box1;
     private javax.swing.JTextField countOfEmployees2Box;
     private javax.swing.JTextField countOfEmployees2Box1;
+    private javax.swing.JTextField countOfEmployees2Box2;
+    private javax.swing.JTextField countOfEmployees2Box3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -723,6 +746,8 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -817,7 +842,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         jLabelTime.setText("Time: " + simulation.getTime() + " (" + simulation.currentTime() + ")");
         
         jLabelCountOfType1Employees.setText("Actually working of employees(type 1): " + simulation.agentReception().getCountOfWorking());
-        jLabelCountOfType2Employees.setText("Actually working of employees(type 2): " + simulation.agentMechanics().getCountOfWorking());
+        jLabelCountOfType2Employees.setText("Actually working of employees(type 2): " + simulation.agentMechanics().getCountOfWorkingC2());
         jLabelCountOfParkingPlaces.setText("Count of occupied parking places: " + simulation.agentParking().getQueue().size());
         jLabelActualQueue.setText("Actual queue length(type 1): " + simulation.agentReception().getQueueTakeOver().size());
         jLabelParking.setText("Actual queue length(type 2): " + simulation.agentReception().getQueuePaying().size());

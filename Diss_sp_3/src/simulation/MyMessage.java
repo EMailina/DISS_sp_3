@@ -9,6 +9,8 @@ public class MyMessage extends MessageForm {
     private int countOfParkingPlaces;
     private boolean availableEmployee;
     private double processStartTime;
+    private int certificate2;
+    private boolean executeWithCertficated;
  
     public MyMessage(Simulation sim) {
         super(sim);
@@ -21,6 +23,8 @@ public class MyMessage extends MessageForm {
         processStartTime = original.processStartTime;
         countOfParkingPlaces = original.getCountOfParkingPlaces();
         availableEmployee = original.isAvailableEmployee();
+        certificate2 = original.certificate2;
+        executeWithCertficated = original.executeWithCertficated;
     }
 
     @Override
@@ -59,5 +63,25 @@ public class MyMessage extends MessageForm {
     public void setProcessStartTime(double processStartTime) {
         this.processStartTime = processStartTime;
     }
+
+    public int getCertificate2() {
+        return certificate2;
+    }
+
+    public void setCertificate2(int certificate2) {
+        this.certificate2 = certificate2;
+    }
+
+    public boolean isExecuteWithCertficated() {
+        return executeWithCertficated;
+    }
+
+    public void setExecuteWithCertficated(boolean executeWithCertficated) {
+        this.executeWithCertficated = executeWithCertficated;
+    }
+
+    
+
+    
 
 }

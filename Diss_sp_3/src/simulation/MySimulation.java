@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class MySimulation extends Simulation {
 
-    private Random generatorOfGenerators = new Random(47);
+    private Random generatorOfGenerators = new Random(0);
 
     private Stat avgWaitingTime;
     private Stat avgQueueLength;
@@ -217,8 +217,8 @@ public class MySimulation extends Simulation {
         _agentReception.setTotalCountOfEmployees(count);
     }
 
-    public void setCountOfEmployeeType2(Integer count) {
-        _agentMechanics.setTotalCountOfEmployees(count);
+    public void setCountOfEmployeeType2WithCertificate1(Integer count) {
+        _agentMechanics.setTotalCountOfEmployeesWithCertificate1(count);
     }
 
     public void setSpeedChange(int value) {
@@ -250,6 +250,10 @@ public class MySimulation extends Simulation {
 
     public void setGeneratorOfGenerators(Random generatorOfGenerators) {
         this.generatorOfGenerators = generatorOfGenerators;
+    }
+
+    public void setCountOfEmployeeType2WithCertificate2(Integer count) {
+         _agentMechanics.setTotalCountOfEmployeesWithCertificate2(count);
     }
     
     

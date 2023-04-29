@@ -13,14 +13,21 @@ import objects.CustomerObject;
 //meta! id="4"
 public class AgentMechanics extends Agent {
 
-    private int totalCountOfEmployees = 2;
-    private int countOfWorking;
+    //FINAL COUNT
+    private int totalCountOfEmployeesWithCertificate1 = 2;
+    private int totalCountOfEmployeesWithCertificate2 = 2;
+
+    //COUNT OF WORKING
+    private int countOfWorkingWithCertificate1;
+    private int countOfWorkingWithCertificate2;
+
     private SimQueue<MessageForm> employee;
 
-    private WStat freeEmployersStat;
     private ArrayList<CustomerObject> guiEmployers;
 
-    private int countOfPaused = 0;
+    private int countOfPausedCertificate1 = 0;
+    private int countOfPausedCertificate2 = 0;
+
     private boolean pauseTimeStarted = false;
     private double pauseTimeStartedTime = Double.MAX_VALUE;
     private int pauseCounter = 0;
@@ -33,22 +40,24 @@ public class AgentMechanics extends Agent {
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-        countOfWorking = 0;
-        freeEmployersStat = new WStat(_mySim);
+        countOfWorkingWithCertificate1 = 0;
+        countOfWorkingWithCertificate2 = 0;
         employee = new SimQueue<>(new WStat(_mySim));
         employee.clear();
-        for (int i = 0; i < totalCountOfEmployees; i++) {
+        for (int i = 0; i < getTotalCountOfEmployees(); i++) {
             employee.add(null);
         }
 
-        guiEmployers = new ArrayList<>(totalCountOfEmployees);
-        for (int i = 0; i < totalCountOfEmployees; i++) {
+        guiEmployers = new ArrayList<>(getTotalCountOfEmployees());
+        for (int i = 0; i < getTotalCountOfEmployees(); i++) {
             guiEmployers.add(null);
         }
-        countOfPaused = 0;
+        countOfPausedCertificate1 = 0;
+        countOfPausedCertificate2 = 0;
         pauseTimeStarted = false;
         pauseTimeStartedTime = Double.MAX_VALUE;
         pauseCounter = 0;
+       
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -65,46 +74,62 @@ public class AgentMechanics extends Agent {
     }
     //meta! tag="end"
 
+    
+    
     public int getTotalCountOfEmployees() {
-        return totalCountOfEmployees;
+        return totalCountOfEmployeesWithCertificate1 + totalCountOfEmployeesWithCertificate2;
     }
 
-    public int getCountOfWorking() {
-        return countOfWorking + countOfPaused;
+    public int getCountOfWorkingC1() {
+        return countOfPausedCertificate1 + countOfWorkingWithCertificate1;
     }
 
-    public void addWorkingEmployee() {
-        if (countOfWorking < totalCountOfEmployees) {
-            freeEmployersStat.addSample(totalCountOfEmployees - countOfWorking);
-            countOfWorking++;
+    public int getCountOfAllWorking() {
+        return countOfPausedCertificate1 + countOfWorkingWithCertificate1 + countOfPausedCertificate2 + countOfWorkingWithCertificate2;
+    }
+
+    public int getCountOfWorkingC2() {
+        return countOfPausedCertificate2 + countOfWorkingWithCertificate2;
+    }
+
+    public void addWorkingEmployeeC1() {
+        if (getCountOfWorkingC1() < totalCountOfEmployeesWithCertificate1) {
+            countOfWorkingWithCertificate1++;
             employee.remove(0);
-
         } else {
-            System.out.println("Chyba------------------------------------------------------------------");
+            System.err.println("Chyba------------------------------------------------------------------");
         }
     }
 
-    public void removeWorkingEmployee() {
-        if (countOfWorking > 0) {
-            freeEmployersStat.addSample(totalCountOfEmployees - countOfWorking);
-            countOfWorking--;
+    public void addWorkingEmployeeC2() {
+        if (getCountOfWorkingC2() < totalCountOfEmployeesWithCertificate2) {
+            countOfWorkingWithCertificate2++;
+            employee.remove(0);
+        } else {
+            System.err.println("Chyba------------------------------------------------------------------");
+        }
+    }
+
+    public void removeWorkingEmployeeC2() {
+        if (getCountOfWorkingC2() > 0) {
+            countOfWorkingWithCertificate2--;
             employee.add(null);
-
         } else {
-            System.out.println("Chyba-------------------------------------------------------------------");
+            System.err.println("Chyba-------------------------------------------------------------------");
         }
     }
 
-    public long getCOuntOfVehicles() {
-        return countOfWorking;
+    public void removeWorkingEmployeeC1() {
+        if (getCountOfWorkingC1() > 0) {
+            countOfWorkingWithCertificate1--;
+            employee.add(null);
+        } else {
+            System.err.println("Chyba-------------------------------------------------------------------");
+        }
     }
 
-    public WStat getFreeEmployersStat() {
-        return freeEmployersStat;
-    }
-
-    public void setFreeEmployersStat(WStat freeEmployersStat) {
-        this.freeEmployersStat = freeEmployersStat;
+    public long getCountOfVehicles() {
+        return countOfWorkingWithCertificate1 + countOfWorkingWithCertificate2;
     }
 
     public SimQueue<MessageForm> getEmployee() {
@@ -123,16 +148,20 @@ public class AgentMechanics extends Agent {
         this.guiEmployers = guiEmployers;
     }
 
-    public void setTotalCountOfEmployees(int totalCountOfEmployees) {
-        this.totalCountOfEmployees = totalCountOfEmployees;
+    public int getCountOfWorkingWithCertificate1() {
+        return countOfWorkingWithCertificate1;
     }
 
-    public int getCountOfPaused() {
-        return countOfPaused;
+    public void setCountOfWorkingWithCertificate1(int countOfWorkingWithCertificate1) {
+        this.countOfWorkingWithCertificate1 = countOfWorkingWithCertificate1;
     }
 
-    public void setCountOfPaused(int countOfPaused) {
-        this.countOfPaused = countOfPaused;
+    public int getCountOfPausedCertificate1() {
+        return countOfPausedCertificate1;
+    }
+
+    public void setCountOfPausedCertificate1(int countOfPausedCertificate1) {
+        this.countOfPausedCertificate1 = countOfPausedCertificate1;
     }
 
     public boolean isPauseTimeStarted() {
@@ -160,26 +189,77 @@ public class AgentMechanics extends Agent {
     }
 
     public void addPausedEmployees() {
-        countOfPaused = totalCountOfEmployees - countOfWorking;
-        for (int i = 0; i < countOfPaused; i++) {
+        countOfPausedCertificate1 = totalCountOfEmployeesWithCertificate1 - countOfWorkingWithCertificate1;
+        for (int i = 0; i < countOfPausedCertificate1; i++) {
+            employee.remove(0);
+        }
+
+        countOfPausedCertificate2 = totalCountOfEmployeesWithCertificate2 - countOfWorkingWithCertificate2;
+        for (int i = 0; i < countOfPausedCertificate2; i++) {
             employee.remove(0);
         }
     }
 
-    public void removePausedEmployees() {
-        countOfPaused--;
-
+    public void removePausedEmployeesC1() {
+        countOfPausedCertificate1--;
         employee.add(null);
+    }
 
+    public void removePausedEmployeesC2() {
+        countOfPausedCertificate2--;
+        employee.add(null);
     }
 
     public void addPauseCounter() {
         this.pauseCounter++;
     }
 
-    public void addEmployeeToPause() {
-        countOfPaused++;
+    public void addEmployeeToPauseC1() {
+        countOfPausedCertificate1++;
         employee.remove(0);
     }
+
+    public void addEmployeeToPauseC2() {
+        countOfPausedCertificate2++;
+        employee.remove(0);
+    }
+
+    public int getTotalCountOfEmployeesWithCertificate2() {
+        return totalCountOfEmployeesWithCertificate2;
+    }
+
+    public void setTotalCountOfEmployeesWithCertificate2(int totalCountOfEmployeesWithCertificate2) {
+        this.totalCountOfEmployeesWithCertificate2 = totalCountOfEmployeesWithCertificate2;
+    }
+
+    public int getCountOfWorkingWithCertificate2() {
+        return countOfWorkingWithCertificate2 + countOfPausedCertificate2;
+    }
+
+    public void setCountOfWorkingWithCertificate2(int countOfWorkingWithCertificate2) {
+        this.countOfWorkingWithCertificate2 = countOfWorkingWithCertificate2;
+    }
+
+    public int getFreeCertificate2Employees() {
+        return totalCountOfEmployeesWithCertificate2 - countOfWorkingWithCertificate2;
+    }
+
+    public int getCountOfPausedCertificate2() {
+        return countOfPausedCertificate2;
+    }
+
+    public int getTotalCountOfEmployeesWithCertificate1() {
+        return totalCountOfEmployeesWithCertificate1;
+    }
+
+    public void setCountOfPausedCertificate2(int countOfPausedCertificate2) {
+        this.countOfPausedCertificate2 = countOfPausedCertificate2;
+    }
+
+    public void setTotalCountOfEmployeesWithCertificate1(int totalCountOfEmployeesWithCertificate1) {
+        this.totalCountOfEmployeesWithCertificate1 = totalCountOfEmployeesWithCertificate1;
+    }
+
+    
 
 }
