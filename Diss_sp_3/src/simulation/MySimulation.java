@@ -16,6 +16,7 @@ public class MySimulation extends Simulation {
     private Stat avgTimeInSystem;
     private Stat avgFreeEmp1;
     private Stat avgFreeEmp2;
+    private Stat avgFreeEmp2WithC2;
     private Stat avgCOuntOfVehicles;
     private Stat avgCountOfCustomers;
     private RunType type;
@@ -24,11 +25,11 @@ public class MySimulation extends Simulation {
     public MySimulation() {
         init();
     }
-    
+
     public MySimulation(long i) {
         generatorOfGenerators = new Random(i);
         init();
-        
+
     }
 
     public MySimulation(RunType type) {
@@ -44,6 +45,7 @@ public class MySimulation extends Simulation {
         avgTimeInSystem = new Stat();
         avgFreeEmp1 = new Stat();
         avgFreeEmp2 = new Stat();
+        avgFreeEmp2WithC2 = new Stat();
         avgCOuntOfVehicles = new Stat();
         avgCountOfCustomers = new Stat();
 
@@ -59,22 +61,24 @@ public class MySimulation extends Simulation {
     @Override
     public void replicationFinished() {
         // Collect local statistics into global, update UI, etc...
-        
-        
+
         agentReception().getQueueTakeOver().enqueue(null);
         agentReception().getQueueTakeOver().dequeue();
         agentReception().getEmployee().enqueue(null);
         agentReception().getEmployee().dequeue();
         agentEnviroment().getCustomers().enqueue(null);
         agentEnviroment().getCustomers().dequeue();
-        agentMechanics().getEmployee().enqueue(null);
-        agentMechanics().getEmployee().dequeue();
-        
+        agentMechanics().getEmployeeWithCertificate1().enqueue(null);
+        agentMechanics().getEmployeeWithCertificate1().dequeue();
+        agentMechanics().getEmployeeWithCertificate2().enqueue(null);
+        agentMechanics().getEmployeeWithCertificate2().dequeue();
+
         avgWaitingTime.addSample(_agentReception.getStatWaitingTime().mean());
         avgQueueLength.addSample(_agentReception.getQueueTakeOverAvgLength().mean());
         avgTimeInSystem.addSample(_agentEnviroment.getAverageTimeInSystem().mean());
         avgFreeEmp1.addSample(_agentReception.getEmployee().lengthStatistic().mean());
-        avgFreeEmp2.addSample(_agentMechanics.getEmployee().lengthStatistic().mean());
+        avgFreeEmp2.addSample(_agentMechanics.getEmployeeWithCertificate1().lengthStatistic().mean());
+        avgFreeEmp2WithC2.addSample(_agentMechanics.getEmployeeWithCertificate2().lengthStatistic().mean());
         avgCOuntOfVehicles.addSample(_agentEnviroment.getCustomers().size());
         avgCountOfCustomers.addSample(_agentEnviroment.getCustomers().lengthStatistic().mean());
         super.replicationFinished();
@@ -83,7 +87,7 @@ public class MySimulation extends Simulation {
     @Override
     public void simulationFinished() {
         // Dysplay simulation results
-        
+
 //        System.out.println("-----------------------------------------------------------------");
 //        System.out.println("Waiting Time: " + avgWaitingTime.mean());
 //        System.out.println("Queue len Time: " + avgQueueLength.mean());
@@ -92,7 +96,6 @@ public class MySimulation extends Simulation {
 //        System.out.println("Time in sys : " + avgTimeInSystem.mean());
 //        System.out.println("vehicles: " + avgCOuntOfVehicles.mean());
 //        System.out.println("countOfCustomers: " + avgCountOfCustomers.mean());
-       
         super.simulationFinished();
 
     }
@@ -232,9 +235,9 @@ public class MySimulation extends Simulation {
             } else if (value == 3) {
                 setSimSpeed(1.0 / 60.0, 0.0001);
             } else if (value == 4) {
-                setSimSpeed(1/60.0, 0.001);
+                setSimSpeed(1 / 60.0, 0.001);
             } else {
-                setSimSpeed(1/60.0, 0.00010);
+                setSimSpeed(1 / 60.0, 0.00010);
             }
         }
 
@@ -253,7 +256,15 @@ public class MySimulation extends Simulation {
     }
 
     public void setCountOfEmployeeType2WithCertificate2(Integer count) {
-         _agentMechanics.setTotalCountOfEmployeesWithCertificate2(count);
+        _agentMechanics.setTotalCountOfEmployeesWithCertificate2(count);
+    }
+
+    public Stat getAvgFreeEmp2WithC2() {
+        return avgFreeEmp2WithC2;
+    }
+
+    public void setAvgFreeEmp2WithC2(Stat avgFreeEmp2WithC2) {
+        this.avgFreeEmp2WithC2 = avgFreeEmp2WithC2;
     }
     
     

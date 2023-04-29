@@ -66,7 +66,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     private final String DASH = "-";
     ArrayList<Double> values = new ArrayList<>();
     private int offset = 0;
-    
+
     public Diss_sp_3() {
         initComponents();
         panelGraph2.setVisible(false);
@@ -141,10 +141,11 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         jLabel25 = new javax.swing.JLabel();
         countOfEmployees2Box3 = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(1200, 600));
-        setSize(new java.awt.Dimension(2127, 1600));
+        setMinimumSize(new java.awt.Dimension(1250, 650));
+        setSize(new java.awt.Dimension(2127, 1700));
         getContentPane().setLayout(null);
 
         StartButton.setText("Start replications");
@@ -248,7 +249,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 
         jLabelCountOfType2Employees.setText("loading...");
         getContentPane().add(jLabelCountOfType2Employees);
-        jLabelCountOfType2Employees.setBounds(30, 250, 236, 16);
+        jLabelCountOfType2Employees.setBounds(30, 250, 330, 16);
 
         jLabelCountOfParkingPlaces.setText("loading...");
         getContentPane().add(jLabelCountOfParkingPlaces);
@@ -383,11 +384,11 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 
             },
             new String [] {
-                "Place", "Customer"
+                "Place", "Customer", "Vehicle"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -402,11 +403,11 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 
             },
             new String [] {
-                "Employer", "Customer"
+                "Employer", "Customer", "Vehicle"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -458,31 +459,32 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77)))
+                        .addGap(77, 77, 77))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(75, 75, 75)
-                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(38, Short.MAX_VALUE))
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(14, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(112, 112, 112))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(133, 133, 133)
                 .addComponent(jLabel21)
-                .addGap(177, 177, 177)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(117, 117, 117))
+                .addGap(158, 158, 158))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -509,7 +511,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         );
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(390, 100, 730, 440);
+        jPanel1.setBounds(390, 100, 830, 440);
 
         jLabel10.setText("loading...");
         getContentPane().add(jLabel10);
@@ -534,6 +536,10 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         jLabel26.setText("Certificate 2:");
         getContentPane().add(jLabel26);
         jLabel26.setBounds(180, 120, 72, 16);
+
+        jLabel27.setText("loading...");
+        getContentPane().add(jLabel27);
+        jLabel27.setBounds(30, 550, 540, 16);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -592,7 +598,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         offset = 1;
         startThreads();
     }//GEN-LAST:event_startSimulation3ActionPerformed
-    
+
     public void setSimulation(MySimulation simulation) {
         this.simulation = simulation;
     }
@@ -631,7 +637,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Diss_sp_3().setVisible(true);
-                
+
             }
         });
     }
@@ -647,16 +653,16 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         simulation.setCountOfEmployeeType2WithCertificate2(Integer.valueOf(countOfEmployees2Box2.getText()));
         int countOfReplication = Integer.valueOf(EditCountOfReplications.getText());
         simulation.registerDelegate(this);
-        
+
         if (runType == RunType.REPLICATIONS) {
             simulation.setValidationRun(checkboxValidation.isSelected());
             simulation.onSimulationWillStart(s -> {
-               // System.out.println("simm...");
+                // System.out.println("simm...");
             });
             // simulation.simulate(countOfReplication, 480);
             simulation.onSimulationDidFinish(sim -> updateReplicationStats());
-            
-  //          for (int i = 0; i < 1000; i++) {
+
+            //          for (int i = 0; i < 1000; i++) {
 //                simulation = new MySimulation(i);
 //                simulation.setType(runType);
 //                simulation.setCountOfEmployeeType1(Integer.valueOf(countOfEmployees1Box.getText()));
@@ -664,7 +670,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 //                
 //                simulation.setValidationRun(checkboxValidation.isSelected());
 //               
-                simulation.simulate(countOfReplication, 480);
+            simulation.simulate(countOfReplication, 480);
 //                System.out.println("" + i + " | " +  simulation.getAvgTimeInSystem().mean());
 //            }
 
@@ -678,28 +684,28 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             simulation.simulate(1, 480);
         } else if (runType == RunType.DEPENDENCY_1) {
             managerDep = new ManagerDependencies();
-            managerDep.findDependencyOnEmp1(this, Integer.valueOf(countOfEmployees2Box1.getText()), countOfReplication);
+            managerDep.findDependencyOnEmp1(this, Integer.valueOf(countOfEmployees2Box1.getText()), Integer.valueOf(countOfEmployees2Box3.getText()),checkboxValidation.isSelected(), countOfReplication);
         } else if (runType == RunType.DEPENDENCY_2) {
             managerDep = new ManagerDependencies();
-            managerDep.findDependencyOnEmp2(this, Integer.valueOf(countOfEmployees1Box1.getText()), countOfReplication);
+            managerDep.findDependencyOnEmp2(this, Integer.valueOf(countOfEmployees1Box1.getText()), countOfReplication, checkboxValidation.isSelected());
         }
-        
+
     }
-    
+
     private void refreshCharts() throws IOException {
         panelGraph2.repaint();
     }
-    
+
     private void startThreads() {
         if ((threadLogic == null && threadGraph == null) || (!threadLogic.isAlive() && !threadGraph.isAlive())) {
-            
+
             threadLogic = new ExtraThread(this);
             threadLogic.start();
             threadGraph = new ChartThread(this);
             threadGraph.start();
         }
     }
-    
+
     private void createLineChart(String name, String seriesName) throws IOException {
         panelGraph2.removeAll();
         panelGraph2.repaint();
@@ -714,7 +720,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         this.panelGraph2.setLayout(new java.awt.BorderLayout());
         this.panelGraph2.add(chartPanel);
         this.panelGraph2.validate();
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -748,6 +754,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -780,7 +787,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     // End of variables declaration//GEN-END:variables
 
     public void startDraw() throws InterruptedException, IOException {
-        
+
         cleanLabels();
         database.addSeries(series);
         try {
@@ -799,15 +806,15 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         } catch (IOException ex) {
             Logger.getLogger(Diss_sp_3.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         if (RunType.SIMULATION == runType) {
-            
+
             initializeTables();
         }
         while (true) {
             if (refreshGuiChanges) {
                 refreshGuiChanges = false;
-                
+
                 if (runType == RunType.SIMULATION) {
                     updateSimStats();
                 } else if (runType == RunType.DEPENDENCY_1) {
@@ -815,40 +822,41 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
                 } else if (runType == RunType.DEPENDENCY_2) {
                     updateCharts();
                 }
-                
+
             }
             if (!threadLogic.isAlive()) {
                 if (runType == RunType.SIMULATION) {
-                    
+
                     updateSimStats();
                 } else if (runType == RunType.REPLICATIONS) {
                     updateReplicationStats();
                 } else {
                     updateCharts();
                 }
-                
+
                 break;
             }
         }
-        
+
     }
-    
+
     private void updateSimStats() {
-        
+
         jLabel2.setText("Average waiting time for vehicle take-over: " + simulation.agentReception().getWaitingTimeStat().mean());
         jLabel3.setText("Average time in system: " + simulation.agentEnviroment().getAverageTimeInSystem().mean());
         jLabel6.setText("Average free employees(type 1): " + simulation.agentReception().getEmployee().lengthStatistic().mean());
-        jLabel7.setText("Average free employees(type 2): " + simulation.agentMechanics().getEmployee().lengthStatistic().mean());
+        jLabel7.setText("Average free employees(type 2) with C1: " + simulation.agentMechanics().getEmployeeWithCertificate1().lengthStatistic().mean());
+        jLabel10.setText("Average free employees(type 2) with C2: " + simulation.agentMechanics().getEmployeeWithCertificate2().lengthStatistic().mean());
         jLabelTime.setText("Time: " + simulation.getTime() + " (" + simulation.currentTime() + ")");
-        
+
         jLabelCountOfType1Employees.setText("Actually working of employees(type 1): " + simulation.agentReception().getCountOfWorking());
-        jLabelCountOfType2Employees.setText("Actually working of employees(type 2): " + simulation.agentMechanics().getCountOfWorkingC2());
+        jLabelCountOfType2Employees.setText("Actually working of employees(type 2): " + (simulation.agentMechanics().getCountOfWorkingC1() + simulation.agentMechanics().getCountOfWorkingC2()) + " (With C2 - " + simulation.agentMechanics().getCountOfWorkingC2() + ")");
         jLabelCountOfParkingPlaces.setText("Count of occupied parking places: " + simulation.agentParking().getQueue().size());
         jLabelActualQueue.setText("Actual queue length(type 1): " + simulation.agentReception().getQueueTakeOver().size());
         jLabelParking.setText("Actual queue length(type 2): " + simulation.agentReception().getQueuePaying().size());
         jLabel9.setText("Average count of customers: " + simulation.agentEnviroment().getCustomers().lengthStatistic().mean());
-        
-        jLabel10.setText("Average queue of customers: " + simulation.agentReception().getQueueTakeOver().lengthStatistic().mean());
+
+        jLabel27.setText("Average queue of customers: " + simulation.agentReception().getQueueTakeOver().lengthStatistic().mean());
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         //   jLabel16.setText("Average queue length: " + simulation.getAvgQueueLength().mean());
 
@@ -859,20 +867,23 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             if (customer == null) {
                 if (!model.getValueAt(j, 1).equals(FREE)) {
                     model.setValueAt(FREE, j, 1);
+                    model.setValueAt(DASH, j, 2);
                 }
             } else {
                 if (customer.isInspectionRewrite() == true) {
                     model.setValueAt("Customer " + customer.getCount(), j, 1);
+                    model.setValueAt(customer.getNameVehicle(), j, 2);
                 } else if (customer.isPause()) {
                     model.setValueAt(PAUSE, j, 1);
+                    model.setValueAt(DASH, j, 2);
                 }
-                
+
             }
         }
 
         // UPDATE EMPLOYEES TYPE 1
         model = (DefaultTableModel) jTable2.getModel();
-        
+
         emp = simulation.agentReception().getGuiEmployers();
         for (int j = 0; j < simulation.agentReception().getTotalCountOfEmployees(); j++) {
             CustomerObject customer = emp.get(j);
@@ -884,7 +895,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             } else {
                 if (!customer.isPause()) {
                     model.setValueAt("Customer " + customer.getCount(), j, 1);
-                    
+
                     if (customer.isPaymentRewrite() == true) {
                         model.setValueAt("PAYMENT", j, 2);
                     } else if (customer.isTakeOverRewrite() == true) {
@@ -904,10 +915,12 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             if (customer == null) {
                 if (!model.getValueAt(j, 1).equals(FREE)) {
                     model.setValueAt(FREE, j, 1);
+                    model.setValueAt(DASH, j, 2);
                 }
             } else {
                 if (customer.isParkingRewrite() == true) {
                     model.setValueAt("Customer " + customer.getCount(), j, 1);
+                    model.setValueAt(customer.getNameVehicle(), j, 2);
                 }
             }
         }
@@ -923,7 +936,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         // emp.addAll(p);
         for (int j = 0; j < length; j++) {
             CustomerObject customer = ((MyMessage) customers.poll()).getCustomer();
-            
+
             if (customer == null) {
                 if (!model.getValueAt(j, 1).equals(FREE)) {
                     model.setValueAt(FREE, j, 1);
@@ -941,7 +954,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
                 } else {
                     if (customer.isPark() == true) {
                         model.addRow(new Object[]{"" + (j + 1), "Customer " + (j + 1), "PARK"});
-                        
+
                     } else if (customer.isWaitingForPayment() == true) {
                         model.addRow(new Object[]{"" + (j + 1), "Customer " + (j + 1), "PAYMENT"});
                     } else {
@@ -949,40 +962,41 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
                     }
                 }
             }
-            
+
         }
         if (model.getRowCount() != length) {
             model.setRowCount(length);
         }
-        
+
     }
-    
+
     private void updateReplicationStats() {
         cleanLabels();
-        
+
         jLabel12.setText("Average waiting time: " + simulation.getAvgWaitingTime().mean());
-        jLabel18.setText("Average time in system: " + simulation.getAvgTimeInSystem().mean());
+        jLabel10.setText("Average time in system: " + simulation.getAvgTimeInSystem().mean());
         jLabel14.setText("Average free employees(type 1): " + simulation.getAvgFreeEmp1().mean());
         jLabel13.setText("Average free employees(type 2): " + simulation.getAvgFreeEmp2().mean());
+        jLabel18.setText("Average free employees(type 2) with C2: " + simulation.getAvgFreeEmp2WithC2().mean());
         jLabelCountReplication.setText("Replication: " + (simulation.currentReplication() + 1));
         jLabel8.setText("Average count of vehicles in system: " + simulation.getAvgCOuntOfVehicles().mean());
         if (simulation.currentReplication() >= 29) {
             jLabel15.setText("Time in system interval confidence: " + simulation.getAvgTimeInSystem().confidenceInterval_90()[0] + " - " + simulation.getAvgTimeInSystem().confidenceInterval_90()[1]);
             jLabel17.setText("Average count of customers interval confidence: " + simulation.getAvgCountOfCustomers().confidenceInterval_95()[0] + " - " + simulation.getAvgCountOfCustomers().confidenceInterval_95()[1]);
         }
-        
+
         jLabel16.setText("Average count of customers: " + simulation.getAvgCountOfCustomers().mean());
         jLabel7.setText("Average queue length: " + simulation.getAvgQueueLength().mean());
     }
-    
+
     public void cleanLabels() {
         jLabel11.setText("");
-        
+
         if (runType == RunType.REPLICATIONS || runType == RunType.SIMULATION) {
             if (runType == RunType.REPLICATIONS) {
                 jLabel11.setText("Replications");
                 jPanel1.setVisible(false);
-                
+
             } else {
                 jLabel11.setText("Simulation");
                 jPanel1.setVisible(true);
@@ -991,10 +1005,10 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             jScrollPane2.setViewportView(jTable2);
             jScrollPane3.setViewportView(jTable3);
             jScrollPane4.setViewportView(jTable4);
-            
+
         } else {
             jPanel1.setVisible(false);
-            
+
         }
         jLabel2.setText("");
         jLabel3.setText("");
@@ -1019,60 +1033,68 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         jLabel18.setText("");
         jLabel16.setText("");
         jLabel10.setText("");
+        jLabel27.setText("");
     }
-    
+
     private void initializeTables() {
         simulation = (MySimulation) simulation;
-        
+
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        
+
         jTable1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         jTable1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        jTable1.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         jTable2.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         jTable2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         jTable2.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         jTable3.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         jTable3.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        jTable3.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         jTable4.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         jTable4.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         jTable4.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-        
+
         updateTableHeader(jTable1);
         updateTableHeader(jTable2);
         updateTableHeader(jTable3);
         updateTableHeader(jTable4);
-        
+
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         for (int j = 0; j < simulation.agentMechanics().getTotalCountOfEmployees(); j++) {
-            model.addRow(new Object[]{"Employer " + (j + 1), FREE});
+            if (j < simulation.agentMechanics().getTotalCountOfEmployeesWithCertificate1()) {
+                model.addRow(new Object[]{"Employer " + (j + 1), FREE, DASH});
+            } else {
+                model.addRow(new Object[]{"Employer " + (j + 1) + " (C2)", FREE, DASH});
+            }
+
         }
-        
+
         model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
         for (int j = 0; j < simulation.agentReception().getTotalCountOfEmployees(); j++) {
             model.addRow(new Object[]{"Employer " + (j + 1), FREE, DASH});
         }
-        
+
         model = (DefaultTableModel) jTable3.getModel();
         model.setRowCount(0);
         for (int j = 0; j < simulation.agentParking().getTotalCountOfParkingPlaces(); j++) {
-            model.addRow(new Object[]{"Place " + (j + 1), FREE, DASH});
+            model.addRow(new Object[]{"Place " + (j + 1), FREE, DASH, DASH});
         }
-        
+
         model = (DefaultTableModel) jTable4.getModel();
         model.setRowCount(0);
-        
+
     }
-    
+
     private void updateTableHeader(JTable table) {
         ((DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer())
                 .setHorizontalAlignment(JLabel.CENTER);
     }
-    
+
     private void updateCharts() throws IOException {
-        
+
         for (int i = series.getItemCount(); i < values.size(); i++) {
             series.add(i + offset, values.get(i));
         }
@@ -1080,10 +1102,10 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         chart.getXYPlot().setDataset(dataset);
         refreshCharts();
     }
-    
+
     @Override
     public void simStateChanged(Simulation smltn, SimState ss) {
-        
+
     }
 
     //TODO DEPENDENCIES
@@ -1091,20 +1113,20 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     public void refresh(Simulation smltn) {
         simulation = (MySimulation) smltn;
         refreshGuiChanges = true;
-        
+
         if (runType == RunType.DEPENDENCY_1) {
             values.add(simulation.getAvgQueueLength().mean());
         } else if (runType == RunType.DEPENDENCY_2) {
             values.add(simulation.getAvgTimeInSystem().mean());
         }
     }
-    
+
     @Override
     public void animatorCreated(IAnimator ia, IAnimator ia1) {
     }
-    
+
     @Override
     public void animatorRemoved(IAnimator ia) {
     }
-    
+
 }

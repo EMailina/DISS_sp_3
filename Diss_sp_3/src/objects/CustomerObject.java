@@ -26,7 +26,9 @@ public class CustomerObject {
     private boolean park = false;
     private boolean pause = false;
 
+    private double carLimit = 0.65;
     private double truckLimit = 0.86;
+    
     
     public CustomerObject() {
        
@@ -147,5 +149,21 @@ public class CustomerObject {
         }
         return true;
     }
+    
+      public boolean isCar() {
+        if(probabilityVehicle < carLimit){
+            return true;
+        }
+        return false;
+    }
 
+      public String getNameVehicle(){
+          if(isTruck()){
+              return "TRUCK";
+          }else if (isCar()){
+              return "CAR";
+          }
+          return "VAN";
+      }
+      
 }

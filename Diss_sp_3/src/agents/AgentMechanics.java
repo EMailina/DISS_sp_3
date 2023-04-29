@@ -21,7 +21,8 @@ public class AgentMechanics extends Agent {
     private int countOfWorkingWithCertificate1;
     private int countOfWorkingWithCertificate2;
 
-    private SimQueue<MessageForm> employee;
+    private SimQueue<MessageForm> employeeWithCertificate1;
+    private SimQueue<MessageForm> employeeWithCertificate2;
 
     private ArrayList<CustomerObject> guiEmployers;
 
@@ -42,10 +43,16 @@ public class AgentMechanics extends Agent {
         super.prepareReplication();
         countOfWorkingWithCertificate1 = 0;
         countOfWorkingWithCertificate2 = 0;
-        employee = new SimQueue<>(new WStat(_mySim));
-        employee.clear();
-        for (int i = 0; i < getTotalCountOfEmployees(); i++) {
-            employee.add(null);
+        employeeWithCertificate1 = new SimQueue<>(new WStat(_mySim));
+        employeeWithCertificate1.clear();
+        for (int i = 0; i < getTotalCountOfEmployeesWithCertificate1(); i++) {
+            employeeWithCertificate1.add(null);
+        }
+        
+        employeeWithCertificate2 = new SimQueue<>(new WStat(_mySim));
+        employeeWithCertificate2.clear();
+        for (int i = 0; i < getTotalCountOfEmployeesWithCertificate2(); i++) {
+            employeeWithCertificate2.add(null);
         }
 
         guiEmployers = new ArrayList<>(getTotalCountOfEmployees());
@@ -92,39 +99,39 @@ public class AgentMechanics extends Agent {
         return countOfPausedCertificate2 + countOfWorkingWithCertificate2;
     }
 
-    public void addWorkingEmployeeC1() {
+    public void addWorkingEmployeeC1() throws Exception {
         if (getCountOfWorkingC1() < totalCountOfEmployeesWithCertificate1) {
             countOfWorkingWithCertificate1++;
-            employee.remove(0);
+            employeeWithCertificate1.remove(0);
         } else {
-            System.err.println("Chyba------------------------------------------------------------------");
+           throw new Exception("Any free workers(type 2) WITH CERTIFICATE 1!");
         }
     }
 
-    public void addWorkingEmployeeC2() {
+    public void addWorkingEmployeeC2() throws Exception {
         if (getCountOfWorkingC2() < totalCountOfEmployeesWithCertificate2) {
             countOfWorkingWithCertificate2++;
-            employee.remove(0);
+            employeeWithCertificate2.remove(0);
         } else {
-            System.err.println("Chyba------------------------------------------------------------------");
+           throw new Exception("Any free workers(type 2) WITH CERTIFICATE 2!");
         }
     }
 
-    public void removeWorkingEmployeeC2() {
+    public void removeWorkingEmployeeC2() throws Exception {
         if (getCountOfWorkingC2() > 0) {
             countOfWorkingWithCertificate2--;
-            employee.add(null);
+            employeeWithCertificate2.add(null);
         } else {
-            System.err.println("Chyba-------------------------------------------------------------------");
+           throw new Exception("Any free workers(type 2) WITH CERTIFICATE 2!");
         }
     }
 
-    public void removeWorkingEmployeeC1() {
+    public void removeWorkingEmployeeC1() throws Exception {
         if (getCountOfWorkingC1() > 0) {
             countOfWorkingWithCertificate1--;
-            employee.add(null);
+            employeeWithCertificate1.add(null);
         } else {
-            System.err.println("Chyba-------------------------------------------------------------------");
+           throw new Exception("Any free workers(type 2) WITH CERTIFICATE 1!");
         }
     }
 
@@ -132,13 +139,6 @@ public class AgentMechanics extends Agent {
         return countOfWorkingWithCertificate1 + countOfWorkingWithCertificate2;
     }
 
-    public SimQueue<MessageForm> getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(SimQueue<MessageForm> employee) {
-        this.employee = employee;
-    }
 
     public ArrayList<CustomerObject> getGuiEmployers() {
         return guiEmployers;
@@ -191,23 +191,23 @@ public class AgentMechanics extends Agent {
     public void addPausedEmployees() {
         countOfPausedCertificate1 = totalCountOfEmployeesWithCertificate1 - countOfWorkingWithCertificate1;
         for (int i = 0; i < countOfPausedCertificate1; i++) {
-            employee.remove(0);
+            employeeWithCertificate1.remove(0);
         }
 
         countOfPausedCertificate2 = totalCountOfEmployeesWithCertificate2 - countOfWorkingWithCertificate2;
         for (int i = 0; i < countOfPausedCertificate2; i++) {
-            employee.remove(0);
+            employeeWithCertificate2.remove(0);
         }
     }
 
     public void removePausedEmployeesC1() {
         countOfPausedCertificate1--;
-        employee.add(null);
+        employeeWithCertificate1.add(null);
     }
 
     public void removePausedEmployeesC2() {
         countOfPausedCertificate2--;
-        employee.add(null);
+        employeeWithCertificate2.add(null);
     }
 
     public void addPauseCounter() {
@@ -216,12 +216,12 @@ public class AgentMechanics extends Agent {
 
     public void addEmployeeToPauseC1() {
         countOfPausedCertificate1++;
-        employee.remove(0);
+        employeeWithCertificate1.remove(0);
     }
 
     public void addEmployeeToPauseC2() {
         countOfPausedCertificate2++;
-        employee.remove(0);
+        employeeWithCertificate2.remove(0);
     }
 
     public int getTotalCountOfEmployeesWithCertificate2() {
@@ -260,6 +260,13 @@ public class AgentMechanics extends Agent {
         this.totalCountOfEmployeesWithCertificate1 = totalCountOfEmployeesWithCertificate1;
     }
 
-    
+    public SimQueue<MessageForm> getEmployeeWithCertificate1() {
+        return employeeWithCertificate1;
+    }
+
+    public SimQueue<MessageForm> getEmployeeWithCertificate2() {
+        return employeeWithCertificate2;
+    }
+
 
 }

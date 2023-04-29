@@ -7,8 +7,6 @@ package diss_sp_3;
 
 import OSPABA.ISimDelegate;
 
-import diss_sp_3.Diss_sp_3;
-import diss_sp_3.RunType;
 import simulation.MySimulation;
 
 /**
@@ -23,11 +21,11 @@ public class ManagerDependencies {
         stop = false;
     }
 
-    public void findDependencyOnEmp1(ISimDelegate refresher, int countOfEmp, int countOfReplication) {
+    public void findDependencyOnEmp1(ISimDelegate refresher, int countOfEmp, int countOfEmpC2, boolean validation, int countOfReplication) {
         stop = false;
         for (int i = 0; i < 15; i++) {
             MySimulation simulation = new MySimulation();
-         //   init(simulation, RunType.DEPENDENCY_1, i + 1, countOfEmp, refresher);
+            init(simulation, RunType.DEPENDENCY_1, i + 1, countOfEmp, countOfEmpC2, validation, refresher);
 
             simulation.simulate(countOfReplication, 480);
             refresher.refresh(simulation);
@@ -38,11 +36,11 @@ public class ManagerDependencies {
         }
     }
 
-    public void findDependencyOnEmp2(ISimDelegate refresher, int countOfEmp, int countOfReplication) {
+    public void findDependencyOnEmp2(ISimDelegate refresher, int countOfEmp, int countOfReplication, boolean validation) {
         stop = false;
         for (int i = 10; i < 26; i++) {
             MySimulation simulation = new MySimulation();
-          //  init(simulation, RunType.DEPENDENCY_2, countOfEmp, i + 1, refresher);
+            init(simulation, RunType.DEPENDENCY_2, countOfEmp, 0, i + 1, validation, refresher);
 
             simulation.simulate(countOfReplication, 480);
             refresher.refresh(simulation);
@@ -63,13 +61,14 @@ public class ManagerDependencies {
         this.stop = stop;
     }
 
-    
-//    private void init(MySimulation simulation, RunType type, int countOfEmp1, int countOfEmp2, ISimDelegate refresher) {
-//        ((Diss_sp_3) refresher).setSimulation(simulation);
-//        simulation.setType(type);
-//        simulation.registerDelegate(refresher);
-//        simulation.setCountOfEmployeeType1(countOfEmp1);
-//        simulation.setCountOfEmployeeType2(countOfEmp2);
-//    }
+    private void init(MySimulation simulation, RunType type, int countOfEmp1, int countOfEmp2, int countOfEmpC2, boolean validation, ISimDelegate refresher) {
+        ((Diss_sp_3) refresher).setSimulation(simulation);
+        simulation.setType(type);
+        simulation.registerDelegate(refresher);
+        simulation.setCountOfEmployeeType1(countOfEmp1);
+        simulation.setValidationRun(validation);
+        simulation.setCountOfEmployeeType2WithCertificate1(countOfEmp2);
+        simulation.setCountOfEmployeeType2WithCertificate2(countOfEmpC2);
+    }
 
 }

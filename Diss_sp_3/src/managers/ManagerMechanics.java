@@ -31,7 +31,7 @@ public class ManagerMechanics extends Manager {
     public void processMechanicExecute(MessageForm message) throws Exception {
         if (myAgent().getCountOfAllWorking() < myAgent().getTotalCountOfEmployees()) {
 
-            addToEmployer(((MyMessage) message).getCustomer());
+            
 
             if (((MyMessage) message).getCustomer().isTruck()) {
                 myAgent().addWorkingEmployeeC2();
@@ -61,6 +61,8 @@ public class ManagerMechanics extends Manager {
                 }
             }
 
+            addToEmployer(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated());
+            
             ((MyMessage) message).setProcessStartTime(mySim().currentTime());
             message.setAddressee(myAgent().findAssistant(Id.processInsepction));
             startContinualAssistant(message);
@@ -80,12 +82,12 @@ public class ManagerMechanics extends Manager {
     }
 
     //meta! sender="ProcessInsepction", id="28", type="Finish"
-    public void processFinish(MessageForm message) {
+    public void processFinish(MessageForm message) throws Exception {
 
-        if(((MyMessage) message).getCustomer().getCount() == 13){
+        if (((MyMessage) message).getCustomer().getCount() == 13) {
             System.out.println("");
         }
-        
+
         String typeOfCar = ((MyMessage) message).getCustomer().isTruck() ? "TRUCK" : ((MyMessage) message).getCustomer().getProbabilityVehicle() < 0.65 ? "PERSONAL" : "VAN";
         //  System.out.println(((MyMessage) message).getCustomer().getCount() + "| Customer Start Service | " + typeOfCar + "| " + mySim().currentTime());
         if (((MyMessage) message).isExecuteWithCertficated()) {
@@ -120,7 +122,7 @@ public class ManagerMechanics extends Manager {
                 } else {
                     myAgent().addEmployeeToPauseC1();
                 }
-                addPauseToEmployerGui();
+                addPauseToEmployerGui(((MyMessage) message).isExecuteWithCertficated());
                 MyMessage newMessage = (MyMessage) message.createCopy();
                 newMessage.setExecuteWithCertficated(((MyMessage) message).isExecuteWithCertficated());
                 newMessage.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
@@ -169,7 +171,11 @@ public class ManagerMechanics extends Manager {
             case Mc.finish:
                 switch (message.sender().id()) {
                     case Id.processInsepction: {
-                        processFinish(message);
+                        try {
+                            processFinish(message);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ManagerMechanics.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                     break;
 
@@ -209,10 +215,14 @@ public class ManagerMechanics extends Manager {
         response(message);
     }
 
-    public void addToEmployer(CustomerObject customer) {
+    public void addToEmployer(CustomerObject customer, boolean c2) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
-            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+            int start = 0;
+            if(c2){
+                start = myAgent().getTotalCountOfEmployeesWithCertificate1();
+            }
+            for (int i = start; i < myAgent().getTotalCountOfEmployees(); i++) {
                 if (myAgent().getGuiEmployers().get(i) == null) {
 
                     myAgent().getGuiEmployers().set(i, customer);
@@ -252,7 +262,7 @@ public class ManagerMechanics extends Manager {
             ((MyMessage) message).setExecuteWithCertficated(false);
             message.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
             startContinualAssistant(message);
-            addPauseToEmployerGui();
+            addPauseToEmployerGui(false);
             //System.out.println("TYPE 1 BERE:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
         }
@@ -263,16 +273,20 @@ public class ManagerMechanics extends Manager {
             ((MyMessage) message).setExecuteWithCertficated(true);
             message.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
             startContinualAssistant(message);
-            addPauseToEmployerGui();
+            addPauseToEmployerGui(true);
             //System.out.println("TYPE 2 BERE:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
         }
     }
 
-    public void addPauseToEmployerGui() {
+    public void addPauseToEmployerGui(boolean c2) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
-            for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
+            int start = 0;
+            if(c2){
+                start = myAgent().getTotalCountOfEmployeesWithCertificate1();
+            }
+            for (int i = start; i < myAgent().getTotalCountOfEmployees(); i++) {
                 if (myAgent().getGuiEmployers().get(i) == null) {
                     CustomerObject customer = new CustomerObject();
                     customer.setCount(myAgent().getPauseCounter());
