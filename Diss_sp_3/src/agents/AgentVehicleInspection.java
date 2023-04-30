@@ -3,7 +3,6 @@ package agents;
 import OSPABA.*;
 import simulation.*;
 import managers.*;
-import continualAssistants.*;
 
 //meta! id="6"
 public class AgentVehicleInspection extends Agent {

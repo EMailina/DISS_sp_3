@@ -3,7 +3,6 @@ package managers;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
-import continualAssistants.*;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,23 +30,12 @@ public class ManagerMechanics extends Manager {
     public void processMechanicExecute(MessageForm message) throws Exception {
         if (myAgent().getCountOfAllWorking() < myAgent().getTotalCountOfEmployees()) {
 
-            
-
             if (((MyMessage) message).getCustomer().isTruck()) {
                 myAgent().addWorkingEmployeeC2();
                 //System.out.println("TYPE 2 BERE:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
                 ((MyMessage) message).setExecuteWithCertficated(true);
 
-                if (myAgent().getCountOfWorkingC1() < myAgent().getTotalCountOfEmployeesWithCertificate1()) {
-                    for (int i = 0; i < myAgent().getTotalCountOfEmployeesWithCertificate1() - myAgent().getCountOfWorkingC1(); i++) {
-                        MessageForm newMessage = message.createCopy();
-                        ((MyMessage) newMessage).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2() - i);
-                        newMessage.setAddressee(Id.agentVehicleInspection);
-                        newMessage.setCode(Mc.noticeFreeMechanic);
-                        notice(newMessage);
-                    }
-                }
             } else {
                 if (myAgent().getCountOfWorkingC1() < myAgent().getTotalCountOfEmployeesWithCertificate1()) {
                     //System.out.println("TYPE 1 BERE:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
@@ -61,44 +49,49 @@ public class ManagerMechanics extends Manager {
                 }
             }
 
+            if (mySim().currentTime() != myAgent().getMessageTime()) {
+                myAgent().setMessageTime(mySim().currentTime());
+                MessageForm newMessage = message.createCopy();
+                newMessage.setAddressee(Id.agentMechanics);
+                newMessage.setCode(Mc.noticeTruckInspection);
+                notice(newMessage);
+            }
             addToEmployer(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated());
-            
+
             ((MyMessage) message).setProcessStartTime(mySim().currentTime());
             message.setAddressee(myAgent().findAssistant(Id.processInsepction));
             startContinualAssistant(message);
             //ystem.out.println("Start service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
             String typeOfCar = ((MyMessage) message).getCustomer().isTruck() ? "TRUCK" : ((MyMessage) message).getCustomer().getProbabilityVehicle() < 0.65 ? "PERSONAL" : "VAN";          //  System.out.println(((MyMessage) message).getCustomer().getCount() + "| Customer Start Service | " + typeOfCar + "| " + mySim().currentTime());
-            if (((MyMessage) message).isExecuteWithCertficated()) {
-                System.out.println(((MyMessage) message).getCustomer().getCount()
-                        + "|" + typeOfCar + "| Start | W:TYPE_2_C2"
-                        + " | " + mySim().currentTime());
-            } else {
-                System.out.println(((MyMessage) message).getCustomer().getCount()
-                        + "|" + typeOfCar + "| Start | W:TYPE_2_C1"
-                        + " | " + mySim().currentTime());
-            }
+//            if (((MyMessage) message).isExecuteWithCertficated()) {
+//                System.out.println(((MyMessage) message).getCustomer().getCount()
+//                        + "|" + typeOfCar + "| Start | W:TYPE_2_C2"
+//                        + " | " + mySim().currentTime());
+//            } else {
+//                System.out.println(((MyMessage) message).getCustomer().getCount()
+//                        + "|" + typeOfCar + "| Start | W:TYPE_2_C1"
+//                        + " | " + mySim().currentTime());
+//            }
 
         }
     }
 
     //meta! sender="ProcessInsepction", id="28", type="Finish"
     public void processFinish(MessageForm message) throws Exception {
-
-        if (((MyMessage) message).getCustomer().getCount() == 13) {
-            System.out.println("");
+        if (((MyMessage) message).getCustomer().getCount() == 27 || ((MyMessage) message).getCustomer().getCount() == 28) {
+//            System.out.println("");
         }
-
         String typeOfCar = ((MyMessage) message).getCustomer().isTruck() ? "TRUCK" : ((MyMessage) message).getCustomer().getProbabilityVehicle() < 0.65 ? "PERSONAL" : "VAN";
         //  System.out.println(((MyMessage) message).getCustomer().getCount() + "| Customer Start Service | " + typeOfCar + "| " + mySim().currentTime());
-        if (((MyMessage) message).isExecuteWithCertficated()) {
-            System.out.println(((MyMessage) message).getCustomer().getCount()
-                    + "|" + typeOfCar + "| Stop | W:TYPE_2_C2"
-                    + " | " + mySim().currentTime());
-        } else {
-            System.out.println(((MyMessage) message).getCustomer().getCount()
-                    + "|" + typeOfCar + "| Stop | W:TYPE_2_C1"
-                    + " | " + mySim().currentTime());
-        }
+//        if (((MyMessage) message).isExecuteWithCertficated()) {
+//            System.out.println(((MyMessage) message).getCustomer().getCount()
+//                    + "|" + typeOfCar + "| Stop | W:TYPE_2_C2"
+//                    + " | " + mySim().currentTime());
+//        } else {
+//            System.out.println(((MyMessage) message).getCustomer().getCount()
+//                    + "|" + typeOfCar + "| Stop | W:TYPE_2_C1"
+//                    + " | " + mySim().currentTime());
+//        }
 
         removeFromEmployer(((MyMessage) message).getCustomer());
         if (((MyMessage) message).isExecuteWithCertficated()) {
@@ -132,14 +125,20 @@ public class ManagerMechanics extends Manager {
 
         }
 
+        if (((MyMessage) message).isExecuteWithCertficated()) {
+            ((MyMessage) message).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2());
+        } else {
+            ((MyMessage) message).setCertificate2(0);
+        }
+
         if (!pause) {
             ((MyMessage) message).setAvailableEmployee(true);
-            ((MyMessage) message).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2());
+            //((MyMessage) message).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2());
             message.setCode(Mc.mechanicExecute);
             response(message);
         } else {
             ((MyMessage) message).setAvailableEmployee(false);
-            ((MyMessage) message).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2());
+            // ((MyMessage) message).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2());
             message.setCode(Mc.mechanicExecute);
             response(message);
         }
@@ -192,6 +191,10 @@ public class ManagerMechanics extends Manager {
             case Mc.noticeLunchPause:
                 processNoticeLunchPause(message);
                 break;
+
+            case Mc.noticeTruckInspection:
+                processNoticeTruckInspection(message);
+                break;
             default:
                 processDefault(message);
                 break;
@@ -219,7 +222,7 @@ public class ManagerMechanics extends Manager {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             int start = 0;
-            if(c2){
+            if (c2) {
                 start = myAgent().getTotalCountOfEmployeesWithCertificate1();
             }
             for (int i = start; i < myAgent().getTotalCountOfEmployees(); i++) {
@@ -227,11 +230,6 @@ public class ManagerMechanics extends Manager {
 
                     myAgent().getGuiEmployers().set(i, customer);
                     customer.setInspectionRewrite(true);
-//                    if (takeOver) {
-//                        customer.setTakeOverRewrite(true);
-//                    } else {
-//                        customer.setPaymentRewrite(true);
-//                    }
                     break;
                 }
             }
@@ -263,7 +261,6 @@ public class ManagerMechanics extends Manager {
             message.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
             startContinualAssistant(message);
             addPauseToEmployerGui(false);
-            //System.out.println("TYPE 1 BERE:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
         }
 
@@ -274,7 +271,6 @@ public class ManagerMechanics extends Manager {
             message.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
             startContinualAssistant(message);
             addPauseToEmployerGui(true);
-            //System.out.println("TYPE 2 BERE:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
         }
     }
@@ -283,7 +279,7 @@ public class ManagerMechanics extends Manager {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             int start = 0;
-            if(c2){
+            if (c2) {
                 start = myAgent().getTotalCountOfEmployeesWithCertificate1();
             }
             for (int i = start; i < myAgent().getTotalCountOfEmployees(); i++) {
@@ -320,21 +316,44 @@ public class ManagerMechanics extends Manager {
     }
 
     private void processFinishProcessLunchPause(MessageForm message) {
-        //System.out.println("stop pauza 2");
         if (((MyMessage) message).isExecuteWithCertficated()) {
             myAgent().removePausedEmployeesC2();
-            //System.out.println("TYPE 1 KONCI:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+            ((MyMessage) message).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2());
 
         } else {
-            //System.out.println("TYPE 2 KONCI:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
-
             myAgent().removePausedEmployeesC1();
+            ((MyMessage) message).setCertificate2(0);
+
         }
 
         removePauseFromEmployer();
-        ((MyMessage) message).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2());
+        ((MyMessage) message).setAvailableEmployee(true);
         message.setAddressee(Id.agentVehicleInspection);
         message.setCode(Mc.noticeFreeMechanic);
         notice(message);
+    }
+
+//    private void processNoticeTruckInspection(MessageForm message) {
+//        if (myAgent().getCountOfWorkingC1() < myAgent().getTotalCountOfEmployeesWithCertificate1()) {
+//            for (int i = 0; i < myAgent().getTotalCountOfEmployeesWithCertificate1() - myAgent().getCountOfWorkingC1(); i++) {
+//                MessageForm newMessage = message.createCopy();
+//                ((MyMessage) newMessage).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2() - i);
+//                newMessage.setAddressee(Id.agentVehicleInspection);
+//                newMessage.setCode(Mc.noticeFreeMechanic);
+//                notice(newMessage);
+//            }
+//        }
+//    }
+    private void processNoticeTruckInspection(MessageForm message) {
+
+        for (int i = 0; i < myAgent().getTotalCountOfEmployees() - myAgent().getCountOfWorkingC1() - myAgent().getCountOfWorkingC2(); i++) {
+            MessageForm newMessage = message.createCopy();
+            ((MyMessage) newMessage).setAvailableEmployee(true);
+            ((MyMessage) newMessage).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2() - i);
+            newMessage.setAddressee(Id.agentVehicleInspection);
+            newMessage.setCode(Mc.noticeFreeMechanic);
+            notice(newMessage);
+        }
+
     }
 }

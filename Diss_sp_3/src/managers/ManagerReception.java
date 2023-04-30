@@ -69,6 +69,8 @@ public class ManagerReception extends Manager {
 
     //meta! sender="ProcessTakeOverVehicle", id="20", type="Finish"
     public void processFinishProcessTakeOverVehicle(MessageForm message) {
+       // System.out.println(((MyMessage) message).getCustomer().getCount()
+       //         + "|" + ((MyMessage) message).getCustomer().getNameVehicle()+ "| Stop registration | " + mySim().currentTime());
         try {
             removeFromEmployer(((MyMessage) message).getCustomer());
             myAgent().removeWorkingEmployee();
@@ -117,6 +119,9 @@ public class ManagerReception extends Manager {
     }
 
     private void startWorkOnTakeOver(MyMessage message) throws Exception {
+       // System.out.println(((MyMessage) message).getCustomer().getCount()
+       //         + "|" + ((MyMessage) message).getCustomer().getNameVehicle()+ "| Start registration"
+       //         + " | " + mySim().currentTime());
         myAgent().addWorkingEmployee();
         myAgent().addReservedParkingPlace();
         ((MyMessage) message).getCustomer().setEndOfWaitingForTakeOver(mySim().currentTime());
@@ -208,17 +213,6 @@ public class ManagerReception extends Manager {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-//        try {
-//            if (myAgent().getCountOfWorkingEmployees() >= myAgent().getTotalCountOfEmployees()
-//                    || myAgent().getCountOfReservedParkingPlaces() >= myAgent().getTotalCountOfParkingPlaces()) {
-//                ((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
-//                myAgent().getQueueTakeOver().enqueue(message);
-//            } else {
-//                startWorkOnTakeOver((MyMessage) message);
-//            }
-//        } catch (Exception ex) {
-//            Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 
     //meta! userInfo="Process messages defined in code", id="0"

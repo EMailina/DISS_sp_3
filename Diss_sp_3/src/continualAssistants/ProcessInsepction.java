@@ -6,8 +6,8 @@ import agents.*;
 import OSPABA.Process;
 import OSPRNG.EmpiricPair;
 import OSPRNG.EmpiricRNG;
-import OSPRNG.UniformContinuousRNG;
 import OSPRNG.UniformDiscreteRNG;
+import objects.VehicleConstants;
 import java.util.ArrayList;
 
 //meta! id="27"
@@ -16,8 +16,6 @@ public class ProcessInsepction extends Process {
     UniformDiscreteRNG inspectionTimeCarDistribution;
     EmpiricRNG inspectionTimeVanDistribution;
     EmpiricRNG inspectionTimeTruckDistribution;
-    private final double CAR_PROBABILITY = 0.65;
-    private final double VAN_PROBABILITY = 0.21;
 
     public ProcessInsepction(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
@@ -58,9 +56,9 @@ public class ProcessInsepction extends Process {
     //meta! sender="AgentMechanics", id="28", type="Start"
     public void processStart(MessageForm message) {
         message.setCode(Mc.noticeEndInspection);
-        if (((MyMessage) message).getCustomer().getProbabilityVehicle() < CAR_PROBABILITY) {
+        if (((MyMessage) message).getCustomer().getProbabilityVehicle() < VehicleConstants.CAR_LIMIT) {
             hold((double) inspectionTimeCarDistribution.sample().doubleValue(), message);
-        } else if (((MyMessage) message).getCustomer().getProbabilityVehicle() < VAN_PROBABILITY + CAR_PROBABILITY) {
+        } else if (((MyMessage) message).getCustomer().getProbabilityVehicle() < VehicleConstants.VAN_LIMIT + VehicleConstants.CAR_LIMIT) {
             hold((double)(inspectionTimeVanDistribution.sample().doubleValue()), message);
         } else {
             hold((double) inspectionTimeTruckDistribution.sample().doubleValue(), message);

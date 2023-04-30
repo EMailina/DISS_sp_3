@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class MySimulation extends Simulation {
 
-    private Random generatorOfGenerators = new Random(0);
+    private Random generatorOfGenerators = new Random(187);
 
     private Stat avgWaitingTime;
     private Stat avgQueueLength;
@@ -61,7 +61,7 @@ public class MySimulation extends Simulation {
     @Override
     public void replicationFinished() {
         // Collect local statistics into global, update UI, etc...
-
+super.replicationFinished();
         agentReception().getQueueTakeOver().enqueue(null);
         agentReception().getQueueTakeOver().dequeue();
         agentReception().getEmployee().enqueue(null);
@@ -81,21 +81,12 @@ public class MySimulation extends Simulation {
         avgFreeEmp2WithC2.addSample(_agentMechanics.getEmployeeWithCertificate2().lengthStatistic().mean());
         avgCOuntOfVehicles.addSample(_agentEnviroment.getCustomers().size());
         avgCountOfCustomers.addSample(_agentEnviroment.getCustomers().lengthStatistic().mean());
-        super.replicationFinished();
+        
     }
 
     @Override
     public void simulationFinished() {
-        // Dysplay simulation results
 
-//        System.out.println("-----------------------------------------------------------------");
-//        System.out.println("Waiting Time: " + avgWaitingTime.mean());
-//        System.out.println("Queue len Time: " + avgQueueLength.mean());
-//        System.out.println("EMP 1 : " + (1-avgFreeEmp1.mean()));
-//        System.out.println("EMP 2: " + (1-avgFreeEmp2.mean()));
-//        System.out.println("Time in sys : " + avgTimeInSystem.mean());
-//        System.out.println("vehicles: " + avgCOuntOfVehicles.mean());
-//        System.out.println("countOfCustomers: " + avgCountOfCustomers.mean());
         super.simulationFinished();
 
     }
@@ -229,9 +220,9 @@ public class MySimulation extends Simulation {
         if (type == RunType.SIMULATION) {
 
             if (value == 1) {
-                setSimSpeed(1, 1);
+                setSimSpeed(1.0/60, 0.01);
             } else if (value == 2) {
-                setSimSpeed(1, 0.350);
+                setSimSpeed(1.0/60, 0.001);
             } else if (value == 3) {
                 setSimSpeed(1.0 / 60.0, 0.0001);
             } else if (value == 4) {
@@ -267,6 +258,5 @@ public class MySimulation extends Simulation {
         this.avgFreeEmp2WithC2 = avgFreeEmp2WithC2;
     }
     
-    
-
+   
 }

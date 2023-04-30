@@ -3,7 +3,6 @@ package managers;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
-import continualAssistants.*;
 
 //meta! id="1"
 public class ManagerModel extends Manager {
@@ -39,9 +38,7 @@ public class ManagerModel extends Manager {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
-        if (message.code() == Mc.customerService) {
-            System.out.println("mod");
-        }
+      
         switch (message.code()) {
         }
     }

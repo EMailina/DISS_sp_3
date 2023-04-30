@@ -4,7 +4,6 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import OSPABA.Process;
-import OSPRNG.ExponentialRNG;
 import OSPRNG.TriangularRNG;
 
 //meta! id="19"

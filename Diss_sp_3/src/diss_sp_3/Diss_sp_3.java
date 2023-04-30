@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Queue;
-import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -656,23 +655,19 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 
         if (runType == RunType.REPLICATIONS) {
             simulation.setValidationRun(checkboxValidation.isSelected());
-            simulation.onSimulationWillStart(s -> {
-                // System.out.println("simm...");
-            });
-            // simulation.simulate(countOfReplication, 480);
             simulation.onSimulationDidFinish(sim -> updateReplicationStats());
-
-            //          for (int i = 0; i < 1000; i++) {
+//
+//            for (int i = 0; i < 1000; i++) {
 //                simulation = new MySimulation(i);
 //                simulation.setType(runType);
 //                simulation.setCountOfEmployeeType1(Integer.valueOf(countOfEmployees1Box.getText()));
-//                simulation.setCountOfEmployeeType2(Integer.valueOf(countOfEmployees2Box.getText()));
-//                
-//                simulation.setValidationRun(checkboxValidation.isSelected());
-//               
-            simulation.simulate(countOfReplication, 480);
-//                System.out.println("" + i + " | " +  simulation.getAvgTimeInSystem().mean());
-//            }
+//                simulation.setCountOfEmployeeType2WithCertificate1(Integer.valueOf(countOfEmployees2Box.getText()));
+//                simulation.setCountOfEmployeeType2WithCertificate2(Integer.valueOf(countOfEmployees2Box2.getText()));
+               simulation.setMaxSimSpeed();
+//                simulation.setSpeedChange(speedSlider.getValue());
+                simulation.simulate(countOfReplication, 480);
+            //    System.out.println("" + i + " | " + simulation.getAvgTimeInSystem().mean());
+           // }
 
             //app.replicate(this, countOfReplication, Integer.valueOf(countOfEmployees1Box.getText()), Integer.valueOf(countOfEmployees2Box.getText()), RunType.REPLICATIONS);
         } else if (runType == RunType.SIMULATION) {
@@ -684,7 +679,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             simulation.simulate(1, 480);
         } else if (runType == RunType.DEPENDENCY_1) {
             managerDep = new ManagerDependencies();
-            managerDep.findDependencyOnEmp1(this, Integer.valueOf(countOfEmployees2Box1.getText()), Integer.valueOf(countOfEmployees2Box3.getText()),checkboxValidation.isSelected(), countOfReplication);
+            managerDep.findDependencyOnEmp1(this, Integer.valueOf(countOfEmployees2Box1.getText()), Integer.valueOf(countOfEmployees2Box3.getText()), checkboxValidation.isSelected(), countOfReplication);
         } else if (runType == RunType.DEPENDENCY_2) {
             managerDep = new ManagerDependencies();
             managerDep.findDependencyOnEmp2(this, Integer.valueOf(countOfEmployees1Box1.getText()), countOfReplication, checkboxValidation.isSelected());

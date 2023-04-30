@@ -144,7 +144,7 @@ public class CustomerObject {
     }
 
     public boolean isTruck() {
-        if(probabilityVehicle < truckLimit){
+        if(probabilityVehicle < VehicleConstants.TRUCK_LIMIT){
             return false;
         }
         return true;
@@ -161,7 +161,7 @@ public class CustomerObject {
           if(isTruck()){
               return "TRUCK";
           }else if (isCar()){
-              return "CAR";
+              return "PERSONAL";
           }
           return "VAN";
       }

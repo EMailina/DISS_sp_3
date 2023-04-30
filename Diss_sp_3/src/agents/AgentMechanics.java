@@ -2,7 +2,6 @@ package agents;
 
 import OSPABA.*;
 import OSPDataStruct.SimQueue;
-import OSPStat.Stat;
 import OSPStat.WStat;
 import simulation.*;
 import managers.*;
@@ -33,6 +32,9 @@ public class AgentMechanics extends Agent {
     private double pauseTimeStartedTime = Double.MAX_VALUE;
     private int pauseCounter = 0;
 
+    private double messageTime = -1;
+    private boolean duplicatedTime = false;
+
     public AgentMechanics(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
         init();
@@ -44,13 +46,13 @@ public class AgentMechanics extends Agent {
         countOfWorkingWithCertificate1 = 0;
         countOfWorkingWithCertificate2 = 0;
         employeeWithCertificate1 = new SimQueue<>(new WStat(_mySim));
-        employeeWithCertificate1.clear();
+
         for (int i = 0; i < getTotalCountOfEmployeesWithCertificate1(); i++) {
             employeeWithCertificate1.add(null);
         }
-        
+
         employeeWithCertificate2 = new SimQueue<>(new WStat(_mySim));
-        employeeWithCertificate2.clear();
+
         for (int i = 0; i < getTotalCountOfEmployeesWithCertificate2(); i++) {
             employeeWithCertificate2.add(null);
         }
@@ -64,7 +66,7 @@ public class AgentMechanics extends Agent {
         pauseTimeStarted = false;
         pauseTimeStartedTime = Double.MAX_VALUE;
         pauseCounter = 0;
-       
+        messageTime = -1;
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -78,11 +80,10 @@ public class AgentMechanics extends Agent {
         addOwnMessage(Mc.noticeEndInspection);
         addOwnMessage(Mc.noticeLunchPause);
         addOwnMessage(Mc.noticeEndPause);
+        addOwnMessage(Mc.noticeTruckInspection);
     }
     //meta! tag="end"
 
-    
-    
     public int getTotalCountOfEmployees() {
         return totalCountOfEmployeesWithCertificate1 + totalCountOfEmployeesWithCertificate2;
     }
@@ -104,7 +105,7 @@ public class AgentMechanics extends Agent {
             countOfWorkingWithCertificate1++;
             employeeWithCertificate1.remove(0);
         } else {
-           throw new Exception("Any free workers(type 2) WITH CERTIFICATE 1!");
+            throw new Exception("Any free workers(type 2) WITH CERTIFICATE 1!");
         }
     }
 
@@ -113,7 +114,7 @@ public class AgentMechanics extends Agent {
             countOfWorkingWithCertificate2++;
             employeeWithCertificate2.remove(0);
         } else {
-           throw new Exception("Any free workers(type 2) WITH CERTIFICATE 2!");
+            throw new Exception("Any free workers(type 2) WITH CERTIFICATE 2! TIME: " + mySim().currentTime());
         }
     }
 
@@ -122,7 +123,7 @@ public class AgentMechanics extends Agent {
             countOfWorkingWithCertificate2--;
             employeeWithCertificate2.add(null);
         } else {
-           throw new Exception("Any free workers(type 2) WITH CERTIFICATE 2!");
+            throw new Exception("Any free workers(type 2) WITH CERTIFICATE 2!");
         }
     }
 
@@ -131,14 +132,13 @@ public class AgentMechanics extends Agent {
             countOfWorkingWithCertificate1--;
             employeeWithCertificate1.add(null);
         } else {
-           throw new Exception("Any free workers(type 2) WITH CERTIFICATE 1!");
+            throw new Exception("Any free workers(type 2) WITH CERTIFICATE 1!");
         }
     }
 
     public long getCountOfVehicles() {
         return countOfWorkingWithCertificate1 + countOfWorkingWithCertificate2;
     }
-
 
     public ArrayList<CustomerObject> getGuiEmployers() {
         return guiEmployers;
@@ -268,5 +268,20 @@ public class AgentMechanics extends Agent {
         return employeeWithCertificate2;
     }
 
+    public double getMessageTime() {
+        return messageTime;
+    }
+
+    public void setMessageTime(double messageTime) {
+        this.messageTime = messageTime;
+    }
+
+    public boolean isDuplicatedTime() {
+        return duplicatedTime;
+    }
+
+    public void setDuplicatedTime(boolean duplicatedTime) {
+        this.duplicatedTime = duplicatedTime;
+    }
 
 }

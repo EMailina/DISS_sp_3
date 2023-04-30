@@ -29,6 +29,7 @@ public class Mc extends IdList {
     public static final int noticeEndPause = 7;
     public static final int parkingPlaceInfoMechanics = 4;
     public static final int mechanicsAvailability = 5;
+    public static final int noticeTruckInspection= 8;
   
 
 }
