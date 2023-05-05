@@ -3,13 +3,15 @@ package simulation;
 import OSPABA.*;
 import OSPStat.Stat;
 import agents.*;
+import animation.Animator;
+import animation.BaseAnimator;
 import diss_sp_3.RunType;
 import java.time.LocalTime;
 import java.util.Random;
 
 public class MySimulation extends Simulation {
 
-    private Random generatorOfGenerators = new Random(187);
+    private Random generatorOfGenerators = new Random(0);
 
     private Stat avgWaitingTime;
     private Stat avgQueueLength;
@@ -21,6 +23,7 @@ public class MySimulation extends Simulation {
     private Stat avgCountOfCustomers;
     private RunType type;
     private boolean validationRun = false;
+    private BaseAnimator animator = null;
 
     public MySimulation() {
         init();
@@ -61,7 +64,7 @@ public class MySimulation extends Simulation {
     @Override
     public void replicationFinished() {
         // Collect local statistics into global, update UI, etc...
-super.replicationFinished();
+        super.replicationFinished();
         agentReception().getQueueTakeOver().enqueue(null);
         agentReception().getQueueTakeOver().dequeue();
         agentReception().getEmployee().enqueue(null);
@@ -81,7 +84,7 @@ super.replicationFinished();
         avgFreeEmp2WithC2.addSample(_agentMechanics.getEmployeeWithCertificate2().lengthStatistic().mean());
         avgCOuntOfVehicles.addSample(_agentEnviroment.getCustomers().size());
         avgCountOfCustomers.addSample(_agentEnviroment.getCustomers().lengthStatistic().mean());
-        
+
     }
 
     @Override
@@ -220,9 +223,9 @@ super.replicationFinished();
         if (type == RunType.SIMULATION) {
 
             if (value == 1) {
-                setSimSpeed(1.0/60, 0.01);
+                setSimSpeed(1.0 / 60, 0.01);
             } else if (value == 2) {
-                setSimSpeed(1.0/60, 0.001);
+                setSimSpeed(1.0 / 60, 0.001);
             } else if (value == 3) {
                 setSimSpeed(1.0 / 60.0, 0.0001);
             } else if (value == 4) {
@@ -257,6 +260,22 @@ super.replicationFinished();
     public void setAvgFreeEmp2WithC2(Stat avgFreeEmp2WithC2) {
         this.avgFreeEmp2WithC2 = avgFreeEmp2WithC2;
     }
+
+    public BaseAnimator getAnimator() {
+        return animator;
+    }
+
+    public void setAnimator(BaseAnimator animator) {
+        this.animator = animator;
+        
+    }
     
-   
+    public int getCountOfEmpType1(){
+        return agentReception().getTotalCountOfEmployees();
+    }
+    
+    public int getCountOfEmpType2(){
+        return agentMechanics().getTotalCountOfEmployees();
+    }
+
 }

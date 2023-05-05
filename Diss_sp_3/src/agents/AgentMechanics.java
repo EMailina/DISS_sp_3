@@ -284,4 +284,26 @@ public class AgentMechanics extends Agent {
         this.duplicatedTime = duplicatedTime;
     }
 
+    public int findEmpForCustomer(CustomerObject customer) throws Exception {
+        for (int i = 0; i < guiEmployers.size(); i++) {
+            if (guiEmployers.get(i) != null) {
+                if (customer.getCount() == guiEmployers.get(i).getCount()) {
+                    return i;
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+    }
+
+    public int findEmpForPause(CustomerObject customer) throws Exception {
+        for (int i = 0; i < guiEmployers.size(); i++) {
+            if (guiEmployers.get(i) != null) {
+                if (customer.getCount() == guiEmployers.get(i).getCount() && guiEmployers.get(i).isPause()) {
+                    return i;
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+    }
+
 }

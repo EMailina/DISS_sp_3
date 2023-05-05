@@ -3,6 +3,11 @@ package managers;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
+import animation.ActivityType;
+import animation.AnimActivity;
+import animation.AnimConfig;
+import animation.EmployeeAnimActivity;
+import animation.InspectionActivity;
 import continualAssistants.*;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
@@ -40,10 +45,19 @@ public class ManagerReception extends Manager {
                 //myAgent().getQueueTakeOver().enqueue(message);
 
             } else {
-               // System.out.println("AFTER CHECK TIME: " + mySim().currentTime());
-                MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().dequeue();
-                myAgent().getQueueTakeOverGui().poll();
-                startWorkOnTakeOver((MyMessage) newMessage);
+                // System.out.println("AFTER CHECK TIME: " + mySim().currentTime());
+                //if (((MySimulation) mySim()).getAnimator() == null) {
+
+                    MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().dequeue();
+                    myAgent().getQueueTakeOverGui().poll();
+                    removeAnimFromQueue(((MyMessage) newMessage).getCustomer());
+                    startWorkOnTakeOver((MyMessage) newMessage);
+                //}else{
+                //    MyMessage newMessage = (MyMessage) message.createCopy();
+                    
+                    
+                    
+               // }
             }
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,6 +70,7 @@ public class ManagerReception extends Manager {
             if (myAgent().getCountOfWorkingEmployees() >= myAgent().getTotalCountOfEmployees()) {
                 //((MyMessage) message).getCustomer().setStartWaitingTime(mySim().currentTime());
                 myAgent().getQueuePaying().enqueue(message);
+                addAnimToQueuePayment();
                 myAgent().getQueuePayingGui().add(message);
                 ((MyMessage) message).getCustomer().setWaitingForPayment(true);
 
@@ -69,8 +84,8 @@ public class ManagerReception extends Manager {
 
     //meta! sender="ProcessTakeOverVehicle", id="20", type="Finish"
     public void processFinishProcessTakeOverVehicle(MessageForm message) {
-       // System.out.println(((MyMessage) message).getCustomer().getCount()
-       //         + "|" + ((MyMessage) message).getCustomer().getNameVehicle()+ "| Stop registration | " + mySim().currentTime());
+        // System.out.println(((MyMessage) message).getCustomer().getCount()
+        //         + "|" + ((MyMessage) message).getCustomer().getNameVehicle()+ "| Stop registration | " + mySim().currentTime());
         try {
             removeFromEmployer(((MyMessage) message).getCustomer());
             myAgent().removeWorkingEmployee();
@@ -81,11 +96,12 @@ public class ManagerReception extends Manager {
             if (myAgent().isPauseTimeStarted()) {
 
                 if (((MyMessage) message).getProcessStartTime() < myAgent().getPauseTimeStartedTime()) {
-                    addPauseToEmployerGui();
 
                     myAgent().addEmployeeToPause();
                     message.setAddressee(myAgent().findAssistant(Id.processLunchPauseReception));
+                    ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
                     startContinualAssistant(message);
+                    addPauseToEmployerGui(((MyMessage) message).getProcessEndTime());
                     pause = true;
 
                 }
@@ -96,6 +112,7 @@ public class ManagerReception extends Manager {
             if (myAgent().getQueuePaying().size() > 0 && !pause) {
                 MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
                 myAgent().getQueuePayingGui().poll();
+                removeAnimFromQueuePayment();
                 //nextMessage.setTotalWaitingTime(mySim().currentTime() - nextMessage.getStartWaitingTime());
                 startWorkOnPayment(nextMessage);
             }
@@ -119,26 +136,26 @@ public class ManagerReception extends Manager {
     }
 
     private void startWorkOnTakeOver(MyMessage message) throws Exception {
-       // System.out.println(((MyMessage) message).getCustomer().getCount()
-       //         + "|" + ((MyMessage) message).getCustomer().getNameVehicle()+ "| Start registration"
-       //         + " | " + mySim().currentTime());
+        // System.out.println(((MyMessage) message).getCustomer().getCount()
+        //         + "|" + ((MyMessage) message).getCustomer().getNameVehicle()+ "| Start registration"
+        //         + " | " + mySim().currentTime());
         myAgent().addWorkingEmployee();
         myAgent().addReservedParkingPlace();
         ((MyMessage) message).getCustomer().setEndOfWaitingForTakeOver(mySim().currentTime());
         myAgent().getStatWaitingTime().addSample(mySim().currentTime() - ((MyMessage) message).getCustomer().getStartOfWaitingForTakeOver());
         message.setAddressee(myAgent().findAssistant(Id.processTakeOverVehicle));
         startContinualAssistant(message);
-         //System.out.println("Start registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
-        addToEmployer(((MyMessage) message).getCustomer(), true);
+        //System.out.println("Start registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+        addToEmployer(((MyMessage) message).getCustomer(), true, ((MyMessage) message).getProcessEndTime());
     }
 
     private void startWorkOnPayment(MyMessage message) throws Exception {
-         //System.out.println("Payment: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
+        //System.out.println("Payment: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
 
         myAgent().addWorkingEmployee();
         message.setAddressee(myAgent().findAssistant(Id.processPaying));
         startContinualAssistant(message);
-        addToEmployer(((MyMessage) message).getCustomer(), false);
+        addToEmployer(((MyMessage) message).getCustomer(), false, ((MyMessage) message).getProcessEndTime());
 
     }
 
@@ -152,11 +169,13 @@ public class ManagerReception extends Manager {
             //pause
             if (myAgent().isPauseTimeStarted()) {
                 if (((MyMessage) message).getProcessStartTime() < myAgent().getPauseTimeStartedTime()) {
-                    addPauseToEmployerGui();
 
                     myAgent().addEmployeeToPause();
                     message.setAddressee(myAgent().findAssistant(Id.processLunchPauseReception));
+                    ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
+
                     startContinualAssistant(message);
+                    addPauseToEmployerGui(((MyMessage) message).getProcessEndTime());
                     pause = true;
                 }
 
@@ -165,6 +184,7 @@ public class ManagerReception extends Manager {
             if (myAgent().getQueuePaying().size() > 0 && !pause) {
                 MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
                 myAgent().getQueuePayingGui().poll();
+                removeAnimFromQueuePayment();
                 //nextMessage.getCustomer().setmySim().currentTime() - nextMessage.getCustomer().getStartOfWaitingForTakeOver());
                 startWorkOnPayment(nextMessage);
             }
@@ -195,6 +215,7 @@ public class ManagerReception extends Manager {
 
                 myAgent().getQueueTakeOver().enqueue(message);
                 myAgent().getQueueTakeOverGui().add(message);
+                addAnimToQueue(((MyMessage) message).getCustomer());
 
                 //System.out.println("v rade:" + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
             } else {
@@ -207,6 +228,7 @@ public class ManagerReception extends Manager {
                 newMessage.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
                 request(newMessage);
                 myAgent().getQueueTakeOver().enqueue(message);
+                addAnimToQueue(((MyMessage) message).getCustomer());
                 myAgent().getQueueTakeOverGui().add(message);
             }
         } catch (Exception ex) {
@@ -286,6 +308,7 @@ public class ManagerReception extends Manager {
                 //((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
                 MyMessage mess = (MyMessage) myAgent().getQueueTakeOver().dequeue();
                 myAgent().getQueueTakeOverGui().poll();
+                removeAnimFromQueue(((MyMessage) mess).getCustomer());
                 startWorkOnTakeOver((MyMessage) mess);
             }
         } catch (Exception ex) {
@@ -293,7 +316,7 @@ public class ManagerReception extends Manager {
         }
     }
 
-    public void addToEmployer(CustomerObject customer, boolean takeOver) {
+    public void addToEmployer(CustomerObject customer, boolean takeOver, double endTime) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
@@ -306,13 +329,14 @@ public class ManagerReception extends Manager {
                         customer.setPaymentRewrite(true);
 
                     }
+
                     break;
                 }
             }
         }
     }
 
-    public void addPauseToEmployerGui() {
+    public void addPauseToEmployerGui(double endTime) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
@@ -322,6 +346,7 @@ public class ManagerReception extends Manager {
                     myAgent().addPauseCounter();
                     myAgent().getGuiEmployers().set(i, customer);
                     customer.setPause(true);
+                    //addAnimToPause(i, endTime);
                     break;
                 }
             }
@@ -334,6 +359,7 @@ public class ManagerReception extends Manager {
             for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
                 if (customer.equals(myAgent().getGuiEmployers().get(i))) {
                     myAgent().getGuiEmployers().set(i, null);
+
                     break;
                 }
             }
@@ -357,11 +383,12 @@ public class ManagerReception extends Manager {
                 }
             }
             myAgent().getGuiEmployers().set(index, null);
+            //removeAnimFromPause(index);
         }
     }
 
     private void processNoticeLunchPause(MessageForm message) {
-       // System.out.println("pauza");
+        // System.out.println("pauza");
         myAgent().setPauseTimeStarted(true);
         myAgent().setPauseTimeStartedTime(mySim().currentTime());
         myAgent().addPausedEmployees();
@@ -370,19 +397,24 @@ public class ManagerReception extends Manager {
             message = message.createCopy();
             message.setCode(Mc.start);
             message.setAddressee(myAgent().findAssistant(Id.processLunchPauseReception));
+
+            ((MyMessage) message).setCustomer(new CustomerObject());
+
+            ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
             startContinualAssistant(message);
-            addPauseToEmployerGui();
-            
+            addPauseToEmployerGui(((MyMessage) message).getProcessEndTime());
+
         }
     }
 
     private void processFinishProcessLunchPause(MessageForm message) {
-     //  System.out.println("stop pauza");
+        //  System.out.println("stop pauza");
         myAgent().removePausedEmployees();
         removePauseFromEmployer();
         //payment
         if (myAgent().getQueuePaying().size() > 0) {
             MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+            removeAnimFromQueuePayment();
             myAgent().getQueuePayingGui().poll();
             try {
                 startWorkOnPayment(nextMessage);
@@ -399,4 +431,79 @@ public class ManagerReception extends Manager {
         }
 
     }
+
+    private void addAnimToQueue(CustomerObject customer) {
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            InspectionActivity a = new InspectionActivity();
+
+            a.setType(ActivityType.ADD_TO_TAKE_OVER_QUEUE);
+            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+        }
+    }
+
+    private void removeAnimFromQueue(CustomerObject customer) {
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            InspectionActivity a = new InspectionActivity();
+
+            a.setType(ActivityType.REMOVE_FROM_TAKE_OVER_QUEUE);
+            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+        }
+    }
+
+    private void addAnimToQueuePayment() {
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            InspectionActivity a = new InspectionActivity();
+            a.setType(ActivityType.ADD_TO_PAYMENT_QUEUE);
+            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+        }
+    }
+
+    private void removeAnimFromQueuePayment() {
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            InspectionActivity a = new InspectionActivity();
+            a.setType(ActivityType.REMOVE_FROM_PAYMENT_QUEUE);
+            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+        }
+    }
+
+//    private void addAnimToPause(int count, double endTime) {
+//        if (((MySimulation) mySim()).getAnimator() != null) {
+//            EmployeeAnimActivity a = new EmployeeAnimActivity();
+//            a.setCount(count);
+//            a.setStartTime(mySim().currentTime());
+//            a.setEndTime(mySim().currentTime() + 30 );
+//            a.setType(ActivityType.ADD_PAUSE_TO_EMPLOYER_TYPE_1);
+//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+//        }
+//    }
+//
+//    private void removeAnimFromPause(int count) {
+//        if (((MySimulation) mySim()).getAnimator() != null) {
+//            EmployeeAnimActivity a = new EmployeeAnimActivity();
+//            a.setCount(count);
+//
+//            a.setType(ActivityType.REMOVE_PAUSE_FROM_EMPLOYER_TYPE_1);
+//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+//        }
+//    }
+//    private void addAnimToWork(int count, double endTime) {
+//        if (((MySimulation) mySim()).getAnimator() != null) {
+//            EmployeeAnimActivity a = new EmployeeAnimActivity();
+//            a.setCount(count);
+//            a.setStartTime(mySim().currentTime());
+//            a.setEndTime(endTime);
+//            a.setType(ActivityType.ADD_WORK_TO_EMPLOYER_TYPE_1);
+//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+//        }
+//    }
+//
+//    private void removeAnimToWork(int count) {
+//        if (((MySimulation) mySim()).getAnimator() != null) {
+//            EmployeeAnimActivity a = new EmployeeAnimActivity();
+//            a.setCount(count);
+//
+//            a.setType(ActivityType.REMOVE_WORK_FROM_EMPLOYER_TYPE_1);
+//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+//        }
+//    }
 }

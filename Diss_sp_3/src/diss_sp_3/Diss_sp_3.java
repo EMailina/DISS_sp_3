@@ -11,16 +11,32 @@ import OSPABA.MessageForm;
 import OSPABA.SimState;
 import OSPABA.Simulation;
 import OSPAnimator.IAnimator;
+import OSPAnimator.ShapeAnimObject;
 import OSPDataStruct.SimQueue;
+import animation.Animator;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+
+import java.io.File;
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Queue;
+import java.util.Timer;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -36,6 +52,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import simulation.MyMessage;
 import simulation.MySimulation;
+import threads.AnimatorThread;
 import threads.ChartThread;
 import threads.ExtraThread;
 
@@ -43,7 +60,7 @@ import threads.ExtraThread;
  *
  * @author Erik
  */
-public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnimDelegate {
+public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
     //  private XYSeries series = new XYSeries("Average waiting time");
     //  private JFreeChart chart1 = null;
@@ -55,6 +72,8 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     private ChartPanel chartPanel = null;
     ExtraThread threadLogic;
     ChartThread threadGraph;
+    AnimatorThread thredAnimation;
+    Animator animator = null;
     private RunType runType;
     private boolean refreshGuiChanges = false;
 //    MonteCarloBase base;
@@ -65,11 +84,15 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     private final String DASH = "-";
     ArrayList<Double> values = new ArrayList<>();
     private int offset = 0;
+    Image img = null;
+    int x = 0, y = 0;
 
     public Diss_sp_3() {
+
         initComponents();
         panelGraph2.setVisible(false);
         cleanLabels();
+
     }
 
     /**
@@ -81,11 +104,12 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panel1 = new java.awt.Panel();
+        canvas1 = new java.awt.Canvas();
         StartButton = new javax.swing.JButton();
         EditCountOfReplications = new javax.swing.JTextField();
         StopButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        panelGraph2 = new javax.swing.JPanel();
         pauseButton = new javax.swing.JButton();
         speedSlider = new javax.swing.JSlider();
         SpeedLabel = new javax.swing.JLabel();
@@ -134,6 +158,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         jLabel22 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        panelGraph2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         checkboxValidation = new javax.swing.JCheckBox();
         countOfEmployees2Box2 = new javax.swing.JTextField();
@@ -146,6 +171,35 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         setMinimumSize(new java.awt.Dimension(1250, 650));
         setSize(new java.awt.Dimension(2127, 1700));
         getContentPane().setLayout(null);
+
+        panel1.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
+        panel1.setMaximumSize(new java.awt.Dimension(850, 350));
+        panel1.setMinimumSize(new java.awt.Dimension(850, 350));
+        panel1.setPreferredSize(new java.awt.Dimension(850, 350));
+
+        canvas1.setMaximumSize(new java.awt.Dimension(2000, 2000));
+        canvas1.setMinimumSize(new java.awt.Dimension(2000, 2000));
+
+        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
+        panel1.setLayout(panel1Layout);
+        panel1Layout.setHorizontalGroup(
+            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel1Layout.createSequentialGroup()
+                .addGap(80, 80, 80)
+                .addComponent(canvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(2, 2, 2))
+        );
+        panel1Layout.setVerticalGroup(
+            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                .addComponent(canvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+
+        getContentPane().add(panel1);
+        panel1.setBounds(310, 180, 1120, 550);
+        panel1.getAccessibleContext().setAccessibleName("");
+        panel1.getAccessibleContext().setAccessibleDescription("");
 
         StartButton.setText("Start replications");
         StartButton.setName("startButton"); // NOI18N
@@ -179,10 +233,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         jLabel1.setText("Count of replications");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(17, 33, 117, 16);
-
-        panelGraph2.setLayout(null);
-        getContentPane().add(panelGraph2);
-        panelGraph2.setBounds(70, 160, 930, 380);
 
         pauseButton.setText("Pause / Continue");
         pauseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -222,6 +272,11 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         countOfEmployees2Box.setBounds(110, 110, 50, 30);
 
         countOfEmployees1Box.setText("4");
+        countOfEmployees1Box.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                countOfEmployees1BoxActionPerformed(evt);
+            }
+        });
         getContentPane().add(countOfEmployees1Box);
         countOfEmployees1Box.setBounds(110, 70, 50, 30);
 
@@ -452,30 +507,30 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         jLabel19.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel19.setText("Take-over Vehicle (type 1)");
 
+        panelGraph2.setLayout(null);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelGraph2, javax.swing.GroupLayout.PREFERRED_SIZE, 957, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(77, 77, 77))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(14, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(112, 112, 112))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -492,21 +547,27 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
                     .addComponent(jLabel22))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel20)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel19)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel19)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelGraph2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         getContentPane().add(jPanel1);
@@ -598,6 +659,10 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         startThreads();
     }//GEN-LAST:event_startSimulation3ActionPerformed
 
+    private void countOfEmployees1BoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_countOfEmployees1BoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_countOfEmployees1BoxActionPerformed
+
     public void setSimulation(MySimulation simulation) {
         this.simulation = simulation;
     }
@@ -645,6 +710,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         START NEW SIMULATION
      */
     public void startSimulation() throws IOException, Exception {
+
         simulation = new MySimulation();
         simulation.setType(runType);
         simulation.setCountOfEmployeeType1(Integer.valueOf(countOfEmployees1Box.getText()));
@@ -663,11 +729,11 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 //                simulation.setCountOfEmployeeType1(Integer.valueOf(countOfEmployees1Box.getText()));
 //                simulation.setCountOfEmployeeType2WithCertificate1(Integer.valueOf(countOfEmployees2Box.getText()));
 //                simulation.setCountOfEmployeeType2WithCertificate2(Integer.valueOf(countOfEmployees2Box2.getText()));
-               simulation.setMaxSimSpeed();
+            simulation.setMaxSimSpeed();
 //                simulation.setSpeedChange(speedSlider.getValue());
-                simulation.simulate(countOfReplication, 480);
+            simulation.simulate(countOfReplication, 480);
             //    System.out.println("" + i + " | " + simulation.getAvgTimeInSystem().mean());
-           // }
+            // }
 
             //app.replicate(this, countOfReplication, Integer.valueOf(countOfEmployees1Box.getText()), Integer.valueOf(countOfEmployees2Box.getText()), RunType.REPLICATIONS);
         } else if (runType == RunType.SIMULATION) {
@@ -676,6 +742,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
                 System.out.println("simm...");
             });
             simulation.setSpeedChange(speedSlider.getValue());
+            simulation.setAnimator(animator);
             simulation.simulate(1, 480);
         } else if (runType == RunType.DEPENDENCY_1) {
             managerDep = new ManagerDependencies();
@@ -698,6 +765,8 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
             threadLogic.start();
             threadGraph = new ChartThread(this);
             threadGraph.start();
+            thredAnimation = new AnimatorThread(this);
+            thredAnimation.start();
         }
     }
 
@@ -715,7 +784,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         this.panelGraph2.setLayout(new java.awt.BorderLayout());
         this.panelGraph2.add(chartPanel);
         this.panelGraph2.validate();
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -723,6 +791,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     private javax.swing.JLabel SpeedLabel;
     private javax.swing.JButton StartButton;
     private javax.swing.JButton StopButton;
+    private java.awt.Canvas canvas1;
     private javax.swing.JCheckBox checkboxValidation;
     private javax.swing.JTextField countOfEmployees1Box;
     private javax.swing.JTextField countOfEmployees1Box1;
@@ -773,6 +842,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
+    private java.awt.Panel panel1;
     private javax.swing.JPanel panelGraph2;
     private javax.swing.JButton pauseButton;
     private javax.swing.JSlider speedSlider;
@@ -782,6 +852,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
     // End of variables declaration//GEN-END:variables
 
     public void startDraw() throws InterruptedException, IOException {
+        //
 
         cleanLabels();
         database.addSeries(series);
@@ -803,9 +874,14 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         }
 
         if (RunType.SIMULATION == runType) {
-
+            hideLabels();
             initializeTables();
         }
+
+        jPanel1.setVisible(false);
+        this.img = ImageIO.read(new File("background.png"));
+        canvas1.getGraphics().drawImage(img, 0, 0, null);
+
         while (true) {
             if (refreshGuiChanges) {
                 refreshGuiChanges = false;
@@ -835,7 +911,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
 
     }
 
-    private void updateSimStats() {
+    private void updateSimStats() throws IOException, InterruptedException {
 
         jLabel2.setText("Average waiting time for vehicle take-over: " + simulation.agentReception().getWaitingTimeStat().mean());
         jLabel3.setText("Average time in system: " + simulation.agentEnviroment().getAverageTimeInSystem().mean());
@@ -1116,12 +1192,26 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate, IAnim
         }
     }
 
-    @Override
-    public void animatorCreated(IAnimator ia, IAnimator ia1) {
+    private void hideLabels() {
+        jLabel12.setVisible(false);
+        jLabel10.setVisible(false);
+        jLabel14.setVisible(false);
+        jLabel13.setVisible(false);
+        jLabel18.setVisible(false);
+        jLabelCountReplication.setVisible(false);
+        jLabel8.setVisible(false);
+        jLabel15.setVisible(false);
+        jLabel17.setVisible(false);
+        jLabel16.setVisible(false);
+        jLabel7.setVisible(false);
+
+        panel1.repaint();
+        panel1.revalidate();
     }
 
-    @Override
-    public void animatorRemoved(IAnimator ia) {
+    public void startAnimator() throws InterruptedException {
+        sleep(1000);
+        this.animator = new Animator(simulation, canvas1);
     }
 
 }

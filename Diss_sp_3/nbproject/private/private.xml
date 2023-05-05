@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/continualAssistants/ProcessLunchPauseInspection.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/simulation/Mc.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/managers/ManagerVehicleInspection.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/WorkType.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/managers/ManagerModel.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/AnimActivity.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/diss_sp_3/ManagerDependencies.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/continualAssistants/ProcessTakeOverVehicle.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/threads/ExtraThread.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/threads/AnimatorThread.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/managers/ManagerEnviroment.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/managers/ManagerMechanics.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/continualAssistants/SchedulerLunchPause.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/agents/AgentParking.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/agents/AgentModel.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/agents/AgentReception.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/diss_sp_3/RunType.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/ActivityType.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/threads/ChartThread.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/continualAssistants/SchedulerCustomerArrival.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/simulation/MySimulation.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/Animator.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/agents/AgentEnviroment.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/simulation/Id.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/agents/AgentVehicleInspection.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/continualAssistants/ProcessLunchPauseReception.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/InspectionActivity.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/Point.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/objects/VehicleConstants.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/objects/CustomerObject.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/agents/AgentMechanics.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/BaseAnimator.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/EmployeeAnimActivity.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/diss_sp_3/Diss_sp_3.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/managers/ManagerReception.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/EmployeeType.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/MoveVehicleActivity.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/animation/AnimConfig.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/continualAssistants/ProcessPaying.java</file>
+            <file>file:/C:/Users/erik5/Documents/NetBeansProjects/DISS_3/Diss_sp_3/src/managers/ManagerParking.java</file>
+        </group>
+    </open-files>
+</project-private>

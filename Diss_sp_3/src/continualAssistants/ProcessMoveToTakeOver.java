@@ -1,22 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package continualAssistants;
 
-import OSPABA.*;
-import simulation.*;
-import agents.*;
-import OSPABA.Process;
+import OSPABA.CommonAgent;
+import OSPABA.MessageForm;
+import OSPABA.Simulation;
+import agents.AgentReception;
 import animation.ActivityType;
 import animation.EmployeeAnimActivity;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.CustomerObject;
+import simulation.Mc;
+import simulation.MyMessage;
+import simulation.MySimulation;
 
-//meta! id="85"
-public class ProcessLunchPauseInspection extends Process {
+/**
+ *
+ * @author Erik
+ */
+public class ProcessMoveToTakeOver  extends OSPABA.Process{
+    
+    private double moveLength = 30;
 
-    private double pauseLength = 30;
-
-    public ProcessLunchPauseInspection(int id, Simulation mySim, CommonAgent myAgent) {
+    public ProcessMoveToTakeOver(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
     }
 
@@ -34,12 +45,10 @@ public class ProcessLunchPauseInspection extends Process {
 
     //meta! sender="AgentMechanics", id="89", type="Start"
     public void processStart(MessageForm message) {
-        message.setCode(Mc.noticeEndPause);
-        hold(pauseLength, message);
+        message.setCode(Mc.noticeEndMoveToTakeOver);
+        hold(moveLength, message);
 
-        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
-            addAnimToWork(getEmployee(((MyMessage) message).getCustomer()), pauseLength);
-        }
+        addAnimToWork(getEmployee(((MyMessage) message).getCustomer()), moveLength);
 
     }
 
@@ -51,7 +60,7 @@ public class ProcessLunchPauseInspection extends Process {
                 processStart(message);
                 break;
 
-            case Mc.noticeEndPause:
+            case Mc.noticeEndMoveToTakeOver:
                 processNoticeEndPause(message);
                 break;
 
@@ -63,15 +72,12 @@ public class ProcessLunchPauseInspection extends Process {
     //meta! tag="end"
 
     @Override
-    public AgentMechanics myAgent() {
-        return (AgentMechanics) super.myAgent();
+    public AgentReception myAgent() {
+        return (AgentReception) super.myAgent();
     }
 
     private void processNoticeEndPause(MessageForm message) {
         assistantFinished(message);
-        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
-            removeAnimToWork(getEmployee(((MyMessage) message).getCustomer()));
-        }
     }
 
     private void addAnimToWork(int count, double endTime) {
@@ -80,20 +86,20 @@ public class ProcessLunchPauseInspection extends Process {
             a.setCount(count);
             a.setStartTime(mySim().currentTime());
             a.setEndTime(endTime + mySim().currentTime());
-            a.setType(ActivityType.ADD_PAUSE_TO_EMPLOYER_TYPE_2);
+            a.setType(ActivityType.ADD_MOVE_TO_TAKE_OVER);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
         }
     }
 
-    private void removeAnimToWork(int count) {
-        if (((MySimulation) mySim()).getAnimator() != null) {
-            EmployeeAnimActivity a = new EmployeeAnimActivity();
-            a.setCount(count);
-
-            a.setType(ActivityType.REMOVE_PAUSE_FROM_EMPLOYER_TYPE_2);
-            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
-        }
-    }
+//  //  private void removeAnimToWork(int count) {
+//        if (((MySimulation) mySim()).getAnimator() != null) {
+//            EmployeeAnimActivity a = new EmployeeAnimActivity();
+//            a.setCount(count);
+//
+//            a.setType(ActivityType.REMOVE_PAUSE_FROM_EMPLOYER_TYPE_1);
+//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+//        }
+//    }
 
     private int getEmployee(CustomerObject customer) {
         try {

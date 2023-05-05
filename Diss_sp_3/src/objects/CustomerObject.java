@@ -5,6 +5,8 @@
  */
 package objects;
 
+import animation.AnimActivity;
+
 /**
  *
  * @author Erik
@@ -28,10 +30,9 @@ public class CustomerObject {
 
     private double carLimit = 0.65;
     private double truckLimit = 0.86;
-    
-    
+    private AnimActivity animActivity = new AnimActivity();
+
     public CustomerObject() {
-       
 
     }
 
@@ -55,8 +56,6 @@ public class CustomerObject {
         this.startOfWaitingForTakeOver = startOfWaitingForTakeOver;
     }
 
-    
-    
     public boolean isPark() {
         return park;
     }
@@ -65,7 +64,6 @@ public class CustomerObject {
         this.park = park;
     }
 
-    
     public boolean isParkingRewrite() {
         return parkingRewrite;
     }
@@ -144,26 +142,34 @@ public class CustomerObject {
     }
 
     public boolean isTruck() {
-        if(probabilityVehicle < VehicleConstants.TRUCK_LIMIT){
+        if (probabilityVehicle < VehicleConstants.TRUCK_LIMIT) {
             return false;
         }
         return true;
     }
-    
-      public boolean isCar() {
-        if(probabilityVehicle < carLimit){
+
+    public boolean isCar() {
+        if (probabilityVehicle < carLimit) {
             return true;
         }
         return false;
     }
 
-      public String getNameVehicle(){
-          if(isTruck()){
-              return "TRUCK";
-          }else if (isCar()){
-              return "PERSONAL";
-          }
-          return "VAN";
-      }
-      
+    public String getNameVehicle() {
+        if (isTruck()) {
+            return "TRUCK";
+        } else if (isCar()) {
+            return "PERSONAL";
+        }
+        return "VAN";
+    }
+
+    public AnimActivity getAnimActivity() {
+        return animActivity;
+    }
+
+    public void setAnimActivity(AnimActivity animActivity) {
+        this.animActivity = animActivity;
+    }
+
 }

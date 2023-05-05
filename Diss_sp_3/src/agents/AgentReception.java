@@ -24,7 +24,7 @@ public class AgentReception extends Agent {
     private WStat freeEmployersStat;
     private int countOfWorking = 0;
     private int countOfPaused = 0;
-    
+
     private int countOfReservedParkingPlaces = 0;
     private SimQueue<MessageForm> employee;
     private ArrayList<CustomerObject> guiEmployers;
@@ -123,7 +123,7 @@ public class AgentReception extends Agent {
         for (int i = 0; i < countOfPaused; i++) {
             employee.remove(0);
         }
-        
+
     }
 
     public void removePausedEmployees() {
@@ -261,6 +261,26 @@ public class AgentReception extends Agent {
         this.queuePayingGui = queuePayingGui;
     }
 
-    
-    
+    public int findEmpForCustomer(CustomerObject customer) throws Exception {
+        for (int i = 0; i < guiEmployers.size(); i++) {
+            if (guiEmployers.get(i) != null) {
+                if (customer.getCount() == guiEmployers.get(i).getCount()) {
+                    return i;
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+    }
+
+    public int findEmpForPause(CustomerObject customer) throws Exception {
+        for (int i = 0; i < guiEmployers.size(); i++) {
+            if (guiEmployers.get(i) != null) {
+                if (customer.getCount() == guiEmployers.get(i).getCount() && guiEmployers.get(i).isPause()) {
+                    return i;
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+    }
+
 }

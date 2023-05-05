@@ -3,6 +3,9 @@ package managers;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
+import animation.ActivityType;
+import animation.EmployeeAnimActivity;
+import continualAssistants.ProcessInsepction;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,13 +59,15 @@ public class ManagerMechanics extends Manager {
                 newMessage.setCode(Mc.noticeTruckInspection);
                 notice(newMessage);
             }
-            addToEmployer(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated());
 
             ((MyMessage) message).setProcessStartTime(mySim().currentTime());
             message.setAddressee(myAgent().findAssistant(Id.processInsepction));
             startContinualAssistant(message);
+            addToEmployer(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated(), 0);
+
             //ystem.out.println("Start service: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
             String typeOfCar = ((MyMessage) message).getCustomer().isTruck() ? "TRUCK" : ((MyMessage) message).getCustomer().getProbabilityVehicle() < 0.65 ? "PERSONAL" : "VAN";          //  System.out.println(((MyMessage) message).getCustomer().getCount() + "| Customer Start Service | " + typeOfCar + "| " + mySim().currentTime());
+
 //            if (((MyMessage) message).isExecuteWithCertficated()) {
 //                System.out.println(((MyMessage) message).getCustomer().getCount()
 //                        + "|" + typeOfCar + "| Start | W:TYPE_2_C2"
@@ -72,7 +77,6 @@ public class ManagerMechanics extends Manager {
 //                        + "|" + typeOfCar + "| Start | W:TYPE_2_C1"
 //                        + " | " + mySim().currentTime());
 //            }
-
         }
     }
 
@@ -115,10 +119,13 @@ public class ManagerMechanics extends Manager {
                 } else {
                     myAgent().addEmployeeToPauseC1();
                 }
-                addPauseToEmployerGui(((MyMessage) message).isExecuteWithCertficated());
                 MyMessage newMessage = (MyMessage) message.createCopy();
+                ((MyMessage) newMessage).getCustomer().setCount(myAgent().getPauseCounter());
+                addPauseToEmployerGui(((MyMessage) message).isExecuteWithCertficated(), ((MyMessage) message).getProcessEndTime());
+
                 newMessage.setExecuteWithCertficated(((MyMessage) message).isExecuteWithCertficated());
                 newMessage.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
+
                 startContinualAssistant(newMessage);
                 pause = true;
             }
@@ -218,7 +225,7 @@ public class ManagerMechanics extends Manager {
         response(message);
     }
 
-    public void addToEmployer(CustomerObject customer, boolean c2) {
+    public void addToEmployer(CustomerObject customer, boolean c2, double endTime) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             int start = 0;
@@ -230,6 +237,7 @@ public class ManagerMechanics extends Manager {
 
                     myAgent().getGuiEmployers().set(i, customer);
                     customer.setInspectionRewrite(true);
+                    //addAnimToWork(i, endTime);
                     break;
                 }
             }
@@ -237,11 +245,11 @@ public class ManagerMechanics extends Manager {
     }
 
     private void removeFromEmployer(CustomerObject customer) {
-
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
                 if (customer.equals(myAgent().getGuiEmployers().get(i))) {
                     myAgent().getGuiEmployers().set(i, null);
+                    //removeAnimToWork(i);
                     break;
                 }
             }
@@ -259,8 +267,11 @@ public class ManagerMechanics extends Manager {
             message.setCode(Mc.start);
             ((MyMessage) message).setExecuteWithCertficated(false);
             message.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
+            ((MyMessage) message).setCustomer(new CustomerObject());
+
+            ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
             startContinualAssistant(message);
-            addPauseToEmployerGui(false);
+            addPauseToEmployerGui(false, ((MyMessage) message).getProcessEndTime());
 
         }
 
@@ -269,13 +280,14 @@ public class ManagerMechanics extends Manager {
             message.setCode(Mc.start);
             ((MyMessage) message).setExecuteWithCertficated(true);
             message.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
+            ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
             startContinualAssistant(message);
-            addPauseToEmployerGui(true);
+            addPauseToEmployerGui(true, ((MyMessage) message).getProcessEndTime());
 
         }
     }
 
-    public void addPauseToEmployerGui(boolean c2) {
+    public void addPauseToEmployerGui(boolean c2, double endTime) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             int start = 0;
@@ -289,6 +301,7 @@ public class ManagerMechanics extends Manager {
                     myAgent().addPauseCounter();
                     myAgent().getGuiEmployers().set(i, customer);
                     customer.setPause(true);
+
                     break;
                 }
             }
@@ -312,6 +325,7 @@ public class ManagerMechanics extends Manager {
                 }
             }
             myAgent().getGuiEmployers().set(index, null);
+            removeAnimFromPause(index);
         }
     }
 
@@ -356,4 +370,46 @@ public class ManagerMechanics extends Manager {
         }
 
     }
+
+    private void addAnimToPause(int count, double endTime) {
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            EmployeeAnimActivity a = new EmployeeAnimActivity();
+            a.setCount(count);
+            a.setStartTime(mySim().currentTime());
+            a.setEndTime(mySim().currentTime() + endTime);
+            a.setType(ActivityType.ADD_PAUSE_TO_EMPLOYER_TYPE_2);
+            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+        }
+    }
+
+    private void removeAnimFromPause(int count) {
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            EmployeeAnimActivity a = new EmployeeAnimActivity();
+            a.setCount(count);
+
+            a.setType(ActivityType.REMOVE_PAUSE_FROM_EMPLOYER_TYPE_2);
+            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+        }
+    }
+
+//    private void addAnimToWork(int count, double endTime) {
+//        if (((MySimulation) mySim()).getAnimator() != null) {
+//            EmployeeAnimActivity a = new EmployeeAnimActivity();
+//            a.setCount(count);
+//            a.setStartTime(mySim().currentTime());
+//            a.setEndTime(endTime);
+//            a.setType(ActivityType.ADD_WORK_TO_EMPLOYER_TYPE_2);
+//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+//        }
+//    }
+//
+//    private void removeAnimToWork(int count) {
+//        if (((MySimulation) mySim()).getAnimator() != null) {
+//            EmployeeAnimActivity a = new EmployeeAnimActivity();
+//            a.setCount(count);
+//
+//            a.setType(ActivityType.REMOVE_WORK_FROM_EMPLOYER_TYPE_2);
+//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+//        }
+//    }
 }

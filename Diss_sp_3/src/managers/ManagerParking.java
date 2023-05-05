@@ -3,6 +3,8 @@ package managers;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
+import animation.ActivityType;
+import animation.InspectionActivity;
 import continualAssistants.*;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
@@ -84,6 +86,7 @@ public class ManagerParking extends Manager {
                 message.setAddressee(mySim().findAgent(Id.agentVehicleInspection));
                 request(message);
                 addToParkingPlace(((MyMessage) message).getCustomer());
+                addAnimToQueue();
             } else {
                 throw new Exception("Parking places full!");
             }
@@ -102,6 +105,7 @@ public class ManagerParking extends Manager {
             ((MyMessage) nextMessage).setCountOfParkingPlaces(myAgent().getQueue().size());
             notice(nextMessage);
             removeFromParkingPlace(((MyMessage) nextMessage).getCustomer());
+            removeAnimFromQueue();
         }
 
     }
@@ -121,6 +125,7 @@ public class ManagerParking extends Manager {
                 ((MyMessage) nextMessage).setCountOfParkingPlaces(myAgent().getQueue().size());
                 notice(nextMessage);
                 removeFromParkingPlace(((MyMessage) nextMessage).getCustomer());
+                removeAnimFromQueue();
             }
         }
     }
@@ -157,4 +162,20 @@ public class ManagerParking extends Manager {
         return true;
     }
 
+     private void addAnimToQueue() {
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            InspectionActivity a = new InspectionActivity();
+            a.setType(ActivityType.ADD_TO_PARKING_QUEUE);
+            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+        }
+    }
+
+    private void removeAnimFromQueue() {
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            InspectionActivity a = new InspectionActivity();
+            a.setType(ActivityType.REMOVE_FROM_PARKING_QUEUE);
+            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
+        }
+    }
+    
 }
