@@ -70,11 +70,12 @@ public class Animator extends BaseAnimator {
 //            g.fillOval(400, y - 15, 10, 10);
 //
             g.drawLine(300, y + 25, 305, y + 25);
-            g.drawLine(495, y + 25, 500, y + 25);
+            g.drawLine(450, y + 25, 500, y + 25);
             y += 100;
         }
 
-        g.drawLine(500, 125, 500, y - 75 < 150 ? 175 : y - 75);
+        g.drawLine(500, 125, 500, y - 75 < 250 ? 175 + 200 : y - 75 + 100);
+        g.drawLine(0, y - 75 < 250 ? 175 + 200 : y - 75 + 100, 500, y - 75 < 250 ? 175 + 200 : y - 75 + 100);
         if (y - 75 < 300) {
             y = 350;
         }
@@ -95,7 +96,7 @@ public class Animator extends BaseAnimator {
 //            g.drawLine(900, y - 10, 950, y - 10);
 //            g.fillOval(900, y - 15, 10, 10);
             g.drawLine(800, y + 25, 805, y + 25);
-            g.drawLine(995, y + 25, 1000, y + 25);
+            g.drawLine(950, y + 25, 1000, y + 25);
             y += 100;
         }
         if (y - 75 < 325) {
@@ -227,11 +228,13 @@ public class Animator extends BaseAnimator {
 
     @Override
     public void processNewActivity(AnimActivity animActivity) {
-        // InspectionActivity act = (InspectionActivity) animActivity;
-        if (animActivity.getType() == ActivityType.REMOVE_FROM_TAKE_OVER_QUEUE) {
-//            int min = Integer.MAX_VALUE;
+        if (null != animActivity.getType()) // InspectionActivity act = (InspectionActivity) animActivity;
+        {
+            switch (animActivity.getType()) {
+                case REMOVE_FROM_TAKE_OVER_QUEUE:
+                    //            int min = Integer.MAX_VALUE;
 //            AnimActivity activityToDelete = null;
-            queueTakeOverLength--;
+                    queueTakeOverLength--;
 //            for (AnimActivity activity : getActivities()) {
 //                if (min > activity.getStartX()) {
 //                    min = activity.getStartX();
@@ -239,58 +242,105 @@ public class Animator extends BaseAnimator {
 //                }
 //            }
 //            getActivities().remove(activityToDelete);
-        } else if (animActivity.getType() == ActivityType.ADD_TO_TAKE_OVER_QUEUE) {
-            queueTakeOverLength++;
-        } else if (animActivity.getType() == ActivityType.ADD_TO_PAYMENT_QUEUE) {
-            queuePaymentLength++;
-        } else if (animActivity.getType() == ActivityType.REMOVE_FROM_PAYMENT_QUEUE) {
-            queuePaymentLength--;
-        } else if (animActivity.getType() == ActivityType.ADD_TO_PARKING_QUEUE) {
-            queueParkingLength++;
-        } else if (animActivity.getType() == ActivityType.REMOVE_FROM_PARKING_QUEUE) {
-            queueParkingLength--;
-        } else if (animActivity.getType() == ActivityType.ADD_PAUSE_TO_EMPLOYER_TYPE_1) {
-            employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.PAUSE);
-            initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_1_START_X);
-            getActivities().add(animActivity);
+                    break;
+                case ADD_TO_TAKE_OVER_QUEUE:
+                    queueTakeOverLength++;
+                    break;
 
-        } else if (animActivity.getType() == ActivityType.REMOVE_PAUSE_FROM_EMPLOYER_TYPE_1) {
-            employees1.set(((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
+                case ADD_TO_PAYMENT_QUEUE:
+                    queuePaymentLength++;
+                    break;
 
-        } else if (animActivity.getType() == ActivityType.ADD_WORK_TO_EMPLOYER_TYPE_1) {
-            employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.WORK);
-            initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_1_START_X);
-            getActivities().add(animActivity);
-            initMoveEmployerType1(((EmployeeAnimActivity) animActivity).getCount(), animActivity.getStartTime(), animActivity.getEndTime());
-        } else if (animActivity.getType() == ActivityType.ADD_WORK_TO_EMPLOYER_TYPE_1_PAYMENT) {
-            employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.WORK);
-            initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_1_START_X);
-            getActivities().add(animActivity);
-        } else if (animActivity.getType() == ActivityType.REMOVE_WORK_FROM_EMPLOYER_TYPE_1) {
-            employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
-        } else if (animActivity.getType() == ActivityType.REMOVE_WORK_FROM_EMPLOYER_TYPE_1_PAYMENT) {
-            employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
-        } else if (animActivity.getType() == ActivityType.ADD_PAUSE_TO_EMPLOYER_TYPE_2) {
-            employees2.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.PAUSE);
-            initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_2_START_X);
-            getActivities().add(animActivity);
-        } else if (animActivity.getType() == ActivityType.REMOVE_PAUSE_FROM_EMPLOYER_TYPE_2) {
-            employees2.set(((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
+                case REMOVE_FROM_PAYMENT_QUEUE:
+                    queuePaymentLength--;
+                    break;
 
-        } else if (animActivity.getType() == ActivityType.ADD_WORK_TO_EMPLOYER_TYPE_2) {
-            employees2.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.WORK);
-            initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_2_START_X);
-            getActivities().add(animActivity);
-        } else if (animActivity.getType() == ActivityType.REMOVE_WORK_FROM_EMPLOYER_TYPE_2) {
-            employees2.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
+                case ADD_TO_PARKING_QUEUE:
+                    queueParkingLength++;
+                    break;
+
+                case REMOVE_FROM_PARKING_QUEUE:
+                    queueParkingLength--;
+                    break;
+
+                case ADD_PAUSE_TO_EMPLOYER_TYPE_1:
+                    employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.PAUSE);
+                    initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_1_START_X);
+                    getActivities().add(animActivity);
+                    break;
+
+                case REMOVE_PAUSE_FROM_EMPLOYER_TYPE_1:
+                    employees1.set(((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
+                    break;
+
+                case ADD_WORK_TO_EMPLOYER_TYPE_1:
+                    employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.WORK);
+                    initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_1_START_X);
+                    getActivities().add(animActivity);
+                    initMoveEmployerType1(((EmployeeAnimActivity) animActivity).getCount(), animActivity.getStartTime(), animActivity.getEndTime());
+                    break;
+
+                case ADD_WORK_TO_EMPLOYER_TYPE_1_PAYMENT:
+                    employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.WORK);
+                    initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_1_START_X);
+                    getActivities().add(animActivity);
+                    break;
+
+                case REMOVE_WORK_FROM_EMPLOYER_TYPE_1:
+                    employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
+                    break;
+
+                case REMOVE_WORK_FROM_EMPLOYER_TYPE_1_PAYMENT:
+                    employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
+                    break;
+
+                case ADD_PAUSE_TO_EMPLOYER_TYPE_2:
+                    employees2.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.PAUSE);
+                    initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_2_START_X);
+                    getActivities().add(animActivity);
+                    break;
+
+                case REMOVE_PAUSE_FROM_EMPLOYER_TYPE_2:
+                    employees2.set(((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
+                    break;
+
+                case ADD_WORK_TO_EMPLOYER_TYPE_2:
+                    employees2.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.WORK);
+                    initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_2_START_X);
+                    getActivities().add(animActivity);
+                    break;
+
+                case REMOVE_WORK_FROM_EMPLOYER_TYPE_2:
+                    employees2.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.FREE);
+                    break;
+
+                case ADD_MOVE_TO_TAKE_OVER:
+                    initMoveToTakeOver(((EmployeeAnimActivity) animActivity).getCount(), animActivity.getStartTime(), animActivity.getEndTime());
+                    break;
+
+                case ADD_MOVE_TO_PAYMENT:
+                    initMoveToPayment(((EmployeeAnimActivity) animActivity).getCount(), animActivity.getStartTime(), animActivity.getEndTime());
+                    break;
+
+                case ADD_MOVE_TO_INSPECTION:
+                    initMoveToInspection(((EmployeeAnimActivity) animActivity).getCount(), animActivity.getStartTime(), animActivity.getEndTime());
+                    break;
+
+                case ADD_MOVE_FROM_INSPECTION:
+                    initMoveFromInspection(((EmployeeAnimActivity) animActivity).getCount(), animActivity.getStartTime(), animActivity.getEndTime());
+                    break;
+
+                case ADD_MOVE_FROM_PAYMENT:
+                    initMoveFromPayment(((EmployeeAnimActivity) animActivity).getCount(), animActivity.getStartTime(), animActivity.getEndTime());
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 
     private void initProcessActivity(AnimActivity animActivity, int count, int x) {
-//        animActivity.setStartX(x);
-//        animActivity.setStartY();
-//        animActivity.setEndX();
-//        animActivity.setEndY();
 
         animActivity.addTurningPoints(x, AnimConfig.EMPLOYEE_START_Y + 100 * count - 15);
         animActivity.addTurningPoints(x + AnimConfig.PROCESS_WIDTH_LINE, AnimConfig.EMPLOYEE_START_Y + 100 * count - 15);
@@ -321,16 +371,86 @@ public class Animator extends BaseAnimator {
         animActivity.setStartTime(startTime);
         animActivity.setEndTime(endTime);
 
-//        animActivity.addTurningPoints(451, 110);
-//        animActivity.addTurningPoints(486, 110);
-//        animActivity.addTurningPoints(486, 160);
-//        animActivity.addTurningPoints(520, 160);
         animActivity.addTurningPoints(451, 100 + count * 100 + 10);
         animActivity.addTurningPoints(486, 100 + count * 100 + 10);
         animActivity.addTurningPoints(486, 160);
         animActivity.addTurningPoints(520, 160);
         getActivities().add(animActivity);
 
+    }
+
+    private void initMoveToTakeOver(int count, double startTime, double endTime) {
+        EmployeeAnimActivity animActivity = new EmployeeAnimActivity();
+        animActivity.setCount(count);
+        animActivity.setType(MOVING_EMP_1);
+        animActivity.setStartTime(startTime);
+        animActivity.setEndTime(endTime);
+
+        animActivity.addTurningPoints(250, 260);
+        animActivity.addTurningPoints(285, 260);//100 + count * 100 + 10);
+        animActivity.addTurningPoints(285, 100 + count * 100 + 10);
+        animActivity.addTurningPoints(369, 100 + count * 100 + 10);
+        getActivities().add(animActivity);
+
+    }
+
+    private void initMoveToPayment(int count, double startTime, double endTime) {
+        EmployeeAnimActivity animActivity = new EmployeeAnimActivity();
+        animActivity.setCount(count);
+        animActivity.setType(MOVING_EMP_1);
+        animActivity.setStartTime(startTime);
+        animActivity.setEndTime(endTime);
+
+        animActivity.addTurningPoints(250, 160);
+        animActivity.addTurningPoints(285, 160);//100 + count * 100 + 10);
+        animActivity.addTurningPoints(285, 100 + count * 100 + 10);
+        animActivity.addTurningPoints(369, 100 + count * 100 + 10);
+        getActivities().add(animActivity);
+
+    }
+
+    private void initMoveToInspection(int count, double startTime, double endTime) {
+        EmployeeAnimActivity animActivity = new EmployeeAnimActivity();
+        animActivity.setCount(count);
+        animActivity.setType(MOVING_EMP_1);
+        animActivity.setStartTime(startTime);
+        animActivity.setEndTime(endTime);
+
+        animActivity.addTurningPoints(750, 160);
+        animActivity.addTurningPoints(785, 160);//100 + count * 100 + 10);
+        animActivity.addTurningPoints(785, 100 + count * 100 + 10);
+        animActivity.addTurningPoints(869, 100 + count * 100 + 10);
+        getActivities().add(animActivity);
+    }
+
+    private void initMoveFromInspection(int count, double startTime, double endTime) {
+        EmployeeAnimActivity animActivity = new EmployeeAnimActivity();
+        animActivity.setCount(count);
+        animActivity.setType(MOVING_EMP_1);
+        animActivity.setStartTime(startTime);
+        animActivity.setEndTime(endTime);
+
+        animActivity.addTurningPoints(950, 100 + count * 100 + 10);
+        animActivity.addTurningPoints(985, 100 + count * 100 + 10);//100 + count * 100 + 10);
+        animActivity.addTurningPoints(985, 15);
+        animActivity.addTurningPoints(135, 15);
+        animActivity.addTurningPoints(135, 130);
+        getActivities().add(animActivity);
+    }
+
+    private void initMoveFromPayment(int count, double startTime, double endTime) {
+        EmployeeAnimActivity animActivity = new EmployeeAnimActivity();
+        animActivity.setCount(count);
+        animActivity.setType(MOVING_EMP_1);
+        animActivity.setStartTime(startTime);
+        animActivity.setEndTime(endTime);
+
+        animActivity.addTurningPoints(451, 100 + count * 100 + 10);
+        animActivity.addTurningPoints(486, 100 + count * 100 + 10);
+        animActivity.addTurningPoints(486, countType1 * 100 + 100 - 75 < 250 ? 175 + 200-15 : countType1 * 100 + 100 - 75 + 100-15);//100 + count * 100 + 10);
+        animActivity.addTurningPoints(0, countType1 * 100 + 100 - 75 < 250 ? 175 + 200-15 : countType1 * 100 + 100 - 75 + 100-15);
+
+        getActivities().add(animActivity);
     }
 
 }

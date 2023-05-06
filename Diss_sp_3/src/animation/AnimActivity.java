@@ -189,7 +189,31 @@ public class AnimActivity {
 
                     //moving left
                 } else {
+                    int moveDistance = (int) ((progress / duration) * (length)) * (-1);
+                    int lengthTraveled = (-1) * this.lengthTraveled;
+                    if (start.getX() + moveDistance - lengthTraveled <= end.getX()) {
+                        //end of route
+                        if (turningPoints.size() == 2) {
+                            actualPoint.setX(end.getX());
 
+                        } else {
+                            int moved = Math.abs(end.getX() - actualPoint.getX());
+
+                            actualPoint.setX(end.getX());
+                            this.lengthTraveled += getLenght(turningPoints.get(0), turningPoints.get(1));
+                            lengthTraveled = -this.lengthTraveled;
+                            if (end.getY() < turningPoints.get(2).getY()) {
+
+                                actualPoint.setY(actualPoint.getY() - Math.abs(moveDistance - moved - lengthTraveled));
+                            } else {
+
+                                actualPoint.setY(actualPoint.getY() - Math.abs(moveDistance - moved - lengthTraveled));
+                            }
+                            turningPoints.remove(0);
+                        }
+                    } else {
+                        actualPoint.setX(start.getX() + moveDistance - lengthTraveled);
+                    }
                 }
             }
 

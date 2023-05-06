@@ -46,22 +46,27 @@ public class ManagerReception extends Manager {
 
             } else {
                 // System.out.println("AFTER CHECK TIME: " + mySim().currentTime());
-                //if (((MySimulation) mySim()).getAnimator() == null) {
-
+                if (((MySimulation) mySim()).getAnimator() == null) {
                     MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().dequeue();
                     myAgent().getQueueTakeOverGui().poll();
                     removeAnimFromQueue(((MyMessage) newMessage).getCustomer());
                     startWorkOnTakeOver((MyMessage) newMessage);
-                //}else{
-                //    MyMessage newMessage = (MyMessage) message.createCopy();
-                    
-                    
-                    
-               // }
+                } else {
+                    addMoveToTakeOver();
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void addMoveToTakeOver() throws Exception {
+        myAgent().addWorkingEmployee();
+        myAgent().addReservedParkingPlace();
+        MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().poll();
+        myAgent().getQueueTakeOverGui().poll();
+        newMessage.setAddressee(myAgent().findAssistant(Id.processMoveToTakeOver));
+        startContinualAssistant(newMessage);
     }
 
     //meta! sender="AgentVehicleInspection", id="53", type="Request"
@@ -75,7 +80,13 @@ public class ManagerReception extends Manager {
                 ((MyMessage) message).getCustomer().setWaitingForPayment(true);
 
             } else {
-                startWorkOnPayment((MyMessage) message);
+                if (((MySimulation) mySim()).getAnimator() == null) {
+                    startWorkOnPayment((MyMessage) message);
+                } else {
+                    myAgent().getQueuePaying().enqueue(message);
+                    myAgent().getQueuePayingGui().add(message);
+                    makeMoveToPayment();
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,11 +121,15 @@ public class ManagerReception extends Manager {
 
             //payment
             if (myAgent().getQueuePaying().size() > 0 && !pause) {
-                MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
-                myAgent().getQueuePayingGui().poll();
-                removeAnimFromQueuePayment();
-                //nextMessage.setTotalWaitingTime(mySim().currentTime() - nextMessage.getStartWaitingTime());
-                startWorkOnPayment(nextMessage);
+                if (((MySimulation) mySim()).getAnimator() == null) {
+                    MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+                    myAgent().getQueuePayingGui().poll();
+                    removeAnimFromQueuePayment();
+                    //nextMessage.setTotalWaitingTime(mySim().currentTime() - nextMessage.getStartWaitingTime());
+                    startWorkOnPayment(nextMessage);
+                } else {
+                    makeMoveToPayment();
+                }
             }
 
             MyMessage nextMessage = (MyMessage) message.createCopy();
@@ -182,11 +197,15 @@ public class ManagerReception extends Manager {
             }
             //payment
             if (myAgent().getQueuePaying().size() > 0 && !pause) {
-                MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
-                myAgent().getQueuePayingGui().poll();
-                removeAnimFromQueuePayment();
-                //nextMessage.getCustomer().setmySim().currentTime() - nextMessage.getCustomer().getStartOfWaitingForTakeOver());
-                startWorkOnPayment(nextMessage);
+                if (((MySimulation) mySim()).getAnimator() == null) {
+                    MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+                    myAgent().getQueuePayingGui().poll();
+                    removeAnimFromQueuePayment();
+                    //nextMessage.getCustomer().setmySim().currentTime() - nextMessage.getCustomer().getStartOfWaitingForTakeOver());
+                    startWorkOnPayment(nextMessage);
+                } else {
+                    makeMoveToPayment();
+                }
             }
             //takeover
             if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5 && !pause) {
@@ -266,6 +285,24 @@ public class ManagerReception extends Manager {
                         processFinishProcessLunchPause(message);
                         break;
 
+                    case Id.processMoveToTakeOver: {
+                        try {
+                            processFinishMove(message);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    case Id.processMoveToPayment: {
+                        try {
+                            processFinishMoveToPayment(message);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
                 }
                 break;
 
@@ -306,10 +343,15 @@ public class ManagerReception extends Manager {
             if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfWorkingEmployees() < myAgent().getTotalCountOfEmployees()
                     && myAgent().getCountOfReservedParkingPlaces() /*+ ((MyMessage) message).getCountOfParkingPlaces() */ < myAgent().getTotalCountOfParkingPlaces()) {
                 //((MyMessage) message).getCustomer().setStartOfWaitingForTakeOver(mySim().currentTime());
-                MyMessage mess = (MyMessage) myAgent().getQueueTakeOver().dequeue();
-                myAgent().getQueueTakeOverGui().poll();
-                removeAnimFromQueue(((MyMessage) mess).getCustomer());
-                startWorkOnTakeOver((MyMessage) mess);
+
+                if (((MySimulation) mySim()).getAnimator() == null) {
+                    MyMessage mess = (MyMessage) myAgent().getQueueTakeOver().dequeue();
+                    myAgent().getQueueTakeOverGui().poll();
+                    removeAnimFromQueue(((MyMessage) mess).getCustomer());
+                    startWorkOnTakeOver((MyMessage) mess);
+                } else {
+                    addMoveToTakeOver();
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
@@ -506,4 +548,26 @@ public class ManagerReception extends Manager {
 //            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
 //        }
 //    }
+    private void processFinishMove(MessageForm message) throws Exception {
+        myAgent().removeWorkingEmployee();
+        myAgent().removeReservedParkingPlace();
+        removeAnimFromQueue(((MyMessage) message).getCustomer());
+        startWorkOnTakeOver((MyMessage) message);
+    }
+
+    private void processFinishMoveToPayment(MessageForm message) throws Exception {
+        myAgent().removeWorkingEmployee();
+        startWorkOnPayment((MyMessage) message);
+    }
+
+    private void makeMoveToPayment() throws Exception {
+        myAgent().addWorkingEmployee();
+        MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+        myAgent().getQueuePayingGui().poll();
+        nextMessage.setAddressee(this);
+        nextMessage.setCode(Mc.start);
+        nextMessage.setAddressee(myAgent().findAssistant(Id.processMoveToPayment));
+        startContinualAssistant(nextMessage);
+        removeAnimFromQueuePayment();
+    }
 }

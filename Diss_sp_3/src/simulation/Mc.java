@@ -31,5 +31,9 @@ public class Mc extends IdList {
     public static final int mechanicsAvailability = 5;
     public static final int noticeTruckInspection = 8;
     public static final int noticeEndMoveToTakeOver = 9;
+    public static final int noticeEndMoveToPayment = 10;
+    public static final int noticeEndMoveToInspection = 11;
+    public static final int noticeEndMoveFromInspection = 12;
+    public static final int noticeEndMoveLeaveSystem = 13;
 
 }

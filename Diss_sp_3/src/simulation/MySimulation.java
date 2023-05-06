@@ -6,8 +6,11 @@ import agents.*;
 import animation.Animator;
 import animation.BaseAnimator;
 import diss_sp_3.RunType;
+import static java.lang.Thread.sleep;
 import java.time.LocalTime;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MySimulation extends Simulation {
 
@@ -59,6 +62,11 @@ public class MySimulation extends Simulation {
         super.prepareReplication();
         // Reset entities, queues, local statistics, etc...
         _agentModel.startSimulation();
+        try {
+            sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MySimulation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

@@ -11,6 +11,7 @@ public class Id extends IdList {
     public static final int agentMechanics = 4;
     public static final int agentParking = 5;
     public static final int agentVehicleInspection = 6;
+    public static final int processMoveToTakeOver = 7;
     public static final int managerModel = 101;
     public static final int managerEnviroment = 102;
     public static final int managerReception = 103;
@@ -25,4 +26,9 @@ public class Id extends IdList {
     public static final int processInsepction = 1005;
     public static final int schedulerLunchPause = 1006;
     //meta! tag="end"
+    public static final int processMoveToPayment = 8;
+    public static final int processMoveToInspection = 9;
+    public static final int processMoveFromInspection = 10;
+    public static final int processLeaveFromPayment = 11;
+
 }

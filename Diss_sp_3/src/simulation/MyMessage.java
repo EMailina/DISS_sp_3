@@ -12,6 +12,7 @@ public class MyMessage extends MessageForm {
     private double processEndTime;
     private int certificate2;
     private boolean executeWithCertficated;
+    private int animEmployer;
 
     public MyMessage(Simulation sim) {
         super(sim);
@@ -21,6 +22,7 @@ public class MyMessage extends MessageForm {
         super(original);
         // copy() is called in superclass
         customer = original.customer;
+        animEmployer = original.animEmployer;
         processStartTime = original.processStartTime;
         countOfParkingPlaces = original.getCountOfParkingPlaces();
         availableEmployee = original.isAvailableEmployee();
@@ -85,9 +87,18 @@ public class MyMessage extends MessageForm {
     public double getProcessEndTime() {
         return processEndTime;
     }
-    
+
     public void setProcessEndTime(double processEndTime) {
         this.processEndTime = processEndTime;
     }
 
+    public int getAnimEmployer() {
+        return animEmployer;
+    }
+
+    public void setAnimEmployer(int animEmployer) {
+        this.animEmployer = animEmployer;
+    }
+
+    
 }

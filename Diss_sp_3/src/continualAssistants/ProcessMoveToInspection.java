@@ -8,10 +8,10 @@ package continualAssistants;
 import OSPABA.CommonAgent;
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
+import agents.AgentMechanics;
 import agents.AgentReception;
 import animation.ActivityType;
 import animation.EmployeeAnimActivity;
-import diss_sp_3.RunType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.CustomerObject;
@@ -23,11 +23,11 @@ import simulation.MySimulation;
  *
  * @author Erik
  */
-public class ProcessMoveToTakeOver extends OSPABA.Process {
+public class ProcessMoveToInspection extends OSPABA.Process {
 
     private double moveLength = 20;
 
-    public ProcessMoveToTakeOver(int id, Simulation mySim, CommonAgent myAgent) {
+    public ProcessMoveToInspection(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
     }
 
@@ -45,11 +45,12 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
 
     //meta! sender="AgentMechanics", id="89", type="Start"
     public void processStart(MessageForm message) {
-        message.setCode(Mc.noticeEndMoveToTakeOver);
+        message.setCode(Mc.noticeEndMoveToInspection);
+
+        int emp = getEmployee(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated());
+        addAnimToWork(emp, moveLength);
+        ((MyMessage) message).setAnimEmployer(emp);
         hold(moveLength, message);
-
-        addAnimToWork(getEmployee(((MyMessage) message).getCustomer()), moveLength);
-
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -60,7 +61,7 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
                 processStart(message);
                 break;
 
-            case Mc.noticeEndMoveToTakeOver: {
+            case Mc.noticeEndMoveToInspection: {
                 try {
                     processNoticeEndPause(message);
                 } catch (Exception ex) {
@@ -77,8 +78,8 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
     //meta! tag="end"
 
     @Override
-    public AgentReception myAgent() {
-        return (AgentReception) super.myAgent();
+    public AgentMechanics myAgent() {
+        return (AgentMechanics) super.myAgent();
     }
 
     private void processNoticeEndPause(MessageForm message) throws Exception {
@@ -92,16 +93,15 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
             a.setCount(count);
             a.setStartTime(mySim().currentTime());
             a.setEndTime(endTime + mySim().currentTime());
-            a.setType(ActivityType.ADD_MOVE_TO_TAKE_OVER);
+            a.setType(ActivityType.ADD_MOVE_TO_INSPECTION);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
         }
     }
 
-
-    private int getEmployee(CustomerObject customer) {
+    private int getEmployee(CustomerObject customer, boolean certificated) {
         try {
 
-            return myAgent().addToEmployer(customer, true, 0);
+            return myAgent().addToEmployer(customer, certificated, 0);
         } catch (Exception ex) {
             Logger.getLogger(ProcessInsepction.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -7,6 +7,7 @@ import OSPStat.WStat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
+import diss_sp_3.RunType;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import objects.CustomerObject;
@@ -71,6 +72,8 @@ public class AgentReception extends Agent {
         new ProcessTakeOverVehicle(Id.processTakeOverVehicle, mySim(), this);
         new ProcessPaying(Id.processPaying, mySim(), this);
         new ProcessLunchPauseReception(Id.processLunchPauseReception, mySim(), this);
+        new ProcessMoveToTakeOver(Id.processMoveToTakeOver, mySim(), this);
+        new ProcessMoveToPayment(Id.processMoveToPayment, mySim(), this);
 
         addOwnMessage(Mc.checkParkingPlace);
         addOwnMessage(Mc.paymentExecute);
@@ -80,6 +83,8 @@ public class AgentReception extends Agent {
         addOwnMessage(Mc.noticeFreeParking);
         addOwnMessage(Mc.noticeLunchPause);
         addOwnMessage(Mc.noticeEndPause);
+        addOwnMessage(Mc.noticeEndMoveToTakeOver);
+        addOwnMessage(Mc.noticeEndMoveToPayment);
     }
     //meta! tag="end"
 
@@ -277,6 +282,39 @@ public class AgentReception extends Agent {
             if (guiEmployers.get(i) != null) {
                 if (customer.getCount() == guiEmployers.get(i).getCount() && guiEmployers.get(i).isPause()) {
                     return i;
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+    }
+
+    public int addToEmployer(CustomerObject customer, boolean takeOver, double endTime) throws Exception {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < getTotalCountOfEmployees(); i++) {
+                if (getGuiEmployers().get(i) == null) {
+                    getGuiEmployers().set(i, customer);
+                    if (takeOver) {
+                        customer.setTakeOverRewrite(true);
+                    } else {
+                        customer.setPaymentRewrite(true);
+                    }
+                    return i;
+
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+    }
+
+    public int removeFromEmployer(CustomerObject customer) throws Exception {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < getTotalCountOfEmployees(); i++) {
+                if (customer.equals(getGuiEmployers().get(i))) {
+                    getGuiEmployers().set(i, null);
+                    return i;
+
                 }
             }
         }

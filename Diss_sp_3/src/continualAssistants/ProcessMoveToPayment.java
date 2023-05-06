@@ -11,7 +11,6 @@ import OSPABA.Simulation;
 import agents.AgentReception;
 import animation.ActivityType;
 import animation.EmployeeAnimActivity;
-import diss_sp_3.RunType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.CustomerObject;
@@ -23,11 +22,11 @@ import simulation.MySimulation;
  *
  * @author Erik
  */
-public class ProcessMoveToTakeOver extends OSPABA.Process {
-
+public class ProcessMoveToPayment extends OSPABA.Process{
+    
     private double moveLength = 20;
 
-    public ProcessMoveToTakeOver(int id, Simulation mySim, CommonAgent myAgent) {
+    public ProcessMoveToPayment(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
     }
 
@@ -45,7 +44,7 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
 
     //meta! sender="AgentMechanics", id="89", type="Start"
     public void processStart(MessageForm message) {
-        message.setCode(Mc.noticeEndMoveToTakeOver);
+        message.setCode(Mc.noticeEndMoveToPayment);
         hold(moveLength, message);
 
         addAnimToWork(getEmployee(((MyMessage) message).getCustomer()), moveLength);
@@ -60,7 +59,7 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
                 processStart(message);
                 break;
 
-            case Mc.noticeEndMoveToTakeOver: {
+            case Mc.noticeEndMoveToPayment: {
                 try {
                     processNoticeEndPause(message);
                 } catch (Exception ex) {
@@ -92,16 +91,15 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
             a.setCount(count);
             a.setStartTime(mySim().currentTime());
             a.setEndTime(endTime + mySim().currentTime());
-            a.setType(ActivityType.ADD_MOVE_TO_TAKE_OVER);
+            a.setType(ActivityType.ADD_MOVE_TO_PAYMENT);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
         }
     }
 
-
     private int getEmployee(CustomerObject customer) {
         try {
 
-            return myAgent().addToEmployer(customer, true, 0);
+            return myAgent().addToEmployer(customer, false, 0);
         } catch (Exception ex) {
             Logger.getLogger(ProcessInsepction.class.getName()).log(Level.SEVERE, null, ex);
         }

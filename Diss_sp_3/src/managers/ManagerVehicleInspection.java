@@ -4,6 +4,8 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //meta! id="6"
 public class ManagerVehicleInspection extends Manager {
@@ -25,16 +27,23 @@ public class ManagerVehicleInspection extends Manager {
 
     //meta! sender="AgentMechanics", id="44", type="Response"
     public void processMechanicExecute(MessageForm message) {
-        message.setCode(Mc.paymentExecute);
-        message.setAddressee(mySim().findAgent(Id.agentReception));
-        request(message);
-        //find another vehicle
-        MessageForm newMessage = message.createCopy();
+        if (((MySimulation) mySim()).getAnimator() == null) {
+            message.setCode(Mc.paymentExecute);
+            message.setAddressee(mySim().findAgent(Id.agentReception));
+            request(message);
+            //find another vehicle
+            MessageForm newMessage = message.createCopy();
 
-        newMessage.setCode(Mc.noticeFreeMechanic);
-        
-        newMessage.setAddressee(mySim().findAgent(Id.agentParking));
-        notice(newMessage);
+            newMessage.setCode(Mc.noticeFreeMechanic);
+
+            newMessage.setAddressee(mySim().findAgent(Id.agentParking));
+            notice(newMessage);
+        } else {
+            message.setCode(Mc.start);
+            message.setAddressee(myAgent().findAssistant(Id.processMoveFromInspection));
+            startContinualAssistant(message);
+
+        }
     }
 
     //meta! sender="AgentModel", id="33", type="Request"
@@ -54,9 +63,15 @@ public class ManagerVehicleInspection extends Manager {
 
     //meta! sender="AgentReception", id="53", type="Response"
     public void processPaymentExecute(MessageForm message) {
-        message.setCode(Mc.customerService);
-        message.setAddressee(Id.agentModel);
-        notice(message);
+        if (((MySimulation) mySim()).getAnimator() == null) {
+            message.setCode(Mc.customerService);
+            message.setAddressee(Id.agentModel);
+            notice(message);
+        } else {
+            message.setCode(Mc.start);
+            message.setAddressee(myAgent().findAssistant(Id.processLeaveFromPayment));
+            notice(message);
+        }
     }
 
     //meta! sender="AgentReception", id="36", type="Response"
@@ -90,6 +105,28 @@ public class ManagerVehicleInspection extends Manager {
     @Override
     public void processMessage(MessageForm message) {
         switch (message.code()) {
+            case Mc.finish:
+                switch (message.sender().id()) {
+                    case Id.processMoveFromInspection: {
+                        try {
+                            processNoticeEndMoveFromInspection(message);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ManagerMechanics.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    case Id.processLeaveFromPayment: {
+                        try {
+                            processNoticeEndLeavePayment(message);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ManagerMechanics.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+                }
+                break;
+
             case Mc.paymentExecute:
                 processPaymentExecute(message);
                 break;
@@ -132,6 +169,10 @@ public class ManagerVehicleInspection extends Manager {
 
             case Mc.noticeFreeMechanic:
                 processNoticeFreeMechanic(message);
+                break;
+
+            case Mc.noticeEndMoveFromInspection:
+                processNoticeEndMoveFromInspection(message);
                 break;
 
             default:
@@ -189,6 +230,25 @@ public class ManagerVehicleInspection extends Manager {
         message.setCode(Mc.noticeFreeMechanic);
         ((MyMessage) message).setAvailableEmployee(true);
         message.setAddressee(mySim().findAgent(Id.agentParking));
+        notice(message);
+    }
+
+    private void processNoticeEndMoveFromInspection(MessageForm message) {
+        message.setCode(Mc.paymentExecute);
+        message.setAddressee(mySim().findAgent(Id.agentReception));
+        request(message);
+        //find another vehicle
+        MessageForm newMessage = message.createCopy();
+
+        newMessage.setCode(Mc.noticeFreeMechanic);
+
+        newMessage.setAddressee(mySim().findAgent(Id.agentParking));
+        notice(newMessage);
+    }
+
+    private void processNoticeEndLeavePayment(MessageForm message) {
+        message.setCode(Mc.customerService);
+        message.setAddressee(Id.agentModel);
         notice(message);
     }
 

@@ -6,6 +6,7 @@ import OSPStat.WStat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
+import diss_sp_3.RunType;
 import java.util.ArrayList;
 import objects.CustomerObject;
 
@@ -74,6 +75,7 @@ public class AgentMechanics extends Agent {
         new ManagerMechanics(Id.managerMechanics, mySim(), this);
         new ProcessInsepction(Id.processInsepction, mySim(), this);
         new ProcessLunchPauseInspection(Id.processLunchPauseInspection, mySim(), this);
+        new ProcessMoveToInspection(Id.processMoveToInspection, mySim(), this);
 
         addOwnMessage(Mc.mechanicExecute);
         addOwnMessage(Mc.mechanicsAvailability);
@@ -81,6 +83,7 @@ public class AgentMechanics extends Agent {
         addOwnMessage(Mc.noticeLunchPause);
         addOwnMessage(Mc.noticeEndPause);
         addOwnMessage(Mc.noticeTruckInspection);
+        addOwnMessage(Mc.noticeEndMoveToInspection);
     }
     //meta! tag="end"
 
@@ -306,4 +309,37 @@ public class AgentMechanics extends Agent {
         throw new Exception("Employer for animation error!");
     }
 
+    public int addToEmployer(CustomerObject customer, boolean c2, double endTime) throws Exception {
+
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            int start = 0;
+            if (c2) {
+                start = getTotalCountOfEmployeesWithCertificate1();
+            }
+            for (int i = start; i < getTotalCountOfEmployees(); i++) {
+                if (getGuiEmployers().get(i) == null) {
+
+                    getGuiEmployers().set(i, customer);
+                    customer.setInspectionRewrite(true);
+                    return i;
+
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+
+    }
+
+    public int removeFromEmployer(CustomerObject customer) throws Exception {
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            for (int i = 0; i < getTotalCountOfEmployees(); i++) {
+                if (customer.equals(getGuiEmployers().get(i))) {
+                    getGuiEmployers().set(i, null);
+                    return i;
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+
+    }
 }

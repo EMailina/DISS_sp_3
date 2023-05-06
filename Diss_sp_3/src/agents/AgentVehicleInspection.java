@@ -1,6 +1,9 @@
 package agents;
 
 import OSPABA.*;
+import continualAssistants.ProcessLeaveFromPayment;
+import continualAssistants.ProcessMoveFromInspection;
+import continualAssistants.ProcessMoveToInspection;
 import simulation.*;
 import managers.*;
 
@@ -21,6 +24,9 @@ public class AgentVehicleInspection extends Agent {
     //meta! userInfo="Generated code: do not modify", tag="begin"
     private void init() {
         new ManagerVehicleInspection(Id.managerVehicleInspection, mySim(), this);
+        new ProcessMoveFromInspection(Id.processMoveFromInspection, mySim(), this);
+        new ProcessLeaveFromPayment(Id.processLeaveFromPayment, mySim(), this);
+
         addOwnMessage(Mc.mechanicExecute);
         addOwnMessage(Mc.customerService);
         addOwnMessage(Mc.parkingPlaceInfo);
@@ -33,7 +39,10 @@ public class AgentVehicleInspection extends Agent {
         addOwnMessage(Mc.mechanicsAvailability);
         addOwnMessage(Mc.noticeLunchPause);
         addOwnMessage(Mc.noticeFreeMechanic);
-   
+        addOwnMessage(Mc.noticeEndMoveFromInspection);
+        addOwnMessage(Mc.noticeEndMoveLeaveSystem);
+       
+
     }
     //meta! tag="end"
 }
