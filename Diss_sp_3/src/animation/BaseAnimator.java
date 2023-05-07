@@ -30,7 +30,7 @@ public abstract class BaseAnimator {
         this.simulation = simulation;
         activities = new CopyOnWriteArrayList<>();
         init();
-       
+
     }
 
     public void addAnimator() {
@@ -54,8 +54,6 @@ public abstract class BaseAnimator {
         clearBackgroundOnDeleted(toRemove);
         drawBackGround();
         drawActivities();
-
-
 
     }
 
@@ -113,4 +111,8 @@ public abstract class BaseAnimator {
     public abstract void processNewActivity(AnimActivity animActivity);
 
     public abstract void clearBackgroundOnDeleted(CopyOnWriteArrayList<AnimActivity> toRemove);
+
+    void createCanvas() {
+        this.canvas = new Canvas();
+    }
 }

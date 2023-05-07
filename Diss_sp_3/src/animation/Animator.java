@@ -588,7 +588,7 @@ public class Animator extends BaseAnimator {
 
     public void setScale(int scale) {
         zoomed = !zoomed;
-
+        super.createCanvas();
     }
 
 }

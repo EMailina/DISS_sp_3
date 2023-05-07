@@ -23,8 +23,9 @@ public class ManagerDependencies {
 
     public void findDependencyOnEmp1(ISimDelegate refresher, int countOfEmp, int countOfEmpC2, boolean validation, int countOfReplication) {
         stop = false;
+        MySimulation simulation = new MySimulation();
         for (int i = 0; i < 15; i++) {
-            MySimulation simulation = new MySimulation();
+
             init(simulation, RunType.DEPENDENCY_1, i + 1, countOfEmp, countOfEmpC2, validation, refresher);
 
             simulation.simulate(countOfReplication, 480);
@@ -38,10 +39,10 @@ public class ManagerDependencies {
 
     public void findDependencyOnEmp2(ISimDelegate refresher, int countOfEmp, int countOfReplication, boolean validation) {
         stop = false;
+        MySimulation simulation = new MySimulation();
         for (int i = 10; i < 26; i++) {
-            MySimulation simulation = new MySimulation();
-            init(simulation, RunType.DEPENDENCY_2, countOfEmp, 0, i + 1, validation, refresher);
 
+            init(simulation, RunType.DEPENDENCY_2, countOfEmp, 0, i + 1, validation, refresher);
             simulation.simulate(countOfReplication, 480);
             refresher.refresh(simulation);
 

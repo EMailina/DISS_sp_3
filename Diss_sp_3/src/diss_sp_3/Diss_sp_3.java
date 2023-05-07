@@ -102,8 +102,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel1 = new java.awt.Panel();
-        canvas1 = new java.awt.Canvas();
         StartButton = new javax.swing.JButton();
         EditCountOfReplications = new javax.swing.JTextField();
         StopButton = new javax.swing.JButton();
@@ -156,7 +154,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         jLabel22 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        panelGraph2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         checkboxAnimation = new javax.swing.JCheckBox();
         countOfEmployees2Box2 = new javax.swing.JTextField();
@@ -165,46 +162,14 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         checkboxValidation = new javax.swing.JCheckBox();
-        label1 = new java.awt.Label();
-        label2 = new java.awt.Label();
+        panelGraph2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(1200, 700));
-        setMinimumSize(new java.awt.Dimension(1200, 700));
+        setMaximumSize(new java.awt.Dimension(1300, 700));
+        setMinimumSize(new java.awt.Dimension(1300, 700));
         setPreferredSize(new java.awt.Dimension(1200, 700));
         setSize(new java.awt.Dimension(1200, 700));
         getContentPane().setLayout(null);
-
-        panel1.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
-        panel1.setMaximumSize(new java.awt.Dimension(850, 500));
-        panel1.setMinimumSize(new java.awt.Dimension(850, 500));
-        panel1.setPreferredSize(new java.awt.Dimension(850, 500));
-
-        canvas1.setMaximumSize(new java.awt.Dimension(1200, 700));
-        canvas1.setMinimumSize(new java.awt.Dimension(1200, 700));
-        canvas1.setPreferredSize(new java.awt.Dimension(1200, 700));
-
-        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
-        panel1.setLayout(panel1Layout);
-        panel1Layout.setHorizontalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panel1Layout.setVerticalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(panel1);
-        panel1.setBounds(373, 180, 850, 500);
-        panel1.getAccessibleContext().setAccessibleName("");
-        panel1.getAccessibleContext().setAccessibleDescription("");
 
         StartButton.setText("Start replications");
         StartButton.setName("startButton"); // NOI18N
@@ -414,6 +379,8 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         getContentPane().add(startSimulation3);
         startSimulation3.setBounds(1020, 20, 160, 32);
 
+        jPanel1.setLayout(null);
+
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -431,12 +398,20 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
             }
         });
         jTable4.setEnabled(false);
+        jTable4.setPreferredSize(new java.awt.Dimension(300, 100));
         jTable4.getTableHeader().setReorderingAllowed(false);
         jScrollPane4.setViewportView(jTable4);
         if (jTable4.getColumnModel().getColumnCount() > 0) {
             jTable4.getColumnModel().getColumn(2).setMinWidth(150);
             jTable4.getColumnModel().getColumn(2).setMaxWidth(250);
         }
+
+        jPanel1.add(jScrollPane4);
+        jScrollPane4.setBounds(20, 40, 380, 210);
+
+        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        jScrollPane3.setPreferredSize(new java.awt.Dimension(250, 100));
+        jScrollPane3.setRequestFocusEnabled(false);
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -455,7 +430,12 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
             }
         });
         jTable3.setEnabled(false);
+        jTable3.setMinimumSize(new java.awt.Dimension(225, 100));
+        jTable3.setPreferredSize(new java.awt.Dimension(225, 100));
         jScrollPane3.setViewportView(jTable3);
+
+        jPanel1.add(jScrollPane3);
+        jScrollPane3.setBounds(430, 40, 370, 110);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -475,6 +455,9 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         });
         jTable1.setEnabled(false);
         jScrollPane1.setViewportView(jTable1);
+
+        jPanel1.add(jScrollPane1);
+        jScrollPane1.setBounds(430, 190, 370, 270);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -500,84 +483,31 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
             jTable2.getColumnModel().getColumn(2).setMaxWidth(250);
         }
 
+        jPanel1.add(jScrollPane2);
+        jScrollPane2.setBounds(20, 300, 375, 160);
+
         jLabel20.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel20.setText("Inspection (type 2)");
+        jPanel1.add(jLabel20);
+        jLabel20.setBounds(540, 160, 140, 19);
 
         jLabel22.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel22.setText("Parking");
+        jPanel1.add(jLabel22);
+        jLabel22.setBounds(580, 10, 60, 19);
 
         jLabel21.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel21.setText("Queue for take-over and payment");
+        jPanel1.add(jLabel21);
+        jLabel21.setBounds(90, 10, 236, 19);
 
         jLabel19.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel19.setText("Take-over Vehicle (type 1)");
-
-        panelGraph2.setLayout(null);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(512, 512, 512)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(panelGraph2, javax.swing.GroupLayout.PREFERRED_SIZE, 957, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(77, 77, 77))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(112, 112, 112))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel21)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(158, 158, 158))))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21)
-                    .addComponent(jLabel22))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel20)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel19)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelGraph2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
+        jPanel1.add(jLabel19);
+        jLabel19.setBounds(110, 260, 200, 19);
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(393, 100, 830, 438);
+        jPanel1.setBounds(380, 150, 920, 530);
 
         jLabel10.setText("loading...");
         getContentPane().add(jLabel10);
@@ -616,28 +546,9 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         getContentPane().add(checkboxValidation);
         checkboxValidation.setBounds(180, 60, 90, 24);
 
-        label1.setText("Status");
-        label1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                label1MouseClicked(evt);
-            }
-        });
-        label1.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                label1MouseWheelMoved(evt);
-            }
-        });
-        getContentPane().add(label1);
-        label1.setBounds(320, 100, 60, 20);
-
-        label2.setText("Animation");
-        label2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                label2MouseClicked(evt);
-            }
-        });
-        getContentPane().add(label2);
-        label2.setBounds(320, 120, 60, 20);
+        panelGraph2.setLayout(null);
+        getContentPane().add(panelGraph2);
+        panelGraph2.setBounds(27, 192, 1160, 420);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -704,20 +615,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private void checkboxAnimationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxAnimationActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkboxAnimationActionPerformed
-
-    private void label2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label2MouseClicked
-        panel1.setVisible(false);
-        jPanel1.setVisible(true);
-    }//GEN-LAST:event_label2MouseClicked
-
-    private void label1MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_label1MouseWheelMoved
-        // TODO add your handling code here:
-    }//GEN-LAST:event_label1MouseWheelMoved
-
-    private void label1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label1MouseClicked
-        panel1.setVisible(true);
-        jPanel1.setVisible(false);
-    }//GEN-LAST:event_label1MouseClicked
 
     public void setSimulation(MySimulation simulation) {
         this.simulation = simulation;
@@ -849,7 +746,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private javax.swing.JLabel SpeedLabel;
     private javax.swing.JButton StartButton;
     private javax.swing.JButton StopButton;
-    private java.awt.Canvas canvas1;
     private javax.swing.JCheckBox checkboxAnimation;
     private javax.swing.JCheckBox checkboxValidation;
     private javax.swing.JTextField countOfEmployees1Box;
@@ -901,9 +797,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
-    private java.awt.Label label1;
-    private java.awt.Label label2;
-    private java.awt.Panel panel1;
     private javax.swing.JPanel panelGraph2;
     private javax.swing.JButton pauseButton;
     private javax.swing.JSlider speedSlider;
@@ -940,13 +833,11 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         }
 
         if (RunType.SIMULATION == runType) {
-            hideLabels();
+            //hideLabels();
             initializeTables();
         }
 
-        panel1.setVisible(true);
-        this.img = ImageIO.read(new File("background.png"));
-        canvas1.getGraphics().drawImage(img, 0, 0, null);
+
 
         while (true) {
             if (refreshGuiChanges) {
@@ -1136,7 +1027,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
             } else {
                 jLabel11.setText("Simulation");
-                jPanel1.setVisible(false);
+                jPanel1.setVisible(true);
             }
             jScrollPane1.setViewportView(jTable1);
             jScrollPane2.setViewportView(jTable2);
@@ -1258,21 +1149,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         }
     }
 
-    private void hideLabels() {
-        jLabel12.setVisible(false);
-        jLabel10.setVisible(false);
-        jLabel14.setVisible(false);
-        jLabel13.setVisible(false);
-        jLabel18.setVisible(false);
-        jLabelCountReplication.setVisible(false);
-        jLabel8.setVisible(false);
-        jLabel15.setVisible(false);
-        jLabel17.setVisible(false);
-        jLabel16.setVisible(false);
-        jLabel7.setVisible(false);
-
-        panel1.repaint();
-        panel1.revalidate();
-    }
+   
 
 }
