@@ -61,6 +61,7 @@ public class ManagerReception extends Manager {
     }
 
     public void addMoveToTakeOver() throws Exception {
+        removeAnimFromQueue(null);
         myAgent().addWorkingEmployee();
         myAgent().addReservedParkingPlace();
         MyMessage newMessage = (MyMessage) myAgent().getQueueTakeOver().poll();
@@ -85,6 +86,7 @@ public class ManagerReception extends Manager {
                 } else {
                     myAgent().getQueuePaying().enqueue(message);
                     myAgent().getQueuePayingGui().add(message);
+                    addAnimToQueuePayment();
                     makeMoveToPayment();
                 }
             }
@@ -122,11 +124,15 @@ public class ManagerReception extends Manager {
             //payment
             if (myAgent().getQueuePaying().size() > 0 && !pause) {
                 if (((MySimulation) mySim()).getAnimator() == null) {
-                    MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
-                    myAgent().getQueuePayingGui().poll();
-                    removeAnimFromQueuePayment();
-                    //nextMessage.setTotalWaitingTime(mySim().currentTime() - nextMessage.getStartWaitingTime());
-                    startWorkOnPayment(nextMessage);
+                    if (((MySimulation) mySim()).getAnimator() == null) {
+                        MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+                        myAgent().getQueuePayingGui().poll();
+                        removeAnimFromQueuePayment();
+                        //nextMessage.setTotalWaitingTime(mySim().currentTime() - nextMessage.getStartWaitingTime());
+                        startWorkOnPayment(nextMessage);
+                    } else {
+                        makeMoveToPayment();
+                    }
                 } else {
                     makeMoveToPayment();
                 }
@@ -161,7 +167,9 @@ public class ManagerReception extends Manager {
         message.setAddressee(myAgent().findAssistant(Id.processTakeOverVehicle));
         startContinualAssistant(message);
         //System.out.println("Start registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
-        addToEmployer(((MyMessage) message).getCustomer(), true, ((MyMessage) message).getProcessEndTime());
+        if (((MySimulation) mySim()).getAnimator() == null) {
+            addToEmployer(((MyMessage) message).getCustomer(), true, ((MyMessage) message).getProcessEndTime());
+        }
     }
 
     private void startWorkOnPayment(MyMessage message) throws Exception {
@@ -170,8 +178,9 @@ public class ManagerReception extends Manager {
         myAgent().addWorkingEmployee();
         message.setAddressee(myAgent().findAssistant(Id.processPaying));
         startContinualAssistant(message);
-        addToEmployer(((MyMessage) message).getCustomer(), false, ((MyMessage) message).getProcessEndTime());
-
+        if (((MySimulation) mySim()).getAnimator() == null) {
+            addToEmployer(((MyMessage) message).getCustomer(), false, ((MyMessage) message).getProcessEndTime());
+        }
     }
 
     //meta! sender="ProcessPaying", id="22", type="Finish"
@@ -281,9 +290,14 @@ public class ManagerReception extends Manager {
                         processFinishProcessPaying(message);
                         break;
 
-                    case Id.processLunchPauseReception:
-                        processFinishProcessLunchPause(message);
-                        break;
+                    case Id.processLunchPauseReception: {
+                        try {
+                            processFinishProcessLunchPause(message);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
 
                     case Id.processMoveToTakeOver: {
                         try {
@@ -449,19 +463,23 @@ public class ManagerReception extends Manager {
         }
     }
 
-    private void processFinishProcessLunchPause(MessageForm message) {
+    private void processFinishProcessLunchPause(MessageForm message) throws Exception {
         //  System.out.println("stop pauza");
         myAgent().removePausedEmployees();
         removePauseFromEmployer();
         //payment
         if (myAgent().getQueuePaying().size() > 0) {
-            MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
-            removeAnimFromQueuePayment();
-            myAgent().getQueuePayingGui().poll();
-            try {
-                startWorkOnPayment(nextMessage);
-            } catch (Exception ex) {
-                Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
+            if (((MySimulation) mySim()).getAnimator() == null) {
+                MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+                removeAnimFromQueuePayment();
+                myAgent().getQueuePayingGui().poll();
+                try {
+                    startWorkOnPayment(nextMessage);
+                } catch (Exception ex) {
+                    Logger.getLogger(ManagerReception.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                makeMoveToPayment();
             }
         } //takeover
         else if (myAgent().getQueueTakeOver().size() > 0 && myAgent().getCountOfReservedParkingPlaces() < 5) {
@@ -508,50 +526,10 @@ public class ManagerReception extends Manager {
         }
     }
 
-//    private void addAnimToPause(int count, double endTime) {
-//        if (((MySimulation) mySim()).getAnimator() != null) {
-//            EmployeeAnimActivity a = new EmployeeAnimActivity();
-//            a.setCount(count);
-//            a.setStartTime(mySim().currentTime());
-//            a.setEndTime(mySim().currentTime() + 30 );
-//            a.setType(ActivityType.ADD_PAUSE_TO_EMPLOYER_TYPE_1);
-//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
-//        }
-//    }
-//
-//    private void removeAnimFromPause(int count) {
-//        if (((MySimulation) mySim()).getAnimator() != null) {
-//            EmployeeAnimActivity a = new EmployeeAnimActivity();
-//            a.setCount(count);
-//
-//            a.setType(ActivityType.REMOVE_PAUSE_FROM_EMPLOYER_TYPE_1);
-//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
-//        }
-//    }
-//    private void addAnimToWork(int count, double endTime) {
-//        if (((MySimulation) mySim()).getAnimator() != null) {
-//            EmployeeAnimActivity a = new EmployeeAnimActivity();
-//            a.setCount(count);
-//            a.setStartTime(mySim().currentTime());
-//            a.setEndTime(endTime);
-//            a.setType(ActivityType.ADD_WORK_TO_EMPLOYER_TYPE_1);
-//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
-//        }
-//    }
-//
-//    private void removeAnimToWork(int count) {
-//        if (((MySimulation) mySim()).getAnimator() != null) {
-//            EmployeeAnimActivity a = new EmployeeAnimActivity();
-//            a.setCount(count);
-//
-//            a.setType(ActivityType.REMOVE_WORK_FROM_EMPLOYER_TYPE_1);
-//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
-//        }
-//    }
     private void processFinishMove(MessageForm message) throws Exception {
         myAgent().removeWorkingEmployee();
         myAgent().removeReservedParkingPlace();
-        removeAnimFromQueue(((MyMessage) message).getCustomer());
+
         startWorkOnTakeOver((MyMessage) message);
     }
 
@@ -563,6 +541,7 @@ public class ManagerReception extends Manager {
     private void makeMoveToPayment() throws Exception {
         myAgent().addWorkingEmployee();
         MyMessage nextMessage = (MyMessage) myAgent().getQueuePaying().dequeue();
+
         myAgent().getQueuePayingGui().poll();
         nextMessage.setAddressee(this);
         nextMessage.setCode(Mc.start);

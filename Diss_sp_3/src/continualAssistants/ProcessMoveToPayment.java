@@ -10,6 +10,8 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import agents.AgentReception;
 import animation.ActivityType;
+import animation.AnimTimeCounter;
+import animation.Animator;
 import animation.EmployeeAnimActivity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +24,10 @@ import simulation.MySimulation;
  *
  * @author Erik
  */
-public class ProcessMoveToPayment extends OSPABA.Process{
-    
+public class ProcessMoveToPayment extends OSPABA.Process {
+
     private double moveLength = 20;
+    private AnimTimeCounter timeCounter;
 
     public ProcessMoveToPayment(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
@@ -33,7 +36,9 @@ public class ProcessMoveToPayment extends OSPABA.Process{
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-        // Setup component for the next replication
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            timeCounter = new AnimTimeCounter((Animator) ((MySimulation) mySim()).getAnimator());
+        }
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
@@ -45,9 +50,12 @@ public class ProcessMoveToPayment extends OSPABA.Process{
     //meta! sender="AgentMechanics", id="89", type="Start"
     public void processStart(MessageForm message) {
         message.setCode(Mc.noticeEndMoveToPayment);
+        int emp = getEmployee(((MyMessage) message).getCustomer());
+        moveLength = timeCounter.getTimePerRouteToEmp1Payment(emp);
         hold(moveLength, message);
 
-        addAnimToWork(getEmployee(((MyMessage) message).getCustomer()), moveLength);
+        ((MyMessage) message).setAnimEmployer(emp);
+        addAnimToWork(emp, moveLength);
 
     }
 
@@ -81,7 +89,7 @@ public class ProcessMoveToPayment extends OSPABA.Process{
     }
 
     private void processNoticeEndPause(MessageForm message) throws Exception {
-        myAgent().removeFromEmployer(((MyMessage) message).getCustomer());
+      //  myAgent().removeFromEmployer(((MyMessage) message).getCustomer());
         assistantFinished(message);
     }
 

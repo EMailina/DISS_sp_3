@@ -6,6 +6,8 @@ import agents.*;
 import OSPABA.Process;
 import OSPRNG.TriangularRNG;
 import animation.ActivityType;
+import animation.AnimTimeCounter;
+import animation.Animator;
 import animation.EmployeeAnimActivity;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
@@ -16,9 +18,11 @@ import objects.CustomerObject;
 public class ProcessTakeOverVehicle extends Process {
 
     private TriangularRNG takeOverVehicleDistribution;
+    private AnimTimeCounter timeCounter;
 
     public ProcessTakeOverVehicle(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
+
         takeOverVehicleDistribution = new TriangularRNG((double) 180 / 60, (double) 431 / 60, (double) 695 / 60, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
 
     }
@@ -26,10 +30,12 @@ public class ProcessTakeOverVehicle extends Process {
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            timeCounter = new AnimTimeCounter((Animator) ((MySimulation) mySim()).getAnimator());
+        }
     }
-
     //meta! sender="AgentReception", id="20", type="Start"
+
     public void processStart(MessageForm message) {
         message.setCode(Mc.noticeEndTakeOver);
         double duration = takeOverVehicleDistribution.sample();
@@ -80,7 +86,10 @@ public class ProcessTakeOverVehicle extends Process {
         if (((MySimulation) mySim()).getAnimator() != null) {
             EmployeeAnimActivity a = new EmployeeAnimActivity();
             a.setCount(count);
+            double moveLength = timeCounter.getTimePerRouteFromEmp1(count);
+            a.setStartMovingTime(endTime - moveLength);
             a.setStartTime(mySim().currentTime());
+            a.setStaticObject(true);
             a.setEndTime(endTime);
             a.setType(ActivityType.ADD_WORK_TO_EMPLOYER_TYPE_1);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
@@ -99,7 +108,7 @@ public class ProcessTakeOverVehicle extends Process {
 
     private int getEmployee(CustomerObject customer) {
         try {
-            return myAgent().findEmpForCustomer(customer);
+            return myAgent().findExistEmpForCustomer(customer);
         } catch (Exception ex) {
             Logger.getLogger(ProcessInsepction.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -107,4 +116,5 @@ public class ProcessTakeOverVehicle extends Process {
         return -1;
     }
 
+  
 }

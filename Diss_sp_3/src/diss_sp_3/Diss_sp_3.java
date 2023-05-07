@@ -52,7 +52,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import simulation.MyMessage;
 import simulation.MySimulation;
-import threads.AnimatorThread;
 import threads.ChartThread;
 import threads.ExtraThread;
 
@@ -72,7 +71,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private ChartPanel chartPanel = null;
     ExtraThread threadLogic;
     ChartThread threadGraph;
-    AnimatorThread thredAnimation;
     Animator animator = null;
     private RunType runType;
     private boolean refreshGuiChanges = false;
@@ -160,44 +158,51 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         jLabel19 = new javax.swing.JLabel();
         panelGraph2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        checkboxValidation = new javax.swing.JCheckBox();
+        checkboxAnimation = new javax.swing.JCheckBox();
         countOfEmployees2Box2 = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
         countOfEmployees2Box3 = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
+        checkboxValidation = new javax.swing.JCheckBox();
+        label1 = new java.awt.Label();
+        label2 = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(1250, 650));
-        setSize(new java.awt.Dimension(2127, 1700));
+        setMaximumSize(new java.awt.Dimension(1200, 700));
+        setMinimumSize(new java.awt.Dimension(1200, 700));
+        setPreferredSize(new java.awt.Dimension(1200, 700));
+        setSize(new java.awt.Dimension(1200, 700));
         getContentPane().setLayout(null);
 
         panel1.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
-        panel1.setMaximumSize(new java.awt.Dimension(850, 350));
-        panel1.setMinimumSize(new java.awt.Dimension(850, 350));
-        panel1.setPreferredSize(new java.awt.Dimension(850, 350));
+        panel1.setMaximumSize(new java.awt.Dimension(850, 500));
+        panel1.setMinimumSize(new java.awt.Dimension(850, 500));
+        panel1.setPreferredSize(new java.awt.Dimension(850, 500));
 
-        canvas1.setMaximumSize(new java.awt.Dimension(2000, 2000));
-        canvas1.setMinimumSize(new java.awt.Dimension(2000, 2000));
+        canvas1.setMaximumSize(new java.awt.Dimension(1200, 700));
+        canvas1.setMinimumSize(new java.awt.Dimension(1200, 700));
+        canvas1.setPreferredSize(new java.awt.Dimension(1200, 700));
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addGap(80, 80, 80)
-                .addComponent(canvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(2, 2, 2))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                .addComponent(canvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(panel1);
-        panel1.setBounds(310, 180, 1120, 550);
+        panel1.setBounds(373, 180, 850, 500);
         panel1.getAccessibleContext().setAccessibleName("");
         panel1.getAccessibleContext().setAccessibleDescription("");
 
@@ -514,31 +519,32 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelGraph2, javax.swing.GroupLayout.PREFERRED_SIZE, 957, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(512, 512, 512)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(112, 112, 112))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(133, 133, 133)
-                .addComponent(jLabel21)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(158, 158, 158))
+                        .addComponent(panelGraph2, javax.swing.GroupLayout.PREFERRED_SIZE, 957, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(77, 77, 77))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(112, 112, 112))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(158, 158, 158))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -571,15 +577,20 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         );
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(390, 100, 830, 440);
+        jPanel1.setBounds(393, 100, 830, 438);
 
         jLabel10.setText("loading...");
         getContentPane().add(jLabel10);
         jLabel10.setBounds(30, 490, 540, 16);
 
-        checkboxValidation.setText("Validation");
-        getContentPane().add(checkboxValidation);
-        checkboxValidation.setBounds(180, 80, 90, 24);
+        checkboxAnimation.setText("Animation");
+        checkboxAnimation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkboxAnimationActionPerformed(evt);
+            }
+        });
+        getContentPane().add(checkboxAnimation);
+        checkboxAnimation.setBounds(180, 90, 90, 20);
 
         countOfEmployees2Box2.setText("17");
         getContentPane().add(countOfEmployees2Box2);
@@ -600,6 +611,33 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         jLabel27.setText("loading...");
         getContentPane().add(jLabel27);
         jLabel27.setBounds(30, 550, 540, 16);
+
+        checkboxValidation.setText("Validation");
+        getContentPane().add(checkboxValidation);
+        checkboxValidation.setBounds(180, 60, 90, 24);
+
+        label1.setText("Status");
+        label1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                label1MouseClicked(evt);
+            }
+        });
+        label1.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                label1MouseWheelMoved(evt);
+            }
+        });
+        getContentPane().add(label1);
+        label1.setBounds(320, 100, 60, 20);
+
+        label2.setText("Animation");
+        label2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                label2MouseClicked(evt);
+            }
+        });
+        getContentPane().add(label2);
+        label2.setBounds(320, 120, 60, 20);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -663,6 +701,24 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         // TODO add your handling code here:
     }//GEN-LAST:event_countOfEmployees1BoxActionPerformed
 
+    private void checkboxAnimationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxAnimationActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkboxAnimationActionPerformed
+
+    private void label2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label2MouseClicked
+        panel1.setVisible(false);
+        jPanel1.setVisible(true);
+    }//GEN-LAST:event_label2MouseClicked
+
+    private void label1MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_label1MouseWheelMoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label1MouseWheelMoved
+
+    private void label1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label1MouseClicked
+        panel1.setVisible(true);
+        jPanel1.setVisible(false);
+    }//GEN-LAST:event_label1MouseClicked
+
     public void setSimulation(MySimulation simulation) {
         this.simulation = simulation;
     }
@@ -721,7 +777,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
         if (runType == RunType.REPLICATIONS) {
             simulation.setValidationRun(checkboxValidation.isSelected());
-            simulation.onSimulationDidFinish(sim -> updateReplicationStats());
 //
 //            for (int i = 0; i < 1000; i++) {
 //                simulation = new MySimulation(i);
@@ -737,12 +792,17 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
             //app.replicate(this, countOfReplication, Integer.valueOf(countOfEmployees1Box.getText()), Integer.valueOf(countOfEmployees2Box.getText()), RunType.REPLICATIONS);
         } else if (runType == RunType.SIMULATION) {
+
             simulation.setValidationRun(checkboxValidation.isSelected());
-            simulation.onSimulationWillStart(s -> {
-                System.out.println("simm...");
-            });
+
             simulation.setSpeedChange(speedSlider.getValue());
-            simulation.setAnimator(animator);
+            if (checkboxAnimation.isSelected()) {
+
+                FormAnimator f = new FormAnimator(this);
+                f.setVisible(true);
+                this.animator = new Animator(simulation, f.getCanvas1());
+                simulation.setAnimator(animator);
+            }
             simulation.simulate(1, 480);
         } else if (runType == RunType.DEPENDENCY_1) {
             managerDep = new ManagerDependencies();
@@ -765,8 +825,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
             threadLogic.start();
             threadGraph = new ChartThread(this);
             threadGraph.start();
-            thredAnimation = new AnimatorThread(this);
-            thredAnimation.start();
         }
     }
 
@@ -792,6 +850,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private javax.swing.JButton StartButton;
     private javax.swing.JButton StopButton;
     private java.awt.Canvas canvas1;
+    private javax.swing.JCheckBox checkboxAnimation;
     private javax.swing.JCheckBox checkboxValidation;
     private javax.swing.JTextField countOfEmployees1Box;
     private javax.swing.JTextField countOfEmployees1Box1;
@@ -842,6 +901,8 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
+    private java.awt.Label label1;
+    private java.awt.Label label2;
     private java.awt.Panel panel1;
     private javax.swing.JPanel panelGraph2;
     private javax.swing.JButton pauseButton;
@@ -851,6 +912,11 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private javax.swing.JButton startSimulation3;
     // End of variables declaration//GEN-END:variables
 
+    
+    public void setScale(int scale){
+        this.animator.setScale(scale);
+    }
+    
     public void startDraw() throws InterruptedException, IOException {
         //
 
@@ -878,7 +944,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
             initializeTables();
         }
 
-        jPanel1.setVisible(false);
+        panel1.setVisible(true);
         this.img = ImageIO.read(new File("background.png"));
         canvas1.getGraphics().drawImage(img, 0, 0, null);
 
@@ -1070,7 +1136,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
             } else {
                 jLabel11.setText("Simulation");
-                jPanel1.setVisible(true);
+                jPanel1.setVisible(false);
             }
             jScrollPane1.setViewportView(jTable1);
             jScrollPane2.setViewportView(jTable2);
@@ -1207,11 +1273,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
         panel1.repaint();
         panel1.revalidate();
-    }
-
-    public void startAnimator() throws InterruptedException {
-        sleep(1000);
-        this.animator = new Animator(simulation, canvas1);
     }
 
 }

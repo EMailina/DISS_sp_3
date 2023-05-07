@@ -11,6 +11,8 @@ import OSPABA.Simulation;
 import agents.AgentMechanics;
 import agents.AgentReception;
 import animation.ActivityType;
+import animation.AnimTimeCounter;
+import animation.Animator;
 import animation.EmployeeAnimActivity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +28,7 @@ import simulation.MySimulation;
 public class ProcessMoveToInspection extends OSPABA.Process {
 
     private double moveLength = 20;
+    private AnimTimeCounter timeCounter;
 
     public ProcessMoveToInspection(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
@@ -34,7 +37,9 @@ public class ProcessMoveToInspection extends OSPABA.Process {
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-        // Setup component for the next replication
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            timeCounter = new AnimTimeCounter((Animator) ((MySimulation) mySim()).getAnimator());
+        }
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
@@ -48,6 +53,7 @@ public class ProcessMoveToInspection extends OSPABA.Process {
         message.setCode(Mc.noticeEndMoveToInspection);
 
         int emp = getEmployee(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated());
+        moveLength = timeCounter.getTimePerRouteToInspection(emp);
         addAnimToWork(emp, moveLength);
         ((MyMessage) message).setAnimEmployer(emp);
         hold(moveLength, message);

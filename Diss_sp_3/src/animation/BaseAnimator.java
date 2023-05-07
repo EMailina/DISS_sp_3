@@ -30,8 +30,7 @@ public abstract class BaseAnimator {
         this.simulation = simulation;
         activities = new CopyOnWriteArrayList<>();
         init();
-        simulation.setAnimator(this);
-        refresh();
+       
     }
 
     public void addAnimator() {
@@ -39,25 +38,24 @@ public abstract class BaseAnimator {
     }
 
     public void refresh() throws InterruptedException {
-        while (true) {
-            double t = simulation.currentTime();
 
-            CopyOnWriteArrayList<AnimActivity> toRemove = new CopyOnWriteArrayList<>();
+        double t = simulation.currentTime();
 
-            for (AnimActivity activity : activities) {
-                if (activity.isEndOfAnimation()) {
-                    toRemove.add(activity);
-                } else {
-                    activity.takeStep(t);
-                }
+        CopyOnWriteArrayList<AnimActivity> toRemove = new CopyOnWriteArrayList<>();
+
+        for (AnimActivity activity : activities) {
+            if (activity.isEndOfAnimation()) {
+                toRemove.add(activity);
+            } else {
+                activity.takeStep(t);
             }
-            activities.removeAll(toRemove);
-            clearBackgroundOnDeleted(toRemove);
-            drawBackGround();
-            drawActivities();
-          
-            sleep(10);
         }
+        activities.removeAll(toRemove);
+        clearBackgroundOnDeleted(toRemove);
+        drawBackGround();
+        drawActivities();
+
+
 
     }
 
@@ -93,7 +91,7 @@ public abstract class BaseAnimator {
 
     public void addAnimActivity(AnimActivity animActivity) {
         //activities.add(animActivity);
-        processNewActivity(animActivity); 
+        processNewActivity(animActivity);
     }
 
     public CopyOnWriteArrayList<AnimActivity> getActivities() {

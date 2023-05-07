@@ -60,9 +60,9 @@ public class ManagerMechanics extends Manager {
                 ((MyMessage) message).setProcessStartTime(mySim().currentTime());
                 message.setAddressee(myAgent().findAssistant(Id.processInsepction));
                 startContinualAssistant(message);
-                
-                int emp = myAgent().addToEmployer(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated(), 0);
-                ((MyMessage) message).setAnimEmployer(emp);
+
+                addToEmployer(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated(), 0);
+                //((MyMessage) message).setAnimEmployer(emp);
             } else {
                 startMoveToInspection(message);
             }
@@ -72,8 +72,9 @@ public class ManagerMechanics extends Manager {
 
     //meta! sender="ProcessInsepction", id="28", type="Finish"
     public void processFinish(MessageForm message) throws Exception {
-
-        removeFromEmployer(((MyMessage) message).getCustomer());
+        //if (((MySimulation) mySim()).getAnimator() == null) {
+            removeFromEmployer(((MyMessage) message).getCustomer());
+        //}
         if (((MyMessage) message).isExecuteWithCertficated()) {
             myAgent().removeWorkingEmployeeC2();
         } else {
@@ -325,17 +326,6 @@ public class ManagerMechanics extends Manager {
         notice(message);
     }
 
-//    private void processNoticeTruckInspection(MessageForm message) {
-//        if (myAgent().getCountOfWorkingC1() < myAgent().getTotalCountOfEmployeesWithCertificate1()) {
-//            for (int i = 0; i < myAgent().getTotalCountOfEmployeesWithCertificate1() - myAgent().getCountOfWorkingC1(); i++) {
-//                MessageForm newMessage = message.createCopy();
-//                ((MyMessage) newMessage).setCertificate2(myAgent().getTotalCountOfEmployeesWithCertificate2() - myAgent().getCountOfWorkingWithCertificate2() - i);
-//                newMessage.setAddressee(Id.agentVehicleInspection);
-//                newMessage.setCode(Mc.noticeFreeMechanic);
-//                notice(newMessage);
-//            }
-//        }
-//    }
     private void processNoticeTruckInspection(MessageForm message) {
         for (int i = 0; i < myAgent().getTotalCountOfEmployees() - myAgent().getCountOfWorkingC1() - myAgent().getCountOfWorkingC2(); i++) {
             MessageForm newMessage = message.createCopy();
@@ -369,26 +359,6 @@ public class ManagerMechanics extends Manager {
         }
     }
 
-//    private void addAnimToWork(int count, double endTime) {
-//        if (((MySimulation) mySim()).getAnimator() != null) {
-//            EmployeeAnimActivity a = new EmployeeAnimActivity();
-//            a.setCount(count);
-//            a.setStartTime(mySim().currentTime());
-//            a.setEndTime(endTime);
-//            a.setType(ActivityType.ADD_WORK_TO_EMPLOYER_TYPE_2);
-//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
-//        }
-//    }
-//
-//    private void removeAnimToWork(int count) {
-//        if (((MySimulation) mySim()).getAnimator() != null) {
-//            EmployeeAnimActivity a = new EmployeeAnimActivity();
-//            a.setCount(count);
-//
-//            a.setType(ActivityType.REMOVE_WORK_FROM_EMPLOYER_TYPE_2);
-//            ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
-//        }
-//    }
     private void processFinishProcessMoveToInspection(MessageForm message) throws Exception {
 
         ((MyMessage) message).setProcessStartTime(mySim().currentTime());

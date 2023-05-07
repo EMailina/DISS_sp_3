@@ -10,6 +10,8 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import agents.AgentVehicleInspection;
 import animation.ActivityType;
+import animation.AnimTimeCounter;
+import animation.Animator;
 import animation.EmployeeAnimActivity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ import simulation.MySimulation;
 public class ProcessLeaveFromPayment extends OSPABA.Process {
 
     private double moveLength = 20;
+    private AnimTimeCounter timeCounter;
 
     public ProcessLeaveFromPayment(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
@@ -32,7 +35,9 @@ public class ProcessLeaveFromPayment extends OSPABA.Process {
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-        // Setup component for the next replication
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            timeCounter = new AnimTimeCounter((Animator) ((MySimulation) mySim()).getAnimator());
+        }
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
@@ -44,8 +49,8 @@ public class ProcessLeaveFromPayment extends OSPABA.Process {
     //meta! sender="AgentMechanics", id="89", type="Start"
     public void processStart(MessageForm message) {
         message.setCode(Mc.noticeEndMoveLeaveSystem);
-
         int emp = ((MyMessage) message).getAnimEmployer();
+        moveLength = timeCounter.getTimePerRouteFromPayment(emp);
         addAnimToWork(emp, moveLength);
         ((MyMessage) message).setAnimEmployer(emp);
         hold(moveLength, message);
@@ -94,5 +99,5 @@ public class ProcessLeaveFromPayment extends OSPABA.Process {
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
         }
     }
-    
+
 }

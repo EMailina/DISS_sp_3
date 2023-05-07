@@ -35,5 +35,6 @@ public class Mc extends IdList {
     public static final int noticeEndMoveToInspection = 11;
     public static final int noticeEndMoveFromInspection = 12;
     public static final int noticeEndMoveLeaveSystem = 13;
+    public static final int noticeDrawAnimation = 14;
 
 }

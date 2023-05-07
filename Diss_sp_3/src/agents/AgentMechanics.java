@@ -342,4 +342,22 @@ public class AgentMechanics extends Agent {
         throw new Exception("Employer for animation error!");
 
     }
+
+    public int findExistEmpForCustomer(CustomerObject customer) throws Exception {
+        if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
+            int start = 0;
+            
+            for (int i = start; i < getTotalCountOfEmployees(); i++) {
+                if (getGuiEmployers().get(i) != null) {
+                    if (getGuiEmployers().get(i).getCount() == customer.getCount()) {
+                        getGuiEmployers().set(i, customer);
+                        return i;
+                    }
+                }
+            }
+        }
+        throw new Exception("Employer for animation error!");
+    }
+
+
 }

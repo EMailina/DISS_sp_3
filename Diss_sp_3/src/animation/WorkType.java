@@ -10,7 +10,7 @@ package animation;
  * @author Erik
  */
 public enum WorkType {
-
+    WORK_PAYMENT,
     WORK,
     PAUSE,
     FREE

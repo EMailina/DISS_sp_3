@@ -32,13 +32,14 @@ public class AgentEnviroment extends Agent {
     private void init() {
         new ManagerEnviroment(Id.managerEnviroment, mySim(), this);
         new SchedulerCustomerArrival(Id.schedulerCustomerArrival, mySim(), this);
-
         new SchedulerLunchPause(Id.schedulerLunchPause, mySim(), this);
+        new SchedulerAnimation(Id.schedulerAnimation, mySim(), this);
 
         addOwnMessage(Mc.init);
         addOwnMessage(Mc.noticeCustomerLeave);
         addOwnMessage(Mc.noticeCustomerArrival);
         addOwnMessage(Mc.noticeLunchPause);
+        addOwnMessage(Mc.noticeDrawAnimation);
     }
     //meta! tag="end"
 

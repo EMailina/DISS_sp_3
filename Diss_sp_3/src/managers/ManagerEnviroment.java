@@ -3,7 +3,8 @@ package managers;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //meta! id="2"
 public class ManagerEnviroment extends Manager {
@@ -33,13 +34,16 @@ public class ManagerEnviroment extends Manager {
             message.setAddressee(myAgent().findAssistant(Id.schedulerLunchPause));
             startContinualAssistant(message);
         }
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            message = (MyMessage) message.createCopy();
+            message.setAddressee(myAgent().findAssistant(Id.schedulerAnimation));
+            startContinualAssistant(message);
+        }
     }
 
     //meta! sender="AgentModel", id="32", type="Notice"
     public void processNoticeCustomerLeave(MessageForm message) {
-
         myAgent().getAverageTimeInSystem().addSample(mySim().currentTime() - ((MyMessage) message).getCustomer().getStartOfWaitingForTakeOver());
-
         myAgent().getCustomers().remove(((MyMessage) message).getCustomer());
     }
 
@@ -78,6 +82,16 @@ public class ManagerEnviroment extends Manager {
                     case Id.schedulerCustomerArrival:
                         processFinishCustomerArrival(message);
                         break;
+
+                    case Id.schedulerAnimation: {
+                        try {
+                            processFinishAnimationDraw(message);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(ManagerEnviroment.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
                 }
                 break;
 
@@ -101,6 +115,10 @@ public class ManagerEnviroment extends Manager {
         message.setCode(Mc.noticeLunchPause);
         message.setAddressee(mySim().findAgent(Id.agentModel));
         notice(message);
+    }
+
+    private void processFinishAnimationDraw(MessageForm message) throws InterruptedException {
+        ((MySimulation) mySim()).getAnimator().refresh();
     }
 
 }

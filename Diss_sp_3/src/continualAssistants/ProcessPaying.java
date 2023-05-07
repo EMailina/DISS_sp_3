@@ -98,7 +98,7 @@ public class ProcessPaying extends Process {
 
     private int getEmployee(CustomerObject customer) {
         try {
-            return myAgent().findEmpForCustomer(customer);
+            return myAgent().findExistEmpForCustomer(customer);
         } catch (Exception ex) {
             Logger.getLogger(ProcessInsepction.class.getName()).log(Level.SEVERE, null, ex);
         }

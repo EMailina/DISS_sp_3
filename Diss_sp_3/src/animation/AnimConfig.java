@@ -11,6 +11,8 @@ package animation;
  */
 public class AnimConfig {
 
+    public static int speed = 10;
+    
     public static int START_QUEUE_TAKE_OVER_X = 220;
     public static int START_QUEUE_TAKE_OVER_Y = 260;
 

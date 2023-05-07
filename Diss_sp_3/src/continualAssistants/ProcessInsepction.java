@@ -108,6 +108,7 @@ public class ProcessInsepction extends Process {
         assistantFinished(message);
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             removeAnimToWork(getEmployee(((MyMessage) message).getCustomer()));
+
         }
     }
 

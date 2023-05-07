@@ -10,6 +10,8 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import agents.AgentReception;
 import animation.ActivityType;
+import animation.AnimTimeCounter;
+import animation.Animator;
 import animation.EmployeeAnimActivity;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
@@ -26,15 +28,20 @@ import simulation.MySimulation;
 public class ProcessMoveToTakeOver extends OSPABA.Process {
 
     private double moveLength = 20;
+    private AnimTimeCounter timeCounter;
 
     public ProcessMoveToTakeOver(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
+
     }
 
     @Override
     public void prepareReplication() {
         super.prepareReplication();
         // Setup component for the next replication
+        if (((MySimulation) mySim()).getAnimator() != null) {
+            timeCounter = new AnimTimeCounter((Animator) ((MySimulation) mySim()).getAnimator());
+        }
     }
 
     //meta! userInfo="Process messages defined in code", id="0"
@@ -46,9 +53,11 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
     //meta! sender="AgentMechanics", id="89", type="Start"
     public void processStart(MessageForm message) {
         message.setCode(Mc.noticeEndMoveToTakeOver);
+        int emp = getEmployee(((MyMessage) message).getCustomer());
+        moveLength = timeCounter.getTimePerRouteToEmp1(emp);
         hold(moveLength, message);
 
-        addAnimToWork(getEmployee(((MyMessage) message).getCustomer()), moveLength);
+        addAnimToWork(emp, moveLength);
 
     }
 
@@ -82,7 +91,7 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
     }
 
     private void processNoticeEndPause(MessageForm message) throws Exception {
-        myAgent().removeFromEmployer(((MyMessage) message).getCustomer());
+        //myAgent().removeFromEmployer(((MyMessage) message).getCustomer());
         assistantFinished(message);
     }
 
@@ -97,10 +106,8 @@ public class ProcessMoveToTakeOver extends OSPABA.Process {
         }
     }
 
-
     private int getEmployee(CustomerObject customer) {
         try {
-
             return myAgent().addToEmployer(customer, true, 0);
         } catch (Exception ex) {
             Logger.getLogger(ProcessInsepction.class.getName()).log(Level.SEVERE, null, ex);

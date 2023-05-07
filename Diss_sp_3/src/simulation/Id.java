@@ -30,5 +30,6 @@ public class Id extends IdList {
     public static final int processMoveToInspection = 9;
     public static final int processMoveFromInspection = 10;
     public static final int processLeaveFromPayment = 11;
+    public static final int schedulerAnimation = 12;
 
 }

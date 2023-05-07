@@ -62,11 +62,7 @@ public class MySimulation extends Simulation {
         super.prepareReplication();
         // Reset entities, queues, local statistics, etc...
         _agentModel.startSimulation();
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MySimulation.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
     }
 
     @Override
@@ -231,9 +227,9 @@ public class MySimulation extends Simulation {
         if (type == RunType.SIMULATION) {
 
             if (value == 1) {
-                setSimSpeed(1.0 / 60, 0.01);
+                setSimSpeed(1.0 / 60.0, 0.01);
             } else if (value == 2) {
-                setSimSpeed(1.0 / 60, 0.001);
+                setSimSpeed(1.0 / 60.0, 0.001);
             } else if (value == 3) {
                 setSimSpeed(1.0 / 60.0, 0.0001);
             } else if (value == 4) {
