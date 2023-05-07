@@ -16,16 +16,16 @@ public class SchedulerCustomerArrival extends Scheduler {
 
     public SchedulerCustomerArrival(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
-  arrivalExponentialDistribution = new ExponentialRNG((double) 60 / 23, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-            vehicleDistribution = new UniformContinuousRNG((double) 0, (double) 1, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
-            count = 1;
+        arrivalExponentialDistribution = new ExponentialRNG((double) 60.0 / 23, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        vehicleDistribution = new UniformContinuousRNG((double) 0, (double) 1, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        count = 1;
     }
 
     @Override
     public void prepareReplication() {
 
         super.prepareReplication();
-      count = 1;
+        count = 1;
     }
 
     //meta! sender="AgentEnviroment", id="10", type="Start"
@@ -51,7 +51,7 @@ public class SchedulerCustomerArrival extends Scheduler {
             case Mc.noticeCustomerArrival:
                 processCustomerArrival(message);
                 break;
-                
+
             default:
                 processDefault(message);
                 break;
@@ -67,7 +67,7 @@ public class SchedulerCustomerArrival extends Scheduler {
     private void processCustomerArrival(MessageForm message) {
         double time = arrivalExponentialDistribution.sample();
         MessageForm copy = message.createCopy();
-
+       //System.out.println("" + (mySim().currentTime()));
         if (mySim().currentTime() + time <= 405.0) {
             hold(time, copy);
         }

@@ -17,8 +17,6 @@ import java.util.logging.Logger;
 
 import simulation.MySimulation;
 import static animation.ActivityType.MOVING;
-import java.awt.geom.AffineTransform;
-import static javax.swing.Spring.width;
 
 /**
  *

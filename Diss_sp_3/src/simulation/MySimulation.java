@@ -3,18 +3,14 @@ package simulation;
 import OSPABA.*;
 import OSPStat.Stat;
 import agents.*;
-import animation.Animator;
 import animation.BaseAnimator;
 import diss_sp_3.RunType;
-import static java.lang.Thread.sleep;
 import java.time.LocalTime;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MySimulation extends Simulation {
 
-    private Random generatorOfGenerators = new Random(0);
+    private Random generatorOfGenerators = new Random();
 
     private Stat avgWaitingTime;
     private Stat avgQueueLength;
@@ -62,7 +58,7 @@ public class MySimulation extends Simulation {
         super.prepareReplication();
         // Reset entities, queues, local statistics, etc...
         _agentModel.startSimulation();
-       
+
     }
 
     @Override
@@ -95,7 +91,17 @@ public class MySimulation extends Simulation {
     public void simulationFinished() {
 
         super.simulationFinished();
+        System.out.println("" + avgTimeInSystem.mean());
+        System.out.println("" + avgWaitingTime.mean());
+         System.out.println("" + avgQueueLength.mean());
+        System.out.println("" + avgCOuntOfVehicles.mean());
+        System.out.println("" + avgFreeEmp1.mean());
+        System.out.println("" + avgFreeEmp2WithC2.mean());
+        System.out.println("" + avgCountOfCustomers.mean());
 
+        System.out.println("");
+        System.out.println("" + avgTimeInSystem.confidenceInterval_90()[0] + " - " + avgTimeInSystem.confidenceInterval_90()[1]);
+        System.out.println("" + avgCountOfCustomers.confidenceInterval_95()[0]+ " - " + avgCountOfCustomers.confidenceInterval_95()[1]);
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
@@ -105,6 +111,7 @@ public class MySimulation extends Simulation {
         setAgentVehicleInspection(new AgentVehicleInspection(Id.agentVehicleInspection, this, agentModel()));
         setAgentReception(new AgentReception(Id.agentReception, this, agentVehicleInspection()));
         setAgentMechanics(new AgentMechanics(Id.agentMechanics, this, agentVehicleInspection()));
+
         setAgentParking(new AgentParking(Id.agentParking, this, agentVehicleInspection()));
 
     }
@@ -271,14 +278,14 @@ public class MySimulation extends Simulation {
 
     public void setAnimator(BaseAnimator animator) {
         this.animator = animator;
-        
+
     }
-    
-    public int getCountOfEmpType1(){
+
+    public int getCountOfEmpType1() {
         return agentReception().getTotalCountOfEmployees();
     }
-    
-    public int getCountOfEmpType2(){
+
+    public int getCountOfEmpType2() {
         return agentMechanics().getTotalCountOfEmployees();
     }
 
