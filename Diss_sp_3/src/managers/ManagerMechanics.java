@@ -73,7 +73,7 @@ public class ManagerMechanics extends Manager {
     //meta! sender="ProcessInsepction", id="28", type="Finish"
     public void processFinish(MessageForm message) throws Exception {
         //if (((MySimulation) mySim()).getAnimator() == null) {
-            removeFromEmployer(((MyMessage) message).getCustomer());
+        removeFromEmployer(((MyMessage) message).getCustomer());
         //}
         if (((MyMessage) message).isExecuteWithCertficated()) {
             myAgent().removeWorkingEmployeeC2();
@@ -259,7 +259,11 @@ public class ManagerMechanics extends Manager {
             message.setCode(Mc.start);
             ((MyMessage) message).setExecuteWithCertficated(true);
             message.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
+            if (((MyMessage) message).getCustomer() == null) {
+                ((MyMessage) message).setCustomer(new CustomerObject());
+            }
             ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
+
             startContinualAssistant(message);
             addPauseToEmployerGui(true, ((MyMessage) message).getProcessEndTime());
 
@@ -364,7 +368,7 @@ public class ManagerMechanics extends Manager {
         ((MyMessage) message).setProcessStartTime(mySim().currentTime());
         message.setAddressee(myAgent().findAssistant(Id.processInsepction));
         startContinualAssistant(message);
-        addToEmployer(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated(), 0);
+        // addToEmployer(((MyMessage) message).getCustomer(), ((MyMessage) message).isExecuteWithCertficated(), 0);
 
     }
 

@@ -89,7 +89,7 @@ public class ProcessMoveToInspection extends OSPABA.Process {
     }
 
     private void processNoticeEndPause(MessageForm message) throws Exception {
-        myAgent().removeFromEmployer(((MyMessage) message).getCustomer());
+        //myAgent().removeFromEmployer(((MyMessage) message).getCustomer());
         assistantFinished(message);
     }
 
