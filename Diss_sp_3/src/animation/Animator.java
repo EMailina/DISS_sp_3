@@ -56,7 +56,6 @@ public class Animator extends BaseAnimator {
         Graphics g = getCanvas().getGraphics();
         Graphics2D g2 = (Graphics2D) g;
 
-        oddial(g2);
         if (clear != zoomed) {
             try {
                 g.setColor(Color.white);
@@ -142,7 +141,6 @@ public class Animator extends BaseAnimator {
         Graphics g = getCanvas().getGraphics();
         Graphics2D g2 = (Graphics2D) g;
 
-        oddial(g2);
         for (int i = 0; i < queueTakeOverLength; i++) {
 
             g.setColor(Color.BLUE);
@@ -247,7 +245,12 @@ public class Animator extends BaseAnimator {
         countType1 = getSimulation().getCountOfEmpType1();
         countType2 = getSimulation().getCountOfEmpType2();
         Graphics g = getCanvas().getGraphics();
-        g.setColor(Color.white);
+        g.setColor(Color.WHITE);
+        try {
+            sleep(50);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Animator.class.getName()).log(Level.SEVERE, null, ex);
+        }
         g.fillRect(0, 0, 8000, 8000);
         employees1 = new CopyOnWriteArrayList<>();
         for (int i = 0; i < countType1; i++) {
@@ -263,7 +266,7 @@ public class Animator extends BaseAnimator {
 
     @Override
     public void processNewActivity(AnimActivity animActivity) {
-        if (null != animActivity.getType()) // InspectionActivity act = (InspectionActivity) animActivity;
+        if (null != animActivity.getType())
         {
             switch (animActivity.getType()) {
                 case REMOVE_FROM_TAKE_OVER_QUEUE:
@@ -383,9 +386,7 @@ public class Animator extends BaseAnimator {
     @Override
     public void clearBackgroundOnDeleted(CopyOnWriteArrayList<AnimActivity> toRemove) {
         Graphics g = getCanvas().getGraphics();
-        Graphics2D g2 = (Graphics2D) g;
 
-        oddial(g2);
 
         for (AnimActivity animActivity : toRemove) {
 
@@ -401,16 +402,7 @@ public class Animator extends BaseAnimator {
         }
     }
 
-    public void oddial(Graphics2D g2) {
-        if (zoomed) {
-            int w = 850;
-            int h = 500;
-            double zoom = -2;
-            g2.translate(w / 2, h / 2);
-            g2.scale(0.5, 0.5);
-            g2.translate(-w, -h);
-        }
-    }
+ 
 
     private void initMoveEmployerType1(AnimActivity activity, int count, double startTime, double endTime) {
         EmployeeAnimActivity animActivity = new EmployeeAnimActivity();
@@ -584,9 +576,6 @@ public class Animator extends BaseAnimator {
         return points;
     }
 
-    public void setScale(int scale) {
-        zoomed = !zoomed;
-        super.createCanvas();
-    }
+
 
 }

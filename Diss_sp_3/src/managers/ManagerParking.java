@@ -4,7 +4,8 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import animation.ActivityType;
-import animation.InspectionActivity;
+import animation.AnimActivity;
+
 import continualAssistants.*;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
@@ -164,7 +165,7 @@ public class ManagerParking extends Manager {
 
      private void addAnimToQueue() {
         if (((MySimulation) mySim()).getAnimator() != null) {
-            InspectionActivity a = new InspectionActivity();
+            AnimActivity a = new AnimActivity();
             a.setType(ActivityType.ADD_TO_PARKING_QUEUE);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
         }
@@ -172,7 +173,7 @@ public class ManagerParking extends Manager {
 
     private void removeAnimFromQueue() {
         if (((MySimulation) mySim()).getAnimator() != null) {
-            InspectionActivity a = new InspectionActivity();
+            AnimActivity a = new AnimActivity();
             a.setType(ActivityType.REMOVE_FROM_PARKING_QUEUE);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
         }

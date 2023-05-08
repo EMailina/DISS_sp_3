@@ -92,7 +92,7 @@ public class ManagerMechanics extends Manager {
                 }
                 MyMessage newMessage = (MyMessage) message.createCopy();
                 ((MyMessage) newMessage).getCustomer().setCount(myAgent().getPauseCounter());
-                addPauseToEmployerGui(((MyMessage) message).isExecuteWithCertficated(), ((MyMessage) message).getProcessEndTime());
+                addPauseToEmployerGui(((MyMessage) message).isExecuteWithCertficated());
 
                 newMessage.setExecuteWithCertficated(((MyMessage) message).isExecuteWithCertficated());
                 newMessage.setAddressee(myAgent().findAssistant(Id.processLunchPauseInspection));
@@ -250,7 +250,7 @@ public class ManagerMechanics extends Manager {
 
             ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
             startContinualAssistant(message);
-            addPauseToEmployerGui(false, ((MyMessage) message).getProcessEndTime());
+            addPauseToEmployerGui(false);
 
         }
 
@@ -265,12 +265,12 @@ public class ManagerMechanics extends Manager {
             ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
 
             startContinualAssistant(message);
-            addPauseToEmployerGui(true, ((MyMessage) message).getProcessEndTime());
+            addPauseToEmployerGui(true);
 
         }
     }
 
-    public void addPauseToEmployerGui(boolean c2, double endTime) {
+    public void addPauseToEmployerGui(boolean c2) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             int start = 0;

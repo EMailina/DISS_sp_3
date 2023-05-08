@@ -674,6 +674,38 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
         if (runType == RunType.REPLICATIONS) {
             simulation.setValidationRun(checkboxValidation.isSelected());
+
+            int min = Integer.MAX_VALUE;
+//            for (int i = ; i <= 9; i++) {
+//                for (int j = 7; j < 20; j++) {
+//                    for (int k = 7; k < 18; k++) {
+//                        simulation = new MySimulation();
+//                        simulation.setType(runType);
+//                        simulation.setCountOfEmployeeType1(i);
+//                        simulation.setCountOfEmployeeType2WithCertificate1(j);
+//                        simulation.setCountOfEmployeeType2WithCertificate2(k);
+//                        simulation.setMaxSimSpeed();
+//                        simulation.simulate(100, 480);
+//                        if (simulation.getAvgTimeInSystem().mean() < 70.0) {
+//                            if (simulation.getAvgCOuntOfVehicles().mean() < 1.0) {
+//                                if (simulation.getAvgWaitingTime().mean() < 10.0) {
+//                                    int price = i * 1100 + j * 1500 + k * 2000;
+//                                    if (price < 52000) {
+//                                        System.out.println("" + i + " " + j + " " + k + " - " + price);
+//                                        if (min > price) {
+//                                            min = price;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//                }
+//                System.out.println("min " + min);
+//
+//            }
+
 //
 //            for (int i = 0; i < 1000; i++) {
 //                simulation = new MySimulation(i);
@@ -722,6 +754,13 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
             threadLogic.start();
             threadGraph = new ChartThread(this);
             threadGraph.start();
+        }
+    }
+
+    public void setSpeed(int val) {
+        if (simulation != null) {
+            speedSlider.setValue(val);
+            simulation.setSpeedChange(val);
         }
     }
 
@@ -805,11 +844,8 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private javax.swing.JButton startSimulation3;
     // End of variables declaration//GEN-END:variables
 
-    
-    public void setScale(int scale){
-        this.animator.setScale(scale);
-    }
-    
+
+
     public void startDraw() throws InterruptedException, IOException {
         //
 
@@ -836,8 +872,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
             //hideLabels();
             initializeTables();
         }
-
-
 
         while (true) {
             if (refreshGuiChanges) {
@@ -1148,7 +1182,5 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
             values.add(simulation.getAvgTimeInSystem().mean());
         }
     }
-
-   
 
 }

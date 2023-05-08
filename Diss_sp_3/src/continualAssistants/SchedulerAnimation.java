@@ -19,7 +19,7 @@ import simulation.Mc;
  */
 public class SchedulerAnimation extends Scheduler {
 
-    private double tau = 1.0/5.0;
+   
 
     public SchedulerAnimation(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
@@ -32,7 +32,7 @@ public class SchedulerAnimation extends Scheduler {
 
     public void processStart(MessageForm message) {
         message.setCode(Mc.noticeDrawAnimation);
-        hold(tau, message);
+        hold(myAgent().getTau(), message);
     }
 
     public void processDefault(MessageForm message) {
@@ -64,7 +64,7 @@ public class SchedulerAnimation extends Scheduler {
     
     private void processDraw(MessageForm message) {
         MessageForm copy = message.createCopy();
-        hold(tau, copy);
+        hold(myAgent().getTau(), copy);
         assistantFinished(message);
     }
 

@@ -27,10 +27,7 @@ public class CustomerObject {
     private boolean waitingForPayment = false;
     private boolean park = false;
     private boolean pause = false;
-
     private double carLimit = 0.65;
-    private double truckLimit = 0.86;
-    private AnimActivity animActivity = new AnimActivity();
 
     public CustomerObject() {
 
@@ -164,12 +161,6 @@ public class CustomerObject {
         return "VAN";
     }
 
-    public AnimActivity getAnimActivity() {
-        return animActivity;
-    }
 
-    public void setAnimActivity(AnimActivity animActivity) {
-        this.animActivity = animActivity;
-    }
 
 }

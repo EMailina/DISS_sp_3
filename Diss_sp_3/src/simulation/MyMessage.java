@@ -9,7 +9,6 @@ public class MyMessage extends MessageForm {
     private int countOfParkingPlaces;
     private boolean availableEmployee;
     private double processStartTime;
-    private double processEndTime;
     private int certificate2;
     private boolean executeWithCertficated;
     private int animEmployer;
@@ -28,7 +27,7 @@ public class MyMessage extends MessageForm {
         availableEmployee = original.isAvailableEmployee();
         certificate2 = original.certificate2;
         executeWithCertficated = original.executeWithCertficated;
-        processEndTime = original.processEndTime;
+
     }
 
     @Override
@@ -84,14 +83,6 @@ public class MyMessage extends MessageForm {
         this.executeWithCertficated = executeWithCertficated;
     }
 
-    public double getProcessEndTime() {
-        return processEndTime;
-    }
-
-    public void setProcessEndTime(double processEndTime) {
-        this.processEndTime = processEndTime;
-    }
-
     public int getAnimEmployer() {
         return animEmployer;
     }
@@ -100,5 +91,4 @@ public class MyMessage extends MessageForm {
         this.animEmployer = animEmployer;
     }
 
-    
 }

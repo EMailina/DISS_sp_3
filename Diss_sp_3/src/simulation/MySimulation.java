@@ -93,15 +93,15 @@ public class MySimulation extends Simulation {
         super.simulationFinished();
         System.out.println("" + avgTimeInSystem.mean());
         System.out.println("" + avgWaitingTime.mean());
-         System.out.println("" + avgQueueLength.mean());
-        System.out.println("" + avgCOuntOfVehicles.mean());
-        System.out.println("" + avgFreeEmp1.mean());
-        System.out.println("" + avgFreeEmp2WithC2.mean());
-        System.out.println("" + avgCountOfCustomers.mean());
-
-        System.out.println("");
-        System.out.println("" + avgTimeInSystem.confidenceInterval_90()[0] + " - " + avgTimeInSystem.confidenceInterval_90()[1]);
-        System.out.println("" + avgCountOfCustomers.confidenceInterval_95()[0]+ " - " + avgCountOfCustomers.confidenceInterval_95()[1]);
+//         System.out.println("" + avgQueueLength.mean());
+       System.out.println("" + avgCOuntOfVehicles.mean());
+//        System.out.println("" + avgFreeEmp1.mean());
+//        System.out.println("" + avgFreeEmp2WithC2.mean());
+//        System.out.println("" + avgCountOfCustomers.mean());
+//
+//        System.out.println("");
+//        System.out.println("" + avgTimeInSystem.confidenceInterval_90()[0] + " - " + avgTimeInSystem.confidenceInterval_90()[1]);
+//        System.out.println("" + avgCountOfCustomers.confidenceInterval_95()[0]+ " - " + avgCountOfCustomers.confidenceInterval_95()[1]);
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"

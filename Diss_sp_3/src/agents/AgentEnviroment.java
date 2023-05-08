@@ -14,6 +14,7 @@ public class AgentEnviroment extends Agent {
 
     private SimQueue<CustomerObject> customers;
     private Stat averageTimeInSystem;
+    private double tau = 1.0 / 5.0;
 
     public AgentEnviroment(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
@@ -57,6 +58,14 @@ public class AgentEnviroment extends Agent {
 
     public void setCustomers(SimQueue<CustomerObject> customers) {
         this.customers = customers;
+    }
+
+    public double getTau() {
+        return tau;
+    }
+
+    public void setTau(double tau) {
+        this.tau = tau;
     }
 
 }

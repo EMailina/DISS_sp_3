@@ -35,7 +35,6 @@ public class ProcessPaying extends Process {
         double duration = paymentTimeDistribution.sample();
         hold(duration, message);
         ((MyMessage) message).setProcessStartTime(mySim().currentTime());
-        ((MyMessage) message).setProcessEndTime(mySim().currentTime() + duration);
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             addAnimToWork(getEmployee(((MyMessage) message).getCustomer()), duration + mySim().currentTime());
         }

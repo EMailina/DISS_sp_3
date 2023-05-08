@@ -7,7 +7,6 @@ import animation.ActivityType;
 import animation.AnimActivity;
 import animation.AnimConfig;
 import animation.EmployeeAnimActivity;
-import animation.InspectionActivity;
 import continualAssistants.*;
 import diss_sp_3.RunType;
 import java.util.logging.Level;
@@ -114,7 +113,7 @@ public class ManagerReception extends Manager {
                     message.setAddressee(myAgent().findAssistant(Id.processLunchPauseReception));
                     ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
                     startContinualAssistant(message);
-                    addPauseToEmployerGui(((MyMessage) message).getProcessEndTime());
+                    addPauseToEmployerGui();
                     pause = true;
 
                 }
@@ -168,7 +167,7 @@ public class ManagerReception extends Manager {
         startContinualAssistant(message);
         //System.out.println("Start registration: " + ((MyMessage) message).getCustomer().getCount() + " " + mySim().currentTime());
         if (((MySimulation) mySim()).getAnimator() == null) {
-            addToEmployer(((MyMessage) message).getCustomer(), true, ((MyMessage) message).getProcessEndTime());
+            addToEmployer(((MyMessage) message).getCustomer(), true);
         }
     }
 
@@ -179,7 +178,7 @@ public class ManagerReception extends Manager {
         message.setAddressee(myAgent().findAssistant(Id.processPaying));
         startContinualAssistant(message);
         if (((MySimulation) mySim()).getAnimator() == null) {
-            addToEmployer(((MyMessage) message).getCustomer(), false, ((MyMessage) message).getProcessEndTime());
+            addToEmployer(((MyMessage) message).getCustomer(), false);
         }
     }
 
@@ -199,7 +198,7 @@ public class ManagerReception extends Manager {
                     ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
 
                     startContinualAssistant(message);
-                    addPauseToEmployerGui(((MyMessage) message).getProcessEndTime());
+                    addPauseToEmployerGui();
                     pause = true;
                 }
 
@@ -372,7 +371,7 @@ public class ManagerReception extends Manager {
         }
     }
 
-    public void addToEmployer(CustomerObject customer, boolean takeOver, double endTime) {
+    public void addToEmployer(CustomerObject customer, boolean takeOver) {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
@@ -392,7 +391,7 @@ public class ManagerReception extends Manager {
         }
     }
 
-    public void addPauseToEmployerGui(double endTime) {
+    public void addPauseToEmployerGui() {
 
         if (((MySimulation) mySim()).getType() == RunType.SIMULATION) {
             for (int i = 0; i < myAgent().getTotalCountOfEmployees(); i++) {
@@ -458,7 +457,7 @@ public class ManagerReception extends Manager {
 
             ((MyMessage) message).getCustomer().setCount(myAgent().getPauseCounter());
             startContinualAssistant(message);
-            addPauseToEmployerGui(((MyMessage) message).getProcessEndTime());
+            addPauseToEmployerGui();
 
         }
     }
@@ -494,7 +493,7 @@ public class ManagerReception extends Manager {
 
     private void addAnimToQueue(CustomerObject customer) {
         if (((MySimulation) mySim()).getAnimator() != null) {
-            InspectionActivity a = new InspectionActivity();
+            AnimActivity a = new AnimActivity();
 
             a.setType(ActivityType.ADD_TO_TAKE_OVER_QUEUE);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
@@ -503,7 +502,7 @@ public class ManagerReception extends Manager {
 
     private void removeAnimFromQueue(CustomerObject customer) {
         if (((MySimulation) mySim()).getAnimator() != null) {
-            InspectionActivity a = new InspectionActivity();
+            AnimActivity a = new AnimActivity();
 
             a.setType(ActivityType.REMOVE_FROM_TAKE_OVER_QUEUE);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
@@ -512,7 +511,7 @@ public class ManagerReception extends Manager {
 
     private void addAnimToQueuePayment() {
         if (((MySimulation) mySim()).getAnimator() != null) {
-            InspectionActivity a = new InspectionActivity();
+            AnimActivity a = new AnimActivity();
             a.setType(ActivityType.ADD_TO_PAYMENT_QUEUE);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
         }
@@ -520,7 +519,7 @@ public class ManagerReception extends Manager {
 
     private void removeAnimFromQueuePayment() {
         if (((MySimulation) mySim()).getAnimator() != null) {
-            InspectionActivity a = new InspectionActivity();
+            AnimActivity a = new AnimActivity();
             a.setType(ActivityType.REMOVE_FROM_PAYMENT_QUEUE);
             ((MySimulation) mySim()).getAnimator().addAnimActivity(a);
         }

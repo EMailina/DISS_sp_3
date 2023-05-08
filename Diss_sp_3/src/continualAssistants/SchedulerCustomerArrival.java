@@ -16,7 +16,7 @@ public class SchedulerCustomerArrival extends Scheduler {
 
     public SchedulerCustomerArrival(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
-        arrivalExponentialDistribution = new ExponentialRNG((double) 60.0 / 23, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
+        arrivalExponentialDistribution = new ExponentialRNG((double) 60.0 / (23.0/**1.24*/), ((MySimulation) this.mySim()).getGeneratorOfGenerators());
         vehicleDistribution = new UniformContinuousRNG((double) 0, (double) 1, ((MySimulation) this.mySim()).getGeneratorOfGenerators());
         count = 1;
     }
