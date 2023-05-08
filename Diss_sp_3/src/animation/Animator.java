@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import simulation.MySimulation;
 import static animation.ActivityType.MOVING;
 
@@ -31,8 +30,6 @@ public class Animator extends BaseAnimator {
     private int queueParkingLength = 0;
     private CopyOnWriteArrayList<WorkType> employees1;
     private CopyOnWriteArrayList<WorkType> employees2;
-    private boolean zoomed = false;
-    private boolean clear = false;
 
     public Animator(MySimulation simulation, Canvas canvas) throws InterruptedException {
         super(simulation, canvas);
@@ -54,18 +51,7 @@ public class Animator extends BaseAnimator {
     public void drawBackGround() {
 
         Graphics g = getCanvas().getGraphics();
-        Graphics2D g2 = (Graphics2D) g;
 
-        if (clear != zoomed) {
-            try {
-                g.setColor(Color.white);
-                g.drawRect(0, 0, 16000, 16000);
-                clear = zoomed;
-                sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Animator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
         g.setColor(Color.white);
 
         //  g.fillRect(450, 0, 70, 1000);
@@ -104,14 +90,7 @@ public class Animator extends BaseAnimator {
         y = 100;
 
         for (int i = 0; i < countType2; i++) {
-//            g.setColor(Color.GREEN);
-//            g.fillRect(900, y, 50, 50);
-//            g.setColor(Color.BLACK);
-//            g.drawRect(900, y, 50, 50);
 
-            //TAKEOVER PROCESS
-//            g.drawLine(900, y - 10, 950, y - 10);
-//            g.fillOval(900, y - 15, 10, 10);
             g.drawLine(800, y + 25, 900, y + 25);
             g.drawLine(950, y + 25, 1000, y + 25);
             y += 100;
@@ -133,6 +112,19 @@ public class Animator extends BaseAnimator {
             g.drawLine(1000, 30, 1000, y - 75 < 200 ? 200 : y - 75);
         }
 
+        g.setColor(Color.GREEN);
+        g.fillRect(5, 50, 10, 10);
+        g.setColor(Color.BLACK);
+        g.fillRect(5, 70, 10, 10);
+        g.setColor(Color.YELLOW);
+        g.fillRect(5, 90, 10, 10);
+        g.setColor(Color.MAGENTA);
+        g.fillRect(5, 110, 10, 10);
+        g.setColor(Color.BLACK);
+        g.drawString("Free Employer", 20, 60);
+        g.drawString("Work Employer", 20, 80);
+        g.drawString("Pause Employer", 20, 100);
+        g.drawString("Payment", 20, 120);
     }
 
     @Override
@@ -233,10 +225,11 @@ public class Animator extends BaseAnimator {
         }
 
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, 150, 25);
+        g.fillRect(0, 0, 100, 40);
         g.setColor(Color.BLACK);
 
         g.drawString("Time: " + String.format("%.3f", getSimulation().currentTime()), 10, 15);
+        g.drawString("Time: " + getSimulation().getTime(), 10, 31);
 
     }
 
@@ -247,7 +240,7 @@ public class Animator extends BaseAnimator {
         Graphics g = getCanvas().getGraphics();
         g.setColor(Color.WHITE);
         try {
-            sleep(50);
+            sleep(100);
         } catch (InterruptedException ex) {
             Logger.getLogger(Animator.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -266,8 +259,7 @@ public class Animator extends BaseAnimator {
 
     @Override
     public void processNewActivity(AnimActivity animActivity) {
-        if (null != animActivity.getType())
-        {
+        if (null != animActivity.getType()) {
             switch (animActivity.getType()) {
                 case REMOVE_FROM_TAKE_OVER_QUEUE:
                     queueTakeOverLength--;
@@ -304,7 +296,6 @@ public class Animator extends BaseAnimator {
                     break;
 
                 case ADD_WORK_TO_EMPLOYER_TYPE_1:
-                    //initWorkEmp1(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_1_START_X, WorkType.WORK);
                     employees1.set((int) ((EmployeeAnimActivity) animActivity).getCount(), WorkType.WORK);
                     initMoveEmployerType1(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), animActivity.getStartTime(), animActivity.getEndTime());
                     initProcessActivity(animActivity, ((EmployeeAnimActivity) animActivity).getCount(), AnimConfig.PROCESS_EMP_1_START_X);
@@ -387,7 +378,6 @@ public class Animator extends BaseAnimator {
     public void clearBackgroundOnDeleted(CopyOnWriteArrayList<AnimActivity> toRemove) {
         Graphics g = getCanvas().getGraphics();
 
-
         for (AnimActivity animActivity : toRemove) {
 
             if (animActivity.getType() == ActivityType.MOVING) {
@@ -401,8 +391,6 @@ public class Animator extends BaseAnimator {
             }
         }
     }
-
- 
 
     private void initMoveEmployerType1(AnimActivity activity, int count, double startTime, double endTime) {
         EmployeeAnimActivity animActivity = new EmployeeAnimActivity();
@@ -575,7 +563,5 @@ public class Animator extends BaseAnimator {
 
         return points;
     }
-
-
 
 }

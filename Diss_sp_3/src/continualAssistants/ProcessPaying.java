@@ -26,7 +26,6 @@ public class ProcessPaying extends Process {
     @Override
     public void prepareReplication() {
         super.prepareReplication();
-
     }
 
     //meta! sender="AgentReception", id="22", type="Start"

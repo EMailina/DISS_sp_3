@@ -526,7 +526,7 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         getContentPane().add(countOfEmployees2Box2);
         countOfEmployees2Box2.setBounds(260, 110, 50, 30);
 
-        jLabel25.setText("Employees 2(all):");
+        jLabel25.setText("Employees 2(C1):");
         getContentPane().add(jLabel25);
         jLabel25.setBounds(10, 120, 110, 16);
 
@@ -580,6 +580,14 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
         }
 
     }//GEN-LAST:event_pauseButtonActionPerformed
+
+    public void pause() {
+        if (simulation.isPaused()) {
+            simulation.resumeSimulation();
+        } else {
+            simulation.pauseSimulation();
+        }
+    }
 
     private void speedSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_speedSliderStateChanged
         SpeedLabel.setText("Simulation speed: " + speedSlider.getValue());
@@ -674,59 +682,15 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
         if (runType == RunType.REPLICATIONS) {
             simulation.setValidationRun(checkboxValidation.isSelected());
-
-            int min = Integer.MAX_VALUE;
-//            for (int i = ; i <= 9; i++) {
-//                for (int j = 7; j < 20; j++) {
-//                    for (int k = 7; k < 18; k++) {
-//                        simulation = new MySimulation();
-//                        simulation.setType(runType);
-//                        simulation.setCountOfEmployeeType1(i);
-//                        simulation.setCountOfEmployeeType2WithCertificate1(j);
-//                        simulation.setCountOfEmployeeType2WithCertificate2(k);
-//                        simulation.setMaxSimSpeed();
-//                        simulation.simulate(100, 480);
-//                        if (simulation.getAvgTimeInSystem().mean() < 70.0) {
-//                            if (simulation.getAvgCOuntOfVehicles().mean() < 1.0) {
-//                                if (simulation.getAvgWaitingTime().mean() < 10.0) {
-//                                    int price = i * 1100 + j * 1500 + k * 2000;
-//                                    if (price < 52000) {
-//                                        System.out.println("" + i + " " + j + " " + k + " - " + price);
-//                                        if (min > price) {
-//                                            min = price;
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                }
-//                System.out.println("min " + min);
-//
-//            }
-
-//
-//            for (int i = 0; i < 1000; i++) {
-//                simulation = new MySimulation(i);
-//                simulation.setType(runType);
-//                simulation.setCountOfEmployeeType1(Integer.valueOf(countOfEmployees1Box.getText()));
-//                simulation.setCountOfEmployeeType2WithCertificate1(Integer.valueOf(countOfEmployees2Box.getText()));
-//                simulation.setCountOfEmployeeType2WithCertificate2(Integer.valueOf(countOfEmployees2Box2.getText()));
             simulation.setMaxSimSpeed();
-//                simulation.setSpeedChange(speedSlider.getValue());
             simulation.simulate(countOfReplication, 480);
-            //    System.out.println("" + i + " | " + simulation.getAvgTimeInSystem().mean());
-            // }
 
-            //app.replicate(this, countOfReplication, Integer.valueOf(countOfEmployees1Box.getText()), Integer.valueOf(countOfEmployees2Box.getText()), RunType.REPLICATIONS);
         } else if (runType == RunType.SIMULATION) {
 
             simulation.setValidationRun(checkboxValidation.isSelected());
 
             simulation.setSpeedChange(speedSlider.getValue());
             if (checkboxAnimation.isSelected()) {
-
                 FormAnimator f = new FormAnimator(this);
                 f.setVisible(true);
                 this.animator = new Animator(simulation, f.getCanvas1());
@@ -749,7 +713,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
 
     private void startThreads() {
         if ((threadLogic == null && threadGraph == null) || (!threadLogic.isAlive() && !threadGraph.isAlive())) {
-
             threadLogic = new ExtraThread(this);
             threadLogic.start();
             threadGraph = new ChartThread(this);
@@ -843,8 +806,6 @@ public class Diss_sp_3 extends javax.swing.JFrame implements ISimDelegate {
     private javax.swing.JButton startSimulation2;
     private javax.swing.JButton startSimulation3;
     // End of variables declaration//GEN-END:variables
-
-
 
     public void startDraw() throws InterruptedException, IOException {
         //
